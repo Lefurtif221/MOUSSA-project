@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<title>Ndoket — Profil client</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#F5FAFC;
+    --surface:#FFFFFF;
+    --ink:#1F2A33;
+    --ink-soft:#54646F;
+    --muted:#8B98A1;
+    --orange:#F2871E;
+    --orange-dark:#D66A0C;
+    --orange-light:#FDE3C5;
+    --blue:#3FC2E8;
+    --blue-dark:#1E9BC2;
+    --blue-light:#D6F3FB;
+    --red:#E14848;
+    --red-light:#FBE3E3;
+    --line:#E5EEF1;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:#EDEFF0;
+    font-family:'Inter',sans-serif;
+    padding:48px 16px;
+    display:flex;
+    justify-content:center;
+  }
+
+  .phone{
+    width:375px;
+    height:812px;
+    background:var(--surface);
+    border-radius:44px;
+    border:12px solid var(--ink);
+    overflow:hidden;
+    position:relative;
+    box-shadow: 0 30px 60px -25px rgba(31,42,51,0.4);
+  }
+  .notch{
+    position:absolute;
+    top:0; left:50%;
+    transform:translateX(-50%);
+    width:150px; height:26px;
+    background:var(--ink);
+    border-radius:0 0 16px 16px;
+    z-index:8;
+  }
+  .screen{
+    width:100%;
+    height:100%;
+    display:flex;
+    flex-direction:column;
+    overflow:hidden;
+  }
+
+  .content{
+    flex:1;
+    overflow-y:auto;
+  }
+
+  /* Header profil */
+  .profile-header{
+    background:var(--orange);
+    padding:56px 20px 28px;
+    display:flex;
+    align-items:center;
+    gap:14px;
+    position:relative;
+    overflow:hidden;
+  }
+  .profile-header::after{
+    content:"";
+    position:absolute;
+    right:-40px; top:-40px;
+    width:140px;height:140px;
+    border-radius:50%;
+    background:rgba(255,255,255,0.14);
+  }
+  .avatar-big{
+    width:64px;height:64px;
+    border-radius:50%;
+    background:#fff;
+    border:3px solid rgba(255,255,255,0.5);
+    position:relative;
+    z-index:1;
+  }
+  .profile-name-block{
+    position:relative;
+    z-index:1;
+  }
+  .profile-name{
+    font-family:'Baloo 2',sans-serif;
+    font-size:19px;
+    font-weight:700;
+    color:#fff;
+  }
+  .profile-phone{
+    font-size:11.5px;
+    color:#FFEFE0;
+    margin-top:2px;
+    font-weight:600;
+  }
+  .edit-btn{
+    margin-left:auto;
+    width:34px;height:34px;
+    border-radius:11px;
+    background:rgba(255,255,255,0.25);
+    position:relative;
+    z-index:1;
+    flex-shrink:0;
+  }
+
+  /* Stats rapides */
+  .stat-row{
+    display:flex;
+    margin:-18px 20px 20px;
+    background:var(--surface);
+    border-radius:16px;
+    border:2px solid var(--line);
+    position:relative;
+    z-index:2;
+    box-shadow:0 10px 20px -14px rgba(31,42,51,0.25);
+  }
+  .stat-item{
+    flex:1;
+    text-align:center;
+    padding:14px 8px;
+  }
+  .stat-item + .stat-item{
+    border-left:2px solid var(--line);
+  }
+  .stat-num{
+    font-family:'Baloo 2',sans-serif;
+    font-size:16px;
+    font-weight:800;
+    color:var(--orange-dark);
+  }
+  .stat-label{
+    font-size:9.5px;
+    color:var(--muted);
+    margin-top:2px;
+    font-weight:600;
+  }
+
+  /* Bandeau devenir prestataire */
+  .become-provider{
+    margin:0 20px 20px;
+    background:var(--blue-light);
+    border-radius:16px;
+    padding:14px 16px;
+    display:flex;
+    align-items:center;
+    gap:12px;
+  }
+  .become-provider .icon{
+    width:36px;height:36px;
+    border-radius:10px;
+    background:var(--blue-dark);
+    flex-shrink:0;
+  }
+  .become-provider .txt h4{
+    font-family:'Baloo 2',sans-serif;
+    font-size:13px;
+    font-weight:700;
+    color:var(--blue-dark);
+    margin:0 0 2px;
+  }
+  .become-provider .txt p{
+    font-size:10.5px;
+    color:var(--blue-dark);
+    margin:0;
+    opacity:0.85;
+  }
+
+  /* Menu */
+  .menu-group{
+    margin:0 20px 18px;
+  }
+  .menu-label{
+    font-size:11px;
+    font-weight:800;
+    color:var(--muted);
+    text-transform:uppercase;
+    letter-spacing:0.05em;
+    margin-bottom:8px;
+    padding-left:2px;
+  }
+  .menu-list{
+    background:var(--surface);
+    border:2px solid var(--line);
+    border-radius:16px;
+    overflow:hidden;
+  }
+  .menu-row{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    padding:13px 16px;
+    border-bottom:2px solid var(--line);
+  }
+  .menu-row:last-child{
+    border-bottom:none;
+  }
+  .menu-icon{
+    width:32px;height:32px;
+    border-radius:10px;
+    background:var(--bg);
+    flex-shrink:0;
+  }
+  .menu-text{
+    flex:1;
+    font-size:12.5px;
+    font-weight:600;
+    color:var(--ink);
+  }
+  .menu-chevron{
+    width:16px;height:16px;
+    position:relative;
+    flex-shrink:0;
+  }
+  .menu-chevron::after{
+    content:"";
+    position:absolute;
+    top:50%; left:40%;
+    width:6px;height:6px;
+    border-top:2px solid var(--muted);
+    border-right:2px solid var(--muted);
+    transform:translate(-50%,-50%) rotate(45deg);
+  }
+
+  .menu-row.danger .menu-text{
+    color:var(--red);
+  }
+  .menu-row.danger .menu-icon{
+    background:var(--red-light);
+  }
+
+  .app-version{
+    text-align:center;
+    font-size:10.5px;
+    color:var(--muted);
+    padding:6px 0 26px;
+  }
+</style>
+</head>
+<body>
+
+  <div class="phone">
+    <div class="notch"></div>
+    <div class="screen">
+      <div class="content">
+
+        <div class="profile-header">
+          <div class="avatar-big"></div>
+          <div class="profile-name-block">
+            <div class="profile-name">Aïcha Diop</div>
+            <div class="profile-phone">+221 77 123 45 67</div>
+          </div>
+          <div class="edit-btn"></div>
+        </div>
+
+        <div class="stat-row">
+          <div class="stat-item">
+            <div class="stat-num">12</div>
+            <div class="stat-label">Réservations</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-num">4</div>
+            <div class="stat-label">Favoris</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-num">★ 4.9</div>
+            <div class="stat-label">Avis laissés</div>
+          </div>
+        </div>
+
+        <div class="become-provider">
+          <div class="icon"></div>
+          <div class="txt">
+            <h4>Devenir prestataire</h4>
+            <p>Proposez vos services sur Ndoket, en 5 minutes</p>
+          </div>
+        </div>
+
+        <div class="menu-group">
+          <div class="menu-label">Mon activité</div>
+          <div class="menu-list">
+            <div class="menu-row">
+              <div class="menu-icon"></div>
+              <div class="menu-text">Mes réservations</div>
+              <div class="menu-chevron"></div>
+            </div>
+            <div class="menu-row">
+              <div class="menu-icon"></div>
+              <div class="menu-text">Mes favoris</div>
+              <div class="menu-chevron"></div>
+            </div>
+            <div class="menu-row">
+              <div class="menu-icon"></div>
+              <div class="menu-text">Mes avis</div>
+              <div class="menu-chevron"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="menu-group">
+          <div class="menu-label">Compte</div>
+          <div class="menu-list">
+            <div class="menu-row">
+              <div class="menu-icon"></div>
+              <div class="menu-text">Mes adresses</div>
+              <div class="menu-chevron"></div>
+            </div>
+            <div class="menu-row">
+              <div class="menu-icon"></div>
+              <div class="menu-text">Moyens de paiement</div>
+              <div class="menu-chevron"></div>
+            </div>
+            <div class="menu-row">
+              <div class="menu-icon"></div>
+              <div class="menu-text">Notifications</div>
+              <div class="menu-chevron"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="menu-group">
+          <div class="menu-label">Aide</div>
+          <div class="menu-list">
+            <div class="menu-row">
+              <div class="menu-icon"></div>
+              <div class="menu-text">Centre d'aide</div>
+              <div class="menu-chevron"></div>
+            </div>
+            <div class="menu-row danger">
+              <div class="menu-icon"></div>
+              <div class="menu-text">Se déconnecter</div>
+              <div class="menu-chevron"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="app-version">Ndoket · Version 1.0.0</div>
+
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>

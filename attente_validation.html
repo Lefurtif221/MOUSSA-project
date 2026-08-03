@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<title>Ndoket — Compte en attente</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#F5FAFC;
+    --surface:#FFFFFF;
+    --ink:#1F2A33;
+    --ink-soft:#54646F;
+    --muted:#8B98A1;
+    --orange:#F2871E;
+    --orange-dark:#D66A0C;
+    --orange-light:#FDE3C5;
+    --blue:#3FC2E8;
+    --blue-dark:#1E9BC2;
+    --blue-light:#D6F3FB;
+    --green:#3AA65A;
+    --green-light:#DCF3E2;
+    --line:#E5EEF1;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:#EDEFF0;
+    font-family:'Inter',sans-serif;
+    padding:48px 16px;
+    display:flex;
+    justify-content:center;
+  }
+
+  .phone{
+    width:375px;
+    height:812px;
+    background:var(--surface);
+    border-radius:44px;
+    border:12px solid var(--ink);
+    overflow:hidden;
+    position:relative;
+    box-shadow: 0 30px 60px -25px rgba(31,42,51,0.4);
+  }
+  .notch{
+    position:absolute;
+    top:0; left:50%;
+    transform:translateX(-50%);
+    width:150px; height:26px;
+    background:var(--ink);
+    border-radius:0 0 16px 16px;
+    z-index:8;
+  }
+  .screen{
+    width:100%;
+    height:100%;
+    display:flex;
+    flex-direction:column;
+    overflow:hidden;
+    background:var(--bg);
+  }
+
+  .content{
+    flex:1;
+    overflow-y:auto;
+    padding:100px 28px 24px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    text-align:center;
+  }
+
+  .pending-badge{
+    width:96px;height:96px;
+    border-radius:50%;
+    background:var(--orange-light);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    margin-bottom:24px;
+    position:relative;
+  }
+  .pending-badge::before{
+    content:"";
+    position:absolute;
+    inset:-8px;
+    border-radius:50%;
+    border:3px dashed rgba(214,106,12,0.3);
+  }
+  .clock-hand{
+    position:absolute;
+    background:var(--orange-dark);
+    border-radius:2px;
+    transform-origin:bottom center;
+  }
+  .clock-face{
+    width:46px;height:46px;
+    border-radius:50%;
+    border:4px solid var(--orange-dark);
+    position:relative;
+  }
+  .clock-face .h1{
+    width:3px;height:14px;
+    bottom:23px; left:50%;
+    margin-left:-1.5px;
+    position:absolute;
+    background:var(--orange-dark);
+    border-radius:2px;
+    transform:rotate(35deg);
+    transform-origin:bottom center;
+  }
+  .clock-face .h2{
+    width:3px;height:10px;
+    bottom:23px; left:50%;
+    margin-left:-1.5px;
+    position:absolute;
+    background:var(--orange-dark);
+    border-radius:2px;
+    transform:rotate(120deg);
+    transform-origin:bottom center;
+  }
+
+  h1{
+    font-family:'Baloo 2',sans-serif;
+    font-size:22px;
+    font-weight:700;
+    color:var(--ink);
+    margin:0 0 10px;
+  }
+  .subtitle{
+    font-size:13px;
+    color:var(--ink-soft);
+    line-height:1.6;
+    margin:0 0 28px;
+    max-width:270px;
+  }
+  .subtitle b{
+    color:var(--ink);
+  }
+
+  /* Timeline de statut */
+  .timeline{
+    width:100%;
+    background:var(--surface);
+    border-radius:20px;
+    border:2px solid var(--line);
+    padding:20px;
+    text-align:left;
+    margin-bottom:22px;
+  }
+  .timeline-item{
+    display:flex;
+    gap:12px;
+    position:relative;
+    padding-bottom:22px;
+  }
+  .timeline-item:last-child{
+    padding-bottom:0;
+  }
+  .timeline-item::before{
+    content:"";
+    position:absolute;
+    left:11px; top:24px; bottom:0;
+    width:2px;
+    background:var(--line);
+  }
+  .timeline-item:last-child::before{
+    display:none;
+  }
+  .timeline-dot{
+    width:24px;height:24px;
+    border-radius:50%;
+    background:var(--green);
+    flex-shrink:0;
+    position:relative;
+    z-index:1;
+  }
+  .timeline-dot.pending{
+    background:var(--orange-light);
+    border:3px solid var(--orange);
+  }
+  .timeline-dot.todo{
+    background:var(--bg);
+    border:2px solid var(--line);
+  }
+  .timeline-dot.done::after{
+    content:"";
+    position:absolute;
+    top:50%; left:50%;
+    width:9px;height:5px;
+    border-left:2px solid #fff;
+    border-bottom:2px solid #fff;
+    transform:translate(-50%,-65%) rotate(-45deg);
+  }
+  .timeline-text .t1{
+    font-size:12.5px;
+    font-weight:700;
+    color:var(--ink);
+  }
+  .timeline-item.todo .timeline-text .t1{
+    color:var(--muted);
+  }
+  .timeline-text .t2{
+    font-size:10.5px;
+    color:var(--muted);
+    margin-top:2px;
+  }
+
+  .eta-note{
+    width:100%;
+    background:var(--blue-light);
+    border-radius:14px;
+    padding:14px;
+    margin-bottom:20px;
+  }
+  .eta-note p{
+    margin:0;
+    font-size:11.5px;
+    color:var(--blue-dark);
+    font-weight:600;
+    line-height:1.5;
+  }
+
+  .footer{
+    padding:16px 24px 26px;
+    border-top:2px solid var(--line);
+    background:var(--surface);
+  }
+  .btn-secondary{
+    text-align:center;
+    padding:14px;
+    border:2px solid var(--line);
+    border-radius:16px;
+    font-size:13px;
+    font-weight:700;
+    color:var(--ink-soft);
+    margin-bottom:8px;
+  }
+  .btn-text{
+    text-align:center;
+    font-size:11.5px;
+    font-weight:700;
+    color:var(--muted);
+  }
+</style>
+</head>
+<body>
+
+  <div class="phone">
+    <div class="notch"></div>
+    <div class="screen">
+      <div class="content">
+
+        <div class="pending-badge">
+          <div class="clock-face">
+            <div class="h1"></div>
+            <div class="h2"></div>
+          </div>
+        </div>
+
+        <h1>Compte en cours de vérification</h1>
+        <p class="subtitle">Merci ! Nous vérifions vos documents. Vous recevrez un <b>SMS</b> dès que votre compte sera validé.</p>
+
+        <div class="timeline">
+          <div class="timeline-item">
+            <div class="timeline-dot done"></div>
+            <div class="timeline-text">
+              <div class="t1">Profil créé</div>
+              <div class="t2">Aujourd'hui, 10:12</div>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-dot done"></div>
+            <div class="timeline-text">
+              <div class="t1">Documents envoyés</div>
+              <div class="t2">Aujourd'hui, 10:16</div>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-dot pending"></div>
+            <div class="timeline-text">
+              <div class="t1">Vérification en cours</div>
+              <div class="t2">Généralement sous 24h</div>
+            </div>
+          </div>
+          <div class="timeline-item todo">
+            <div class="timeline-dot todo"></div>
+            <div class="timeline-text">
+              <div class="t1">Compte activé</div>
+              <div class="t2">Vous pourrez recevoir des réservations</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="eta-note">
+          <p>Vous pouvez fermer l'application : nous vous préviendrons par SMS dès que votre compte sera validé.</p>
+        </div>
+
+      </div>
+
+      <div class="footer">
+        <div class="btn-secondary">Modifier mes documents</div>
+        <div class="btn-text">Contacter le support</div>
+      </div>
+
+    </div>
+  </div>
+
+</body>
+</html>

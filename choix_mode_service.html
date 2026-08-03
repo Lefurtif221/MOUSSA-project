@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<title>Ndoket — Sur place ou à domicile</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#F5FAFC;
+    --surface:#FFFFFF;
+    --ink:#1F2A33;
+    --ink-soft:#54646F;
+    --muted:#8B98A1;
+    --orange:#F2871E;
+    --orange-dark:#D66A0C;
+    --orange-light:#FDE3C5;
+    --blue:#3FC2E8;
+    --blue-dark:#1E9BC2;
+    --blue-light:#D6F3FB;
+    --line:#E5EEF1;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:#EDEFF0;
+    font-family:'Inter',sans-serif;
+    padding:48px 16px;
+    display:flex;
+    justify-content:center;
+  }
+
+  .phone{
+    width:375px;
+    height:812px;
+    background:var(--surface);
+    border-radius:44px;
+    border:12px solid var(--ink);
+    overflow:hidden;
+    position:relative;
+    box-shadow: 0 30px 60px -25px rgba(31,42,51,0.4);
+  }
+  .notch{
+    position:absolute;
+    top:0; left:50%;
+    transform:translateX(-50%);
+    width:150px; height:26px;
+    background:var(--ink);
+    border-radius:0 0 16px 16px;
+    z-index:8;
+  }
+  .screen{
+    width:100%;
+    height:100%;
+    display:flex;
+    flex-direction:column;
+    overflow:hidden;
+  }
+
+  .topbar{
+    padding:52px 20px 8px;
+    display:flex;
+    align-items:center;
+    gap:12px;
+  }
+  .back{
+    width:34px;height:34px;
+    border-radius:11px;
+    background:var(--bg);
+    border:2px solid var(--line);
+    position:relative;
+    flex-shrink:0;
+  }
+  .back::after{
+    content:"";
+    position:absolute;
+    top:50%; left:50%;
+    width:8px;height:8px;
+    border-left:2px solid var(--ink-soft);
+    border-bottom:2px solid var(--ink-soft);
+    transform:translate(-60%,-50%) rotate(45deg);
+  }
+  .steps{
+    display:flex;
+    gap:6px;
+    flex:1;
+  }
+  .step-bar{
+    height:4px;
+    flex:1;
+    border-radius:4px;
+    background:var(--line);
+  }
+  .step-bar.done{
+    background:var(--orange);
+  }
+
+  .body{
+    flex:1;
+    overflow-y:auto;
+    padding:22px 24px 24px;
+  }
+
+  .eyebrow{
+    font-size:11.5px;
+    font-weight:800;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    color:var(--orange-dark);
+    margin-bottom:8px;
+  }
+  h1{
+    font-family:'Baloo 2',sans-serif;
+    font-size:22px;
+    font-weight:700;
+    color:var(--ink);
+    margin:0 0 8px;
+  }
+  .subtitle{
+    font-size:13px;
+    color:var(--ink-soft);
+    line-height:1.55;
+    margin:0 0 24px;
+  }
+
+  .summary-chip{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    background:var(--bg);
+    border-radius:14px;
+    padding:10px 14px;
+    margin-bottom:26px;
+  }
+  .summary-chip .avatar{
+    width:34px;height:34px;
+    border-radius:10px;
+    background:linear-gradient(135deg, var(--blue-light), var(--orange-light) 140%);
+    flex-shrink:0;
+  }
+  .summary-chip .txt .name{
+    font-size:12.5px;
+    font-weight:700;
+    color:var(--ink);
+  }
+  .summary-chip .txt .service{
+    font-size:11px;
+    color:var(--muted);
+  }
+
+  .option-card{
+    border:2px solid var(--line);
+    border-radius:20px;
+    padding:18px;
+    margin-bottom:16px;
+    display:flex;
+    gap:14px;
+    align-items:flex-start;
+  }
+  .option-card.selected{
+    border-color:var(--blue);
+    background:var(--blue-light);
+  }
+  .option-icon{
+    width:48px;height:48px;
+    border-radius:14px;
+    background:var(--surface);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    flex-shrink:0;
+  }
+  .option-icon .shape{
+    width:20px;height:20px;
+    border-radius:50%;
+    background:var(--blue-dark);
+  }
+  .option-card:last-of-type .option-icon .shape{
+    background:var(--orange-dark);
+    border-radius:5px;
+  }
+  .option-text{
+    flex:1;
+  }
+  .option-text h3{
+    font-family:'Baloo 2',sans-serif;
+    font-size:15.5px;
+    font-weight:700;
+    color:var(--ink);
+    margin:0 0 4px;
+  }
+  .option-text p{
+    font-size:11.5px;
+    color:var(--ink-soft);
+    line-height:1.5;
+    margin:0 0 6px;
+  }
+  .option-extra{
+    font-size:10.5px;
+    font-weight:700;
+    color:var(--blue-dark);
+  }
+  .option-card:last-of-type .option-extra{
+    color:var(--orange-dark);
+  }
+  .radio{
+    width:20px;height:20px;
+    border-radius:50%;
+    border:2px solid var(--line);
+    flex-shrink:0;
+    background:var(--surface);
+  }
+  .radio.checked{
+    border-color:var(--blue-dark);
+    background:var(--blue-dark);
+    position:relative;
+  }
+  .radio.checked::after{
+    content:"";
+    position:absolute;
+    top:50%; left:50%;
+    width:7px;height:4px;
+    border-left:2px solid #fff;
+    border-bottom:2px solid #fff;
+    transform:translate(-50%,-60%) rotate(-45deg);
+  }
+
+  .address-field{
+    margin-top:4px;
+    margin-bottom:8px;
+  }
+  .address-field .field-label{
+    font-size:11.5px;
+    font-weight:700;
+    color:var(--ink-soft);
+    margin-bottom:7px;
+  }
+  .address-field .field-input{
+    border:2px solid var(--line);
+    border-radius:14px;
+    padding:13px 15px;
+    background:var(--surface);
+    font-size:13px;
+    color:var(--muted);
+  }
+
+  .footer{
+    padding:16px 24px 26px;
+    border-top:2px solid var(--line);
+  }
+  .btn-primary{
+    background:var(--orange);
+    color:#FFFFFF;
+    text-align:center;
+    padding:16px;
+    border-radius:16px;
+    font-weight:700;
+    font-size:14px;
+  }
+</style>
+</head>
+<body>
+
+  <div class="phone">
+    <div class="notch"></div>
+    <div class="screen">
+
+      <div class="topbar">
+        <div class="back"></div>
+        <div class="steps">
+          <div class="step-bar done"></div>
+          <div class="step-bar done"></div>
+          <div class="step-bar"></div>
+          <div class="step-bar"></div>
+        </div>
+      </div>
+
+      <div class="body">
+        <div class="eyebrow">Étape 3 sur 4</div>
+        <h1>Où souhaitez-vous être servie ?</h1>
+        <p class="subtitle">Fatou Tresses propose ses services sur place et à domicile.</p>
+
+        <div class="summary-chip">
+          <div class="avatar"></div>
+          <div class="txt">
+            <div class="name">Fatou Tresses</div>
+            <div class="service">Tresses box braids · 15 000 FCFA</div>
+          </div>
+        </div>
+
+        <div class="option-card selected">
+          <div class="option-icon"><div class="shape"></div></div>
+          <div class="option-text">
+            <h3>Sur place</h3>
+            <p>Vous vous rendez chez la prestataire, à Sacré-Cœur.</p>
+            <div class="option-extra">Aucun frais supplémentaire</div>
+          </div>
+          <div class="radio checked"></div>
+        </div>
+
+        <div class="option-card">
+          <div class="option-icon"><div class="shape"></div></div>
+          <div class="option-text">
+            <h3>À domicile</h3>
+            <p>La prestataire se déplace chez vous, dans un rayon de 5 km.</p>
+            <div class="option-extra">+ 1 500 FCFA de déplacement</div>
+          </div>
+          <div class="radio"></div>
+        </div>
+
+        <div class="address-field">
+          <div class="field-label">Votre adresse (si à domicile)</div>
+          <div class="field-input">Quartier, rue, point de repère...</div>
+        </div>
+      </div>
+
+      <div class="footer">
+        <div class="btn-primary">Continuer</div>
+      </div>
+
+    </div>
+  </div>
+
+</body>
+</html>

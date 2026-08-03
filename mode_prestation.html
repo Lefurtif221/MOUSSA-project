@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<title>Ndoket — Mode de prestation</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#F5FAFC;
+    --surface:#FFFFFF;
+    --ink:#1F2A33;
+    --ink-soft:#54646F;
+    --muted:#8B98A1;
+    --orange:#F2871E;
+    --orange-dark:#D66A0C;
+    --orange-light:#FDE3C5;
+    --blue:#3FC2E8;
+    --blue-dark:#1E9BC2;
+    --blue-light:#D6F3FB;
+    --line:#E5EEF1;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:#EDEFF0;
+    font-family:'Inter',sans-serif;
+    padding:48px 16px;
+    display:flex;
+    justify-content:center;
+  }
+
+  .phone{
+    width:375px;
+    height:812px;
+    background:var(--surface);
+    border-radius:44px;
+    border:12px solid var(--ink);
+    overflow:hidden;
+    position:relative;
+    box-shadow: 0 30px 60px -25px rgba(31,42,51,0.4);
+  }
+  .notch{
+    position:absolute;
+    top:0; left:50%;
+    transform:translateX(-50%);
+    width:150px; height:26px;
+    background:var(--ink);
+    border-radius:0 0 16px 16px;
+    z-index:8;
+  }
+  .screen{
+    width:100%;
+    height:100%;
+    display:flex;
+    flex-direction:column;
+    overflow:hidden;
+  }
+
+  .topbar{
+    padding:52px 20px 8px;
+    display:flex;
+    align-items:center;
+    gap:12px;
+  }
+  .back{
+    width:34px;height:34px;
+    border-radius:11px;
+    background:var(--bg);
+    border:2px solid var(--line);
+    position:relative;
+    flex-shrink:0;
+  }
+  .back::after{
+    content:"";
+    position:absolute;
+    top:50%; left:50%;
+    width:8px;height:8px;
+    border-left:2px solid var(--ink-soft);
+    border-bottom:2px solid var(--ink-soft);
+    transform:translate(-60%,-50%) rotate(45deg);
+  }
+  .topbar-title{
+    font-family:'Baloo 2',sans-serif;
+    font-size:16px;
+    font-weight:700;
+    color:var(--ink);
+  }
+
+  .body{
+    flex:1;
+    overflow-y:auto;
+    padding:18px 24px 24px;
+  }
+
+  .intro{
+    font-size:12.5px;
+    color:var(--ink-soft);
+    line-height:1.55;
+    margin:0 0 22px;
+  }
+
+  /* Carte mode : header + switch + contenu extensible */
+  .mode-card{
+    border:2px solid var(--line);
+    border-radius:20px;
+    margin-bottom:16px;
+    overflow:hidden;
+  }
+  .mode-card.on{
+    border-color:var(--blue);
+  }
+  .mode-card.on.home{
+    border-color:var(--orange);
+  }
+  .mode-header{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    padding:16px;
+    background:var(--bg);
+  }
+  .mode-card.on .mode-header{
+    background:var(--blue-light);
+  }
+  .mode-card.on.home .mode-header{
+    background:var(--orange-light);
+  }
+  .mode-icon{
+    width:42px;height:42px;
+    border-radius:13px;
+    background:var(--surface);
+    flex-shrink:0;
+    position:relative;
+  }
+  .mode-icon .shape{
+    position:absolute;
+    top:50%; left:50%;
+    width:18px;height:18px;
+    border-radius:50%;
+    background:var(--blue-dark);
+    transform:translate(-50%,-50%);
+  }
+  .mode-card.home .mode-icon .shape{
+    background:var(--orange-dark);
+    border-radius:5px;
+  }
+  .mode-title-block{
+    flex:1;
+  }
+  .mode-title{
+    font-family:'Baloo 2',sans-serif;
+    font-size:14.5px;
+    font-weight:700;
+    color:var(--ink);
+  }
+  .mode-sub{
+    font-size:10.5px;
+    color:var(--ink-soft);
+    margin-top:2px;
+  }
+  .switch{
+    width:38px;height:22px;
+    border-radius:20px;
+    background:var(--blue-dark);
+    position:relative;
+    flex-shrink:0;
+  }
+  .mode-card.home .switch{
+    background:var(--orange);
+  }
+  .switch::after{
+    content:"";
+    position:absolute;
+    top:3px; right:3px;
+    width:16px;height:16px;
+    border-radius:50%;
+    background:#fff;
+  }
+  .switch.off{
+    background:var(--line);
+  }
+  .switch.off::after{
+    right:auto; left:3px;
+  }
+
+  .mode-content{
+    padding:16px;
+  }
+  .field{
+    margin-bottom:14px;
+  }
+  .field:last-child{
+    margin-bottom:0;
+  }
+  .field-label{
+    font-size:11.5px;
+    font-weight:700;
+    color:var(--ink-soft);
+    margin-bottom:7px;
+  }
+  .field-input{
+    border:2px solid var(--line);
+    border-radius:12px;
+    padding:12px 14px;
+    background:var(--bg);
+    font-size:12.5px;
+    color:var(--ink);
+    font-weight:600;
+  }
+
+  .zone-slider{
+    height:6px;
+    border-radius:6px;
+    background:var(--line);
+    position:relative;
+    margin-bottom:8px;
+  }
+  .zone-slider .fill{
+    position:absolute;
+    left:0; top:0; bottom:0;
+    width:55%;
+    background:var(--orange);
+    border-radius:6px;
+  }
+  .zone-slider .handle{
+    position:absolute;
+    left:55%; top:50%;
+    transform:translate(-50%,-50%);
+    width:16px;height:16px;
+    border-radius:50%;
+    background:#fff;
+    border:3px solid var(--orange);
+  }
+  .zone-value{
+    text-align:right;
+    font-size:11px;
+    font-weight:700;
+    color:var(--orange-dark);
+  }
+
+  .disabled-note{
+    padding:14px 16px;
+    font-size:11.5px;
+    color:var(--muted);
+    line-height:1.5;
+  }
+
+  .footer{
+    padding:16px 24px 26px;
+    border-top:2px solid var(--line);
+  }
+  .btn-primary{
+    background:var(--orange);
+    color:#FFFFFF;
+    text-align:center;
+    padding:16px;
+    border-radius:16px;
+    font-weight:700;
+    font-size:14px;
+  }
+</style>
+</head>
+<body>
+
+  <div class="phone">
+    <div class="notch"></div>
+    <div class="screen">
+
+      <div class="topbar">
+        <div class="back"></div>
+        <div class="topbar-title">Mode de prestation</div>
+      </div>
+
+      <div class="body">
+        <p class="intro">Choisissez comment vous recevez vos clientes. Vous pouvez activer les deux modes en même temps.</p>
+
+        <div class="mode-card on">
+          <div class="mode-header">
+            <div class="mode-icon"><div class="shape"></div></div>
+            <div class="mode-title-block">
+              <div class="mode-title">Sur place</div>
+              <div class="mode-sub">Les clientes viennent chez vous</div>
+            </div>
+            <div class="switch"></div>
+          </div>
+          <div class="mode-content">
+            <div class="field">
+              <div class="field-label">Adresse</div>
+              <div class="field-input">Rue Sacré-Cœur 3, Villa 42</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="mode-card on home">
+          <div class="mode-header">
+            <div class="mode-icon"><div class="shape"></div></div>
+            <div class="mode-title-block">
+              <div class="mode-title">À domicile</div>
+              <div class="mode-sub">Vous vous déplacez chez la cliente</div>
+            </div>
+            <div class="switch"></div>
+          </div>
+          <div class="mode-content">
+            <div class="field">
+              <div class="field-label">Rayon de déplacement</div>
+              <div class="zone-slider">
+                <div class="fill"></div>
+                <div class="handle"></div>
+              </div>
+              <div class="zone-value">5 km autour de Sacré-Cœur</div>
+            </div>
+            <div class="field">
+              <div class="field-label">Frais de déplacement</div>
+              <div class="field-input">+ 1 500 FCFA</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer">
+        <div class="btn-primary">Enregistrer</div>
+      </div>
+
+    </div>
+  </div>
+
+</body>
+</html>

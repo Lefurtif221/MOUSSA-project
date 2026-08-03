@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<title>Ndoket — Écran d'accueil / premier choix</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#F5FAFC;
+    --surface:#FFFFFF;
+    --ink:#1F2A33;
+    --ink-soft:#54646F;
+    --muted:#8B98A1;
+    --orange:#F2871E;
+    --orange-dark:#D66A0C;
+    --orange-light:#FDE3C5;
+    --blue:#3FC2E8;
+    --blue-dark:#1E9BC2;
+    --blue-light:#D6F3FB;
+    --line:#E5EEF1;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:#EDEFF0;
+    font-family:'Inter',sans-serif;
+    padding:48px 16px;
+    display:flex;
+    justify-content:center;
+  }
+
+  .phone{
+    width:375px;
+    height:812px;
+    background:var(--surface);
+    border-radius:44px;
+    border:12px solid var(--ink);
+    overflow:hidden;
+    position:relative;
+    box-shadow: 0 30px 60px -25px rgba(31,42,51,0.4);
+  }
+  .notch{
+    position:absolute;
+    top:0; left:50%;
+    transform:translateX(-50%);
+    width:150px; height:26px;
+    background:var(--ink);
+    border-radius:0 0 16px 16px;
+    z-index:8;
+  }
+  .screen{
+    width:100%;
+    height:100%;
+    display:flex;
+    flex-direction:column;
+    overflow:hidden;
+    background:linear-gradient(180deg, var(--bg) 0%, #FFFFFF 55%);
+  }
+
+  .hero{
+    flex:1;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    padding:70px 32px 0;
+    position:relative;
+  }
+  .hero::before{
+    content:"";
+    position:absolute;
+    top:60px; left:-50px;
+    width:140px;height:140px;
+    border-radius:50%;
+    background:var(--orange-light);
+    opacity:0.6;
+    z-index:0;
+  }
+  .hero::after{
+    content:"";
+    position:absolute;
+    top:180px; right:-60px;
+    width:170px;height:170px;
+    border-radius:50%;
+    background:var(--blue-light);
+    opacity:0.7;
+    z-index:0;
+  }
+
+  .logo-circle{
+    width:132px;height:132px;
+    border-radius:50%;
+    background:#fff;
+    box-shadow:0 16px 32px -14px rgba(31,42,51,0.28);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    overflow:hidden;
+    margin-bottom:18px;
+    position:relative;
+    z-index:1;
+  }
+  .logo-circle img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+  }
+
+  .brand-name{
+    font-family:'Baloo 2',sans-serif;
+    font-weight:800;
+    font-size:26px;
+    color:var(--ink);
+    letter-spacing:0.01em;
+    position:relative;
+    z-index:1;
+  }
+  .brand-tagline{
+    font-size:12.5px;
+    font-weight:600;
+    color:var(--ink-soft);
+    margin-top:6px;
+    text-align:center;
+    max-width:230px;
+    line-height:1.5;
+    position:relative;
+    z-index:1;
+  }
+
+  .buoy-strip{
+    height:8px;
+    background-image: repeating-linear-gradient(
+      90deg,
+      var(--orange) 0px, var(--orange) 14px,
+      #FFFFFF 14px, #FFFFFF 20px,
+      var(--blue) 20px, var(--blue) 26px,
+      #FFFFFF 26px, #FFFFFF 32px
+    );
+  }
+
+  .choice-zone{
+    padding:26px 24px 34px;
+  }
+
+  .choice-eyebrow{
+    font-size:11px;
+    font-weight:800;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    color:var(--muted);
+    text-align:center;
+    margin-bottom:18px;
+  }
+
+  .choice-btn{
+    display:flex;
+    align-items:center;
+    gap:14px;
+    border-radius:18px;
+    padding:16px 18px;
+    margin-bottom:14px;
+  }
+  .choice-btn.client{
+    background:var(--orange);
+  }
+  .choice-btn.provider{
+    background:var(--surface);
+    border:2px solid var(--blue);
+  }
+  .choice-icon{
+    width:42px;height:42px;
+    border-radius:13px;
+    background:rgba(255,255,255,0.25);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    flex-shrink:0;
+  }
+  .choice-btn.provider .choice-icon{
+    background:var(--blue-light);
+  }
+  .choice-icon .shape{
+    width:18px;height:18px;
+    border-radius:50%;
+    background:#fff;
+  }
+  .choice-btn.provider .choice-icon .shape{
+    background:var(--blue-dark);
+    border-radius:5px;
+  }
+  .choice-text{
+    flex:1;
+  }
+  .choice-text h3{
+    font-family:'Baloo 2',sans-serif;
+    font-size:15px;
+    font-weight:700;
+    color:#fff;
+    margin:0 0 2px;
+  }
+  .choice-btn.provider .choice-text h3{
+    color:var(--ink);
+  }
+  .choice-text p{
+    font-size:11px;
+    color:rgba(255,255,255,0.9);
+    margin:0;
+    line-height:1.4;
+  }
+  .choice-btn.provider .choice-text p{
+    color:var(--ink-soft);
+  }
+  .choice-arrow{
+    width:24px;height:24px;
+    border-radius:50%;
+    background:rgba(255,255,255,0.25);
+    position:relative;
+    flex-shrink:0;
+  }
+  .choice-btn.provider .choice-arrow{
+    background:var(--blue-light);
+  }
+  .choice-arrow::after{
+    content:"";
+    position:absolute;
+    top:50%; left:44%;
+    width:6px;height:6px;
+    border-top:2px solid #fff;
+    border-right:2px solid #fff;
+    transform:translate(-50%,-50%) rotate(45deg);
+  }
+  .choice-btn.provider .choice-arrow::after{
+    border-color:var(--blue-dark);
+  }
+
+  .login-hint{
+    text-align:center;
+    font-size:11px;
+    color:var(--muted);
+    margin-top:6px;
+  }
+  .login-hint b{
+    color:var(--blue-dark);
+    font-weight:700;
+  }
+</style>
+</head>
+<body>
+
+  <div class="phone">
+    <div class="notch"></div>
+    <div class="screen">
+
+      <div class="hero">
+        <div class="logo-circle"><img src="logo_ndoket_icon.png" alt="Ndoket" /></div>
+        <div class="brand-name">NDOKET</div>
+        <div class="brand-tagline">Trouvez ou proposez un service près de vous, à Dakar</div>
+      </div>
+
+      <div class="buoy-strip"></div>
+
+      <div class="choice-zone">
+        <div class="choice-eyebrow">Pour commencer, vous êtes...</div>
+
+        <div class="choice-btn client">
+          <div class="choice-icon"><div class="shape"></div></div>
+          <div class="choice-text">
+            <h3>Cliente</h3>
+            <p>Je cherche et réserve un service</p>
+          </div>
+          <div class="choice-arrow"></div>
+        </div>
+
+        <div class="choice-btn provider">
+          <div class="choice-icon"><div class="shape"></div></div>
+          <div class="choice-text">
+            <h3>Prestataire</h3>
+            <p>Je propose mes services, sur place ou à domicile</p>
+          </div>
+          <div class="choice-arrow"></div>
+        </div>
+
+        <div class="login-hint">Déjà inscrite ? <b>Se connecter</b></div>
+      </div>
+
+    </div>
+  </div>
+
+</body>
+</html>

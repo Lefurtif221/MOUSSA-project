@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<title>Ndoket — Vérification prestataire</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#F5FAFC;
+    --surface:#FFFFFF;
+    --ink:#1F2A33;
+    --ink-soft:#54646F;
+    --muted:#8B98A1;
+    --orange:#F2871E;
+    --orange-dark:#D66A0C;
+    --orange-light:#FDE3C5;
+    --blue:#3FC2E8;
+    --blue-dark:#1E9BC2;
+    --blue-light:#D6F3FB;
+    --green:#3AA65A;
+    --green-light:#DCF3E2;
+    --line:#E5EEF1;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:#EDEFF0;
+    font-family:'Inter',sans-serif;
+    padding:48px 16px;
+    display:flex;
+    justify-content:center;
+  }
+
+  .phone{
+    width:375px;
+    height:812px;
+    background:var(--surface);
+    border-radius:44px;
+    border:12px solid var(--ink);
+    overflow:hidden;
+    position:relative;
+    box-shadow: 0 30px 60px -25px rgba(31,42,51,0.4);
+  }
+  .notch{
+    position:absolute;
+    top:0; left:50%;
+    transform:translateX(-50%);
+    width:150px; height:26px;
+    background:var(--ink);
+    border-radius:0 0 16px 16px;
+    z-index:8;
+  }
+  .screen{
+    width:100%;
+    height:100%;
+    display:flex;
+    flex-direction:column;
+    overflow:hidden;
+  }
+
+  .topbar{
+    padding:52px 20px 8px;
+    display:flex;
+    align-items:center;
+    gap:12px;
+  }
+  .back{
+    width:34px;height:34px;
+    border-radius:11px;
+    background:var(--bg);
+    border:2px solid var(--line);
+    position:relative;
+    flex-shrink:0;
+  }
+  .back::after{
+    content:"";
+    position:absolute;
+    top:50%; left:50%;
+    width:8px;height:8px;
+    border-left:2px solid var(--ink-soft);
+    border-bottom:2px solid var(--ink-soft);
+    transform:translate(-60%,-50%) rotate(45deg);
+  }
+  .steps{
+    display:flex;
+    gap:6px;
+    flex:1;
+  }
+  .step-bar{
+    height:4px;
+    flex:1;
+    border-radius:4px;
+    background:var(--line);
+  }
+  .step-bar.done{
+    background:var(--blue);
+  }
+
+  .body{
+    flex:1;
+    overflow-y:auto;
+    padding:20px 24px 24px;
+  }
+
+  .eyebrow{
+    font-size:11.5px;
+    font-weight:800;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    color:var(--blue-dark);
+    margin-bottom:8px;
+  }
+  h1{
+    font-family:'Baloo 2',sans-serif;
+    font-size:22px;
+    font-weight:700;
+    color:var(--ink);
+    margin:0 0 8px;
+  }
+  .subtitle{
+    font-size:13px;
+    color:var(--ink-soft);
+    line-height:1.55;
+    margin:0 0 22px;
+  }
+
+  .trust-note{
+    display:flex;
+    gap:10px;
+    align-items:flex-start;
+    background:var(--blue-light);
+    border-radius:14px;
+    padding:14px;
+    margin-bottom:24px;
+  }
+  .trust-note .dot{
+    width:8px;height:8px;
+    border-radius:50%;
+    background:var(--blue-dark);
+    margin-top:5px;
+    flex-shrink:0;
+  }
+  .trust-note p{
+    margin:0;
+    font-size:11.5px;
+    color:var(--blue-dark);
+    line-height:1.5;
+    font-weight:600;
+  }
+
+  .upload-card{
+    border:2px dashed var(--line);
+    border-radius:18px;
+    padding:18px;
+    margin-bottom:14px;
+    display:flex;
+    align-items:center;
+    gap:14px;
+  }
+  .upload-card.done{
+    border-style:solid;
+    border-color:var(--green);
+    background:var(--green-light);
+  }
+  .upload-icon{
+    width:46px;height:46px;
+    border-radius:14px;
+    background:var(--bg);
+    flex-shrink:0;
+    position:relative;
+  }
+  .upload-card.done .upload-icon{
+    background:var(--green);
+  }
+  .upload-icon .plus{
+    position:absolute;
+    top:50%; left:50%;
+    width:16px;height:16px;
+  }
+  .upload-icon .plus::before, .upload-icon .plus::after{
+    content:"";
+    position:absolute;
+    background:var(--muted);
+  }
+  .upload-icon .plus::before{ width:100%; height:2.5px; top:50%; left:0; transform:translateY(-50%); border-radius:2px; }
+  .upload-icon .plus::after{ height:100%; width:2.5px; left:50%; top:0; transform:translateX(-50%); border-radius:2px; }
+  .upload-icon .check{
+    position:absolute;
+    top:50%; left:50%;
+    width:14px; height:8px;
+    border-left:3px solid #fff;
+    border-bottom:3px solid #fff;
+    transform:translate(-50%,-65%) rotate(-45deg);
+  }
+  .upload-text{
+    flex:1;
+  }
+  .upload-text .t1{
+    font-size:13px;
+    font-weight:700;
+    color:var(--ink);
+  }
+  .upload-card.done .upload-text .t1{
+    color:#2A7D45;
+  }
+  .upload-text .t2{
+    font-size:10.5px;
+    color:var(--muted);
+    margin-top:2px;
+    line-height:1.4;
+  }
+  .upload-card.done .upload-text .t2{
+    color:#3AA65A;
+  }
+  .upload-status{
+    font-size:9.5px;
+    font-weight:800;
+    padding:4px 9px;
+    border-radius:8px;
+    background:var(--surface);
+    color:var(--muted);
+    white-space:nowrap;
+  }
+  .upload-card.done .upload-status{
+    background:var(--green);
+    color:#fff;
+  }
+
+  .section-label{
+    font-size:11px;
+    font-weight:800;
+    color:var(--muted);
+    text-transform:uppercase;
+    letter-spacing:0.05em;
+    margin:22px 0 12px;
+  }
+
+  .privacy-note{
+    display:flex;
+    align-items:flex-start;
+    gap:10px;
+    margin-top:8px;
+  }
+  .lock-icon{
+    width:16px;height:16px;
+    border:2px solid var(--muted);
+    border-radius:4px;
+    position:relative;
+    margin-top:2px;
+    flex-shrink:0;
+  }
+  .lock-icon::before{
+    content:"";
+    position:absolute;
+    top:-7px; left:50%;
+    width:8px; height:8px;
+    border:2px solid var(--muted);
+    border-bottom:none;
+    border-radius:6px 6px 0 0;
+    transform:translateX(-50%);
+  }
+  .privacy-note p{
+    margin:0;
+    font-size:10.5px;
+    color:var(--muted);
+    line-height:1.5;
+  }
+
+  .footer{
+    padding:16px 24px 26px;
+    border-top:2px solid var(--line);
+  }
+  .btn-primary{
+    background:var(--orange);
+    color:#FFFFFF;
+    text-align:center;
+    padding:16px;
+    border-radius:16px;
+    font-weight:700;
+    font-size:14px;
+  }
+  .btn-primary.disabled{
+    background:var(--line);
+    color:var(--muted);
+  }
+</style>
+</head>
+<body>
+
+  <div class="phone">
+    <div class="notch"></div>
+    <div class="screen">
+
+      <div class="topbar">
+        <div class="back"></div>
+        <div class="steps">
+          <div class="step-bar done"></div>
+          <div class="step-bar done"></div>
+          <div class="step-bar done"></div>
+        </div>
+      </div>
+
+      <div class="body">
+        <div class="eyebrow">Étape 3 sur 3 — Sécurité</div>
+        <h1>Vérifiez votre identité</h1>
+        <p class="subtitle">Pour la sécurité des clientes, tous les prestataires Ndoket sont vérifiés avant de pouvoir recevoir des réservations.</p>
+
+        <div class="trust-note">
+          <div class="dot"></div>
+          <p>Vos documents ne sont visibles que par l'équipe Ndoket et ne sont jamais partagés avec les clientes.</p>
+        </div>
+
+        <div class="section-label">Pièce d'identité</div>
+
+        <div class="upload-card done">
+          <div class="upload-icon"><div class="check"></div></div>
+          <div class="upload-text">
+            <div class="t1">Carte Nationale d'Identité</div>
+            <div class="t2">CNI_recto.jpg · 2,1 Mo</div>
+          </div>
+          <div class="upload-status">Ajouté</div>
+        </div>
+
+        <div class="upload-card">
+          <div class="upload-icon"><div class="plus"></div></div>
+          <div class="upload-text">
+            <div class="t1">Verso de la CNI</div>
+            <div class="t2">Photo nette, les 4 coins visibles</div>
+          </div>
+          <div class="upload-status">Requis</div>
+        </div>
+
+        <div class="section-label">Selfie de vérification</div>
+
+        <div class="upload-card">
+          <div class="upload-icon"><div class="plus"></div></div>
+          <div class="upload-text">
+            <div class="t1">Photo de vous</div>
+            <div class="t2">Visage dégagé, bonne luminosité</div>
+          </div>
+          <div class="upload-status">Requis</div>
+        </div>
+
+        <div class="privacy-note">
+          <div class="lock-icon"></div>
+          <p>Vos informations sont chiffrées et utilisées uniquement pour vérifier votre identité, conformément à notre politique de confidentialité.</p>
+        </div>
+      </div>
+
+      <div class="footer">
+        <div class="btn-primary disabled">Envoyer pour vérification</div>
+      </div>
+
+    </div>
+  </div>
+
+</body>
+</html>
