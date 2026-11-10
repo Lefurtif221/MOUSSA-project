@@ -1,0 +1,453 @@
+/* =============================================
+   NDOKET — Animations & Micro-interactions
+   ============================================= */
+
+/* Respect reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* --- PAGE ENTER --- */
+.screen {
+  animation: pageEnter 0.3s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+@keyframes pageEnter {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* --- PAGE EXIT (via nav.js) --- */
+.screen.page-exit {
+  animation: pageExit 0.15s ease-in both;
+}
+@keyframes pageExit {
+  from { opacity: 1; }
+  to   { opacity: 0; }
+}
+
+/* =============================================
+   BUTTONS — Press feedback + improved sizing
+   ============================================= */
+
+/* Primary buttons */
+.btn-primary,
+.btn-decline,
+.choice-btn.client {
+  min-height: 52px;
+  padding: 16px 24px;
+  border: none;
+  border-radius: 16px;
+  font-family: 'Inter', sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform 0.18s cubic-bezier(0.22, 1, 0.36, 1),
+              box-shadow 0.18s cubic-bezier(0.22, 1, 0.36, 1),
+              background-color 0.18s ease;
+  position: relative;
+  overflow: hidden;
+}
+.btn-primary:active:not(.disabled):not([disabled]),
+.btn-decline:active:not(.disabled):not([disabled]),
+.choice-btn.client:active {
+  transform: scale(0.97);
+  box-shadow: 0 2px 12px rgba(242, 135, 30, 0.35);
+}
+.btn-primary.disabled,
+.btn-primary[disabled] {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+/* Secondary buttons */
+.btn-secondary,
+.choice-btn.provider {
+  min-height: 52px;
+  padding: 16px 24px;
+  border: 2px solid var(--line);
+  border-radius: 16px;
+  background: var(--surface);
+  font-family: 'Inter', sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform 0.18s cubic-bezier(0.22, 1, 0.36, 1),
+              border-color 0.18s ease,
+              box-shadow 0.18s ease;
+}
+.btn-secondary:active,
+.choice-btn.provider:active {
+  transform: scale(0.97);
+  border-color: var(--blue);
+  box-shadow: 0 2px 12px rgba(63, 194, 232, 0.25);
+}
+
+/* Choice buttons (index) */
+.choice-btn {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  border-radius: 18px;
+  padding: 16px 18px;
+  margin-bottom: 14px;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform 0.18s cubic-bezier(0.22, 1, 0.36, 1),
+              box-shadow 0.18s ease;
+}
+.choice-btn:active {
+  transform: scale(0.97);
+}
+
+/* =============================================
+   CARDS — Press feedback
+   ============================================= */
+
+.provider-card,
+.booking-card,
+.booking-row {
+  -webkit-tap-highlight-color: transparent;
+  transition: transform 0.18s cubic-bezier(0.22, 1, 0.36, 1),
+              box-shadow 0.18s ease;
+}
+.provider-card:active,
+.booking-card:active,
+.booking-row:active {
+  transform: scale(0.98);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+/* =============================================
+   CHIPS — Selection bounce
+   ============================================= */
+
+.gender-pill,
+.mode-chip,
+.cat-item,
+.cut-chip,
+.filter-chip,
+.slot,
+.chip,
+.paiement-method {
+  -webkit-tap-highlight-color: transparent;
+  transition: transform 0.18s cubic-bezier(0.22, 1, 0.36, 1),
+              background-color 0.2s ease,
+              border-color 0.2s ease,
+              color 0.2s ease;
+}
+.gender-pill:active,
+.mode-chip:active,
+.cat-item:active,
+.cut-chip:active,
+.filter-chip:active,
+.slot:active,
+.chip:active,
+.paiement-method:active {
+  transform: scale(0.95);
+}
+
+/* Selection bounce keyframe */
+@keyframes chipBounce {
+  0%   { transform: scale(1); }
+  40%  { transform: scale(0.93); }
+  70%  { transform: scale(1.03); }
+  100% { transform: scale(1); }
+}
+.gender-pill.selected,
+.mode-chip.active,
+.cat-item.active,
+.cut-chip.active,
+.filter-chip.active,
+.chip.selected {
+  animation: chipBounce 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* =============================================
+   RADIO — Check animation
+   ============================================= */
+
+.radio.checked {
+  animation: radioPop 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+}
+@keyframes radioPop {
+  0%   { transform: scale(0.8); }
+  50%  { transform: scale(1.15); }
+  100% { transform: scale(1); }
+}
+
+/* =============================================
+   TOGGLE SWITCHES — Smooth flip
+   ============================================= */
+
+.switch,
+.beads-switch,
+.status-switch {
+  transition: background-color 0.25s ease, box-shadow 0.25s ease;
+}
+.switch::after,
+.beads-switch::after,
+.status-switch::after {
+  transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1),
+              background-color 0.25s ease;
+}
+
+/* =============================================
+   SEARCH BAR — Focus glow
+   ============================================= */
+
+.search-bar {
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+.search-bar:focus-within {
+  border-color: var(--orange);
+  box-shadow: 0 0 0 3px rgba(242, 135, 30, 0.12);
+}
+
+/* =============================================
+   FIELDS — Focus glow
+   ============================================= */
+
+.field-input,
+textarea.field-input {
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+.field-input:focus,
+textarea.field-input:focus {
+  border-color: var(--orange);
+  box-shadow: 0 0 0 3px rgba(242, 135, 30, 0.1);
+}
+
+/* =============================================
+   STAGGERED LIST REVEAL
+   ============================================= */
+
+.stagger-reveal > * {
+  animation: staggerIn 0.35s cubic-bezier(0.22, 1, 0.36, 1) backwards;
+}
+.stagger-reveal > *:nth-child(1) { animation-delay: 0ms; }
+.stagger-reveal > *:nth-child(2) { animation-delay: 40ms; }
+.stagger-reveal > *:nth-child(3) { animation-delay: 80ms; }
+.stagger-reveal > *:nth-child(4) { animation-delay: 120ms; }
+.stagger-reveal > *:nth-child(5) { animation-delay: 160ms; }
+.stagger-reveal > *:nth-child(6) { animation-delay: 200ms; }
+.stagger-reveal > *:nth-child(7) { animation-delay: 240ms; }
+.stagger-reveal > *:nth-child(8) { animation-delay: 280ms; }
+
+@keyframes staggerIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* =============================================
+   SECTION HEADERS — Fade in
+   ============================================= */
+
+.section-head {
+  animation: fadeSlideIn 0.4s cubic-bezier(0.22, 1, 0.36, 1) backwards;
+}
+@keyframes fadeSlideIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* =============================================
+   BOTTOM NAV — Active indicator
+   ============================================= */
+
+.tab {
+  position: relative;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform 0.15s ease;
+}
+.tab:active {
+  transform: scale(0.9);
+}
+.tab.active::after {
+  content: "";
+  position: absolute;
+  top: -2px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 20px;
+  height: 3px;
+  border-radius: 2px;
+  background: var(--orange);
+  animation: tabSlide 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+}
+@keyframes tabSlide {
+  from { width: 0; opacity: 0; }
+  to   { width: 20px; opacity: 1; }
+}
+
+/* =============================================
+   DATE PICKER — Selected pulse
+   ============================================= */
+
+.date-item {
+  -webkit-tap-highlight-color: transparent;
+  transition: transform 0.15s ease, background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+.date-item:active {
+  transform: scale(0.92);
+}
+
+/* =============================================
+   GENDER CARDS — Selection
+   ============================================= */
+
+.gender-card {
+  -webkit-tap-highlight-color: transparent;
+  transition: transform 0.18s cubic-bezier(0.22, 1, 0.36, 1),
+              border-color 0.2s ease,
+              box-shadow 0.2s ease;
+}
+.gender-card:active {
+  transform: scale(0.97);
+}
+.gender-card.selected {
+  border-color: var(--orange);
+  box-shadow: 0 0 0 3px rgba(242, 135, 30, 0.12);
+}
+
+/* =============================================
+   UPLOAD CARDS — Press feedback
+   ============================================= */
+
+.upload-card {
+  -webkit-tap-highlight-color: transparent;
+  transition: transform 0.18s cubic-bezier(0.22, 1, 0.36, 1),
+              border-color 0.2s ease,
+              box-shadow 0.2s ease;
+}
+.upload-card:active {
+  transform: scale(0.97);
+}
+
+/* =============================================
+   MENU / ACCOUNT ROWS — Press feedback
+   ============================================= */
+
+.menu-row,
+.account-row {
+  -webkit-tap-highlight-color: transparent;
+  transition: transform 0.15s ease, background-color 0.15s ease;
+}
+.menu-row:active,
+.account-row:active {
+  transform: scale(0.98);
+  background-color: var(--bg);
+}
+
+/* =============================================
+   SLOT / CRENEAU — Selection
+   ============================================= */
+
+.slot {
+  transition: transform 0.15s ease,
+              background-color 0.2s ease,
+              border-color 0.2s ease,
+              color 0.2s ease;
+}
+.slot.selected {
+  background: var(--orange);
+  color: #fff;
+  border-color: var(--orange);
+  animation: chipBounce 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* =============================================
+   STATUS PILL — Subtle pulse
+   ============================================= */
+
+.status-pill.confirmed {
+  animation: statusPulse 2.5s ease-in-out infinite;
+}
+@keyframes statusPulse {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0.7; }
+}
+
+/* =============================================
+   BADGE — Pop in
+   ============================================= */
+
+.badge {
+  animation: badgePop 0.3s cubic-bezier(0.22, 1, 0.36, 1) backwards;
+}
+@keyframes badgePop {
+  from { transform: scale(0); opacity: 0; }
+  to   { transform: scale(1); opacity: 1; }
+}
+
+/* =============================================
+   AVATAR — Gentle float
+   ============================================= */
+
+.avatar {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.avatar:active {
+  transform: scale(0.92);
+}
+
+/* =============================================
+   LOADING SPINNER
+   ============================================= */
+
+.spinner {
+  width: 28px;
+  height: 28px;
+  border: 3px solid var(--line);
+  border-top-color: var(--orange);
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* =============================================
+   TOAST / SNACKBAR
+   ============================================= */
+
+.toast {
+  position: fixed;
+  bottom: 80px;
+  left: 50%;
+  transform: translateX(-50%) translateY(20px);
+  background: var(--ink);
+  color: #fff;
+  padding: 12px 20px;
+  border-radius: 12px;
+  font-size: 13px;
+  font-weight: 600;
+  z-index: 999;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease, transform 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+  pointer-events: auto;
+}
+
+/* =============================================
+   FAB — Float-in
+   ============================================= */
+
+.fab {
+  animation: fabIn 0.35s cubic-bezier(0.22, 1, 0.36, 1) backwards;
+  animation-delay: 0.2s;
+}
+@keyframes fabIn {
+  from { transform: scale(0) rotate(-45deg); opacity: 0; }
+  to   { transform: scale(1) rotate(0); opacity: 1; }
+}
+.fab:active {
+  transform: scale(0.9);
+}

@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Ndoket — Accueil</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="animations.css">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#F5FAFC;--surface:#FFFFFF;--ink:#1F2A33;--ink-soft:#54646F;--muted:#8B98A1;
+    --orange:#F2871E;--orange-dark:#D66A0C;--orange-light:#FDE3C5;
+    --blue:#3FC2E8;--blue-dark:#1E9BC2;--blue-light:#D6F3FB;
+    --green:#3AA65A;--green-light:#DCF3E2;--line:#E5EEF1;
+  }
+  *{box-sizing:border-box;}
+  html,body{height:100%;}
+  body{margin:0;background:var(--surface);font-family:'Inter',sans-serif;}
+  .screen{width:100%;height:100dvh;display:flex;flex-direction:column;overflow:hidden;}
+
+  /* Header */
+  .header{background:var(--ink);padding:50px 20px 20px;position:relative;overflow:hidden;}
+  .header::after{content:"";position:absolute;right:-30px;top:-30px;width:120px;height:120px;border-radius:50%;background:rgba(242,135,30,0.12);}
+  .header-row{display:flex;justify-content:space-between;align-items:flex-start;position:relative;}
+  .greeting-sm{font-size:10.5px;font-weight:700;color:#9AAAB4;letter-spacing:0.04em;}
+  .greeting{font-family:'Baloo 2',sans-serif;font-size:19px;font-weight:700;color:#fff;margin-top:2px;}
+  .avatar{width:42px;height:42px;border-radius:14px;background:var(--blue);display:flex;align-items:center;justify-content:center;color:#fff;font-family:'Baloo 2';font-size:16px;font-weight:800;border:2px solid rgba(255,255,255,0.2);}
+
+  /* Search */
+  .search-wrap{padding:0 20px;margin-top:-16px;position:relative;z-index:2;}
+  .search-bar{display:flex;align-items:center;gap:10px;background:var(--surface);border:2px solid var(--line);border-radius:14px;padding:12px 14px;}
+  .search-bar svg{width:18px;height:18px;stroke:var(--muted);fill:none;stroke-width:2;flex-shrink:0;}
+  .search-bar input{flex:1;border:none;outline:none;font-size:13px;font-family:'Inter',sans-serif;color:var(--ink);background:transparent;}
+  .search-bar input::placeholder{color:var(--muted);}
+
+  /* Bande colorée */
+  .strip{height:5px;background:repeating-linear-gradient(90deg,var(--orange) 0 12px,#fff 12px 17px,var(--blue) 17px 22px,#fff 22px 27px);}
+
+  .content{flex:1;overflow-y:auto;}
+
+  /* Categories */
+  .cats{display:flex;gap:8px;padding:16px 20px 0;overflow-x:auto;-webkit-overflow-scrolling:touch;}
+  .cats::-webkit-scrollbar{display:none;}
+  .cat{flex-shrink:0;font-size:11.5px;font-weight:700;padding:8px 14px;border-radius:20px;background:var(--bg);border:2px solid var(--line);color:var(--ink-soft);cursor:pointer;transition:all 0.2s;}
+  .cat.active{background:var(--blue);border-color:var(--blue);color:#fff;}
+
+  /* Provider cards */
+  .providers{padding:8px 20px 22px;display:flex;flex-direction:column;gap:14px;}
+  .sec-title{display:flex;justify-content:space-between;align-items:baseline;padding:16px 20px 0;}
+  .sec-title h2{font-family:'Baloo 2',sans-serif;font-size:16px;font-weight:700;margin:0;color:var(--ink);}
+  .sec-title span{font-size:11px;font-weight:700;color:var(--muted);}
+  .prov-card{background:var(--surface);border:none;border-radius:22px;overflow:hidden;cursor:pointer;box-shadow:0 10px 28px -14px rgba(31,42,51,.28);transition:transform 0.15s;}
+  .prov-card:active{transform:scale(0.98);}
+  .prov-photo{height:150px;background-size:cover;background-position:center;position:relative;display:flex;justify-content:space-between;align-items:flex-start;padding:10px;}
+  .prov-photo::after{content:"";position:absolute;left:0;right:0;bottom:0;height:64px;background:linear-gradient(transparent,rgba(0,0,0,.35));pointer-events:none;}
+  .prov-cat{position:relative;z-index:1;font-size:10px;font-weight:800;color:#fff;background:rgba(31,42,51,.55);padding:5px 10px;border-radius:999px;}
+  .prov-dist{position:relative;z-index:1;font-size:10px;font-weight:800;color:#fff;background:var(--blue-dark);padding:5px 10px;border-radius:999px;}
+  .prov-body{padding:13px 15px 14px;}
+  .prov-row{display:flex;justify-content:space-between;align-items:center;gap:8px;}
+  .prov-name{font-family:'Baloo 2',sans-serif;font-size:16px;font-weight:700;color:var(--ink);}
+  .prov-note{font-size:12px;font-weight:800;color:var(--orange-dark);background:var(--orange-light);padding:4px 9px;border-radius:999px;white-space:nowrap;}
+  .prov-addr{font-size:11.5px;color:var(--muted);margin-top:3px;}
+  .prov-foot{display:flex;justify-content:space-between;align-items:center;margin-top:10px;}
+  .prov-price{font-family:'Baloo 2',sans-serif;font-size:14px;font-weight:800;color:var(--ink);}
+  .prov-cta{font-size:12px;font-weight:800;color:#fff;background:var(--orange);padding:8px 16px;border-radius:999px;}
+
+  .empty{text-align:center;padding:40px 20px;font-size:13px;color:var(--muted);}
+
+  /* Tabbar */
+  .tabbar{display:flex;justify-content:space-around;padding:12px 0 10px;background:var(--surface);border-top:2px solid var(--line);}
+  .tab{display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;-webkit-tap-highlight-color:transparent;}
+  .tab-icon{width:22px;height:22px;display:flex;align-items:center;justify-content:center;}
+  .tab-icon svg{width:20px;height:20px;}
+  .tab-text{font-size:9px;font-weight:700;color:var(--muted);}
+  .tab.active .tab-text{color:var(--orange-dark);}
+</style>
+</head>
+<body>
+  <div class="screen">
+    <div class="header">
+      <div class="header-row">
+        <div>
+          <div class="greeting-sm">Bienvenue</div>
+          <div class="greeting" id="greeting">Bonjour</div>
+        </div>
+        <div class="avatar" id="avatarLetter">N</div>
+      </div>
+    </div>
+
+    <div class="search-wrap">
+      <div class="search-bar">
+        <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input type="text" id="searchInput" placeholder="Rechercher un service, un prestataire..." />
+      </div>
+    </div>
+    <div class="strip"></div>
+
+    <div class="content">
+      <div class="cats" id="catRow">
+        <div class="cat active" data-cat="Tous">Tous</div>
+        <div class="cat" data-cat="Pose d'ongles">Pose d'ongles</div>
+        <div class="cat" data-cat="Pose de cils">Pose de cils</div>
+        <div class="cat" data-cat="Coiffure">Coiffure</div>
+      </div>
+
+      <div class="sec-title"><h2>Près de vous</h2><span id="secCount"></span></div>
+      <div id="providerList" class="providers"></div>
+      <div class="empty" id="listEmpty" style="display:none">Aucun prestataire trouvé.</div>
+    </div>
+
+    <div class="tabbar">
+      <div class="tab active" data-nav="accueil_client">
+        <span class="tab-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></span>
+        <div class="tab-text">Accueil</div>
+      </div>
+      <div class="tab" data-nav="recherche">
+        <span class="tab-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></span>
+        <div class="tab-text">Recherche</div>
+      </div>
+      <div class="tab" data-nav="mes_reservations">
+        <span class="tab-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></span>
+        <div class="tab-text">RDV</div>
+      </div>
+      <div class="tab" data-nav="profil_client">
+        <span class="tab-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span>
+        <div class="tab-text">Profil</div>
+      </div>
+    </div>
+  </div>
+
+<script src="supabase.js"></script>
+<script src="icons.js"></script>
+<script src="nav.js"></script>
+<script>
+(function(){
+  var me = sessionUser();
+  if(!me){ location.href='login.html'; return; }
+  localStorage.setItem('ndoket_space', 'client');
+
+  var list = document.getElementById('providerList');
+  var empty = document.getElementById('listEmpty');
+  var search = document.getElementById('searchInput');
+  var state = { cat: 'Tous', query: '' };
+  var providers = [];
+  var myPos = null;
+
+  function distKm(a, b, c, d){
+    var R = 6371, toRad = Math.PI / 180;
+    var dLat = (c - a) * toRad, dLng = (d - b) * toRad;
+    var x = Math.sin(dLat/2)*Math.sin(dLat/2) + Math.cos(a*toRad)*Math.cos(c*toRad)*Math.sin(dLng/2)*Math.sin(dLng/2);
+    return R * 2 * Math.atan2(Math.sqrt(x), Math.sqrt(1-x));
+  }
+  function fmtDist(km){
+    if(km == null) return '';
+    return 'À ' + (km < 10 ? km.toFixed(1) : Math.round(km)) + ' km';
+  }
+
+  var gradients = [
+    'linear-gradient(135deg, #FDE3C5, #F2871E 140%)',
+    'linear-gradient(135deg, #D6F3FB, #3FC2E8 140%)',
+    'linear-gradient(135deg, #DCF3E2, #3AA65A 140%)',
+    'linear-gradient(135deg, #FBE3E3, #E85D5D 140%)'
+  ];
+
+  // Greeting + position du client (pour le tri par proximité)
+  supabase.select('profils',{id:'eq.'+me.id}).then(function(rows){
+    var p = rows && rows[0];
+    if(p && p.prenom){
+      document.getElementById('greeting').textContent = 'Bonjour, ' + p.prenom;
+      document.getElementById('avatarLetter').textContent = p.prenom[0].toUpperCase();
+      if(p.avatar_url){
+        document.getElementById('avatarLetter').innerHTML = '<img src="' + escUrl(p.avatar_url) + '" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:inherit" />';
+      }
+    }
+    if(p && p.latitude != null && p.longitude != null){
+      myPos = { latitude: p.latitude, longitude: p.longitude };
+      render();
+    } else {
+      // Première visite : on capture la position (silencieux, best-effort)
+      getMyPosition().then(function(pos){
+        myPos = pos;
+        supabase.update('profils', { latitude: pos.latitude, longitude: pos.longitude }, 'id', me.id).catch(function(){});
+        render();
+      }).catch(function(){ /* pas de GPS : tri par note */ });
+    }
+  }).catch(function(){});
+
+  function render(){
+    var q = state.query.toLowerCase();
+    var rows = providers.filter(function(p){
+      var okCat = state.cat==='Tous' || (p.categorie||'').toLowerCase().split(',').map(function(s){return s.trim();}).indexOf(state.cat.toLowerCase())>-1 || (p.categorie||'').toLowerCase()===state.cat.toLowerCase();
+      var okQ = !q || (p.nom||'').toLowerCase().indexOf(q)>-1 || (p.adresse||'').toLowerCase().indexOf(q)>-1 || (p.categorie||'').toLowerCase().indexOf(q)>-1;
+      return okCat && okQ;
+    });
+
+    // Tri : les plus proches d'abord (calculé automatiquement depuis la position du client)
+    rows.forEach(function(p){
+      p._dist = (myPos && p.latitude != null && p.longitude != null)
+        ? distKm(myPos.latitude, myPos.longitude, p.latitude, p.longitude)
+        : null;
+    });
+    if(myPos){
+      rows.sort(function(a, b){ return (a._dist == null ? 999 : a._dist) - (b._dist == null ? 999 : b._dist); });
+    } else {
+      rows.sort(function(a, b){ return (b.note_globale || 0) - (a.note_globale || 0); });
+    }
+
+    list.innerHTML = '';
+    if(!rows.length){ empty.style.display='block'; document.getElementById('secCount').textContent=''; return; }
+    empty.style.display='none';
+    document.getElementById('secCount').textContent = rows.length + (rows.length > 1 ? ' salons' : ' salon');
+
+    rows.forEach(function(p,i){
+      var card = document.createElement('div');
+      card.className = 'prov-card';
+      var addr = p.adresse || ((p.ville||'Dakar')+', Dakar');
+      var price = p.prix_min ? ('Dès '+p.prix_min.toLocaleString('fr-FR')+' F') : 'Prix sur place';
+      var note = p.note_globale ? ('★ '+Number(p.note_globale).toFixed(1)) : '★ Nouveau';
+      var photoStyle = p.photo_url
+        ? 'background-image:url(&quot;'+escUrl(p.photo_url)+'&quot;)'
+        : 'background:'+gradients[i%gradients.length];
+      var distBadge = fmtDist(p._dist) ? '<span class="prov-dist">📍 '+fmtDist(p._dist)+'</span>' : '<span></span>';
+      var catBadge = p.categorie ? '<span class="prov-cat">'+esc(p.categorie)+'</span>' : '<span></span>';
+      card.innerHTML =
+        '<div class="prov-photo" style="'+photoStyle+'">'+catBadge+distBadge+'</div>'+
+        '<div class="prov-body">'+
+          '<div class="prov-row"><div class="prov-name">'+esc(p.nom)+'</div><div class="prov-note">'+note+'</div></div>'+
+          '<div class="prov-addr">'+esc(addr)+'</div>'+
+          '<div class="prov-foot"><span class="prov-price">'+price+'</span><span class="prov-cta">Réserver ›</span></div>'+
+        '</div>';
+      card.onclick=function(){
+        ndoket.setPrestataire(p.id);
+        location.href='fiche_services.html';
+      };
+      list.appendChild(card);
+    });
+  }
+
+  function load(){
+    supabase.select('prestataires').then(function(rows){
+      providers = rows || [];
+      return supabase.select('services').then(function(services){
+        var minBy = {};
+        (services||[]).forEach(function(s){
+          if(!minBy[s.prestataire_id]||s.prix<minBy[s.prestataire_id]) minBy[s.prestataire_id]=s.prix;
+        });
+        providers.forEach(function(p){ p.prix_min=minBy[p.id]||0; });
+        render();
+      });
+    }).catch(function(e){
+      empty.style.display='block';
+      empty.textContent='Erreur : '+e.message;
+    });
+  }
+
+  search.addEventListener('input',function(){ state.query=search.value.trim(); render(); });
+
+  document.getElementById('catRow').addEventListener('click',function(e){
+    var item=e.target.closest('.cat');
+    if(!item) return;
+    document.querySelectorAll('.cat').forEach(function(c){c.classList.remove('active');});
+    item.classList.add('active');
+    state.cat=item.getAttribute('data-cat');
+    render();
+  });
+
+  load();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Ndoket — Genre du prestataire</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="animations.css">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --bg:#F5FAFC;
+    --surface:#FFFFFF;
+    --ink:#1F2A33;
+    --ink-soft:#54646F;
+    --muted:#8B98A1;
+    --orange:#F2871E;
+    --orange-dark:#D66A0C;
+    --orange-light:#FDE3C5;
+    --blue:#3FC2E8;
+    --blue-dark:#1E9BC2;
+    --blue-light:#D6F3FB;
+    --line:#E5EEF1;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:#EDEFF0;
+    font-family:'Inter',sans-serif;
+    padding:48px 16px;
+    display:flex;
+    justify-content:center;
+  }
+
+  .phone{
+    width:375px;
+    height:812px;
+    background:var(--surface);
+    border-radius:44px;
+    border:12px solid var(--ink);
+    overflow:hidden;
+    position:relative;
+    box-shadow: 0 30px 60px -25px rgba(31,42,51,0.4);
+  }
+  .notch{
+    position:absolute;
+    top:0; left:50%;
+    transform:translateX(-50%);
+    width:150px; height:26px;
+    background:var(--ink);
+    border-radius:0 0 16px 16px;
+    z-index:8;
+  }
+  .screen{
+    width:100%;
+    height:100%;
+    display:flex;
+    flex-direction:column;
+    overflow:hidden;
+  }
+
+  .topbar{
+    padding:52px 20px 8px;
+    display:flex;
+    align-items:center;
+    gap:12px;
+  }
+  .back{
+    width:34px;height:34px;
+    border-radius:11px;
+    background:var(--bg);
+    border:2px solid var(--line);
+    position:relative;
+    flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;}
+  
+  .steps{
+    display:flex;
+    gap:6px;
+    flex:1;
+  }
+  .step-bar{
+    height:4px;
+    flex:1;
+    border-radius:4px;
+    background:var(--line);
+  }
+  .step-bar.done{
+    background:var(--blue);
+  }
+
+  .body{
+    flex:1;
+    padding:26px 24px 24px;
+  }
+
+  .eyebrow{
+    font-size:11.5px;
+    font-weight:800;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    color:var(--blue-dark);
+    margin-bottom:8px;
+  }
+  h1{
+    font-family:'Baloo 2',sans-serif;
+    font-size:22px;
+    font-weight:700;
+    color:var(--ink);
+    margin:0 0 8px;
+  }
+  .subtitle{
+    font-size:13px;
+    color:var(--ink-soft);
+    line-height:1.55;
+    margin:0 0 28px;
+  }
+
+  .gender-card{
+    display:flex;
+    align-items:center;
+    gap:16px;
+    border:2px solid var(--line);
+    border-radius:20px;
+    padding:20px;
+    margin-bottom:14px;
+  }
+  .gender-card.selected{
+    border-color:var(--orange);
+    background:var(--orange-light);
+  }
+  .gender-icon{
+    width:54px;height:54px;
+    border-radius:50%;
+    background:var(--surface);
+    border:2px solid var(--line);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    flex-shrink:0;
+  }
+  .gender-card.selected .gender-icon{
+    border-color:var(--orange);
+    background:#fff;
+  }
+  .gender-icon .glyph{
+    width:20px;height:20px;
+    border-radius:50%;
+    border:3px solid var(--blue-dark);
+    position:relative;
+  }
+  .gender-icon .glyph::after{
+    content:"";
+    position:absolute;
+    bottom:-11px; left:50%;
+    width:3px; height:10px;
+    background:var(--blue-dark);
+    transform:translateX(-50%);
+  }
+  .gender-icon.women .glyph{
+    border-color:var(--orange-dark);
+  }
+  .gender-icon.women .glyph::after{
+    display:none;
+  }
+  .gender-icon.women .glyph::before{
+    content:"";
+    position:absolute;
+    bottom:-11px; left:50%;
+    width:14px; height:10px;
+    border-left:3px solid var(--orange-dark);
+    border-right:3px solid var(--orange-dark);
+    border-bottom:3px solid var(--orange-dark);
+    border-radius:0 0 8px 8px;
+    transform:translateX(-50%);
+  }
+
+  .gender-text{
+    flex:1;
+  }
+  .gender-text h3{
+    font-family:'Baloo 2',sans-serif;
+    font-size:15.5px;
+    font-weight:700;
+    color:var(--ink);
+    margin:0 0 3px;
+  }
+  .gender-text p{
+    font-size:11.5px;
+    color:var(--ink-soft);
+    margin:0;
+    line-height:1.4;
+  }
+
+  .radio{
+    width:22px;height:22px;
+    border-radius:50%;
+    border:2px solid var(--line);
+    flex-shrink:0;
+    background:var(--surface);
+  }
+  .radio.checked{
+    border-color:var(--orange);
+    background:var(--orange);
+    position:relative;
+  }
+  .radio.checked::after{
+    content:"";
+    position:absolute;
+    top:50%; left:50%;
+    width:8px;height:5px;
+    border-left:2px solid #fff;
+    border-bottom:2px solid #fff;
+    transform:translate(-50%,-60%) rotate(-45deg);
+  }
+
+  .info-note{
+    display:flex;
+    gap:10px;
+    align-items:flex-start;
+    background:var(--blue-light);
+    border-radius:14px;
+    padding:14px;
+    margin-top:10px;
+  }
+  .info-note .dot{
+    width:8px;height:8px;
+    border-radius:50%;
+    background:var(--blue-dark);
+    margin-top:5px;
+    flex-shrink:0;
+  }
+  .info-note p{
+    margin:0;
+    font-size:11.5px;
+    color:var(--blue-dark);
+    line-height:1.5;
+    font-weight:600;
+  }
+
+  .footer{display:flex;justify-content:center;align-items:center;
+    padding:16px 20px 26px;
+    border-top:2px solid var(--line);
+  }
+  .btn-primary{
+    min-width:230px;
+    background:var(--orange);
+    color:#FFFFFF;
+    border:none;
+    text-align:center;
+    padding:14px 40px;
+    border-radius:16px;
+    font-family:'Inter',sans-serif;
+    font-weight:800;
+    font-size:14.5px;
+    cursor:pointer;
+  }
+
+  /* === NDOKET : plein Ã©cran (hors maquette) === */
+  html,body{height:100%;}
+  body{padding:0 !important;display:block !important;justify-content:flex-start !important;}
+  .phone{width:100% !important;height:100% !important;max-width:none !important;
+    border-radius:0 !important;border:none !important;box-shadow:none !important;}
+  .notch{display:none !important;}
+  .screen{height:100% !important;min-height:100dvh !important;}
+  .content{overflow-y:auto !important;}
+</style>
+</head>
+<body data-role="prestataire">
+
+  <div class="phone">
+    <div class="notch"></div>
+    <div class="screen">
+
+      <div class="topbar">
+        <div class="back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px"><polyline points="15 18 9 12 15 6"/></svg></div>
+        <div class="steps">
+          <div class="step-bar done"></div>
+          <div class="step-bar done"></div>
+          <div class="step-bar done"></div>
+          <div class="step-bar"></div>
+          <div class="step-bar"></div>
+        </div>
+      </div>
+
+      <div class="body">
+        <div class="eyebrow">Dernière étape</div>
+        <h1>Vous êtes...</h1>
+        <p class="subtitle">Cette information aide les clientes et clients à trouver le bon prestataire selon leurs préférences.</p>
+
+        <div class="gender-card" data-gender="homme">
+          <div class="gender-icon"><div class="glyph"></div></div>
+          <div class="gender-text">
+            <h3>Homme</h3>
+            <p>Ex. coiffeur, barbier</p>
+          </div>
+          <div class="radio"></div>
+        </div>
+
+        <div class="gender-card selected" data-gender="femme">
+          <div class="gender-icon women"><div class="glyph"></div></div>
+          <div class="gender-text">
+            <h3>Femme</h3>
+            <p>Ex. coiffeuse, esthéticienne</p>
+          </div>
+          <div class="radio checked"></div>
+        </div>
+
+        <div class="info-note">
+          <div class="dot"></div>
+          <p>Cette information est enregistrée sur votre profil prestataire.</p>
+        </div>
+      </div>
+
+      <div class="footer">
+        <button type="button" class="btn-primary" id="continueBtn">Continuer</button>
+      </div>
+
+    </div>
+  </div>
+
+<script src="supabase.js"></script>
+<script src="icons.js"></script>
+  <script src="nav.js"></script>
+<script>
+(function(){
+  var gender = 'femme';
+
+  document.querySelectorAll('.gender-card').forEach(function(card){
+    card.addEventListener('click', function(){
+      document.querySelectorAll('.gender-card').forEach(function(c){
+        c.classList.remove('selected');
+        c.querySelector('.radio').classList.remove('checked');
+      });
+      card.classList.add('selected');
+      card.querySelector('.radio').classList.add('checked');
+      gender = card.getAttribute('data-gender');
+      ndoket.set('genre', gender);
+    });
+  });
+
+  document.getElementById('continueBtn').addEventListener('click', function(){
+    ndoket.set('genre', gender);
+    // Persistance en base (colonne profils.genre)
+    var me = sessionUser();
+    if(me){
+      supabase.update('profils', { genre: gender }, 'id', me.id).catch(function(){});
+    }
+    location.href = 'accueil_prestataire.html';
+  });
+})();
+</script>
+</body>
+</html>

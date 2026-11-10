@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Ndoket - Mes avis</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="animations.css">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#F5FAFC;--surface:#FFFFFF;--ink:#1F2A33;--ink-soft:#54646F;--muted:#8B98A1;
+    --orange:#F2871E;--orange-dark:#D66A0C;--orange-light:#FDE3C5;
+    --blue:#3FC2E8;--blue-dark:#1E9BC2;--blue-light:#D6F3FB;
+    --green:#3AA65A;--green-light:#DCF3E2;--line:#E5EEF1;--red:#E85D5D;
+  }
+  *{box-sizing:border-box;}
+  html,body{height:100%;}
+  body{margin:0;background:var(--bg);font-family:'Inter',sans-serif;}
+  .screen{width:100%;height:100dvh;display:flex;flex-direction:column;overflow:hidden;}
+
+  .topbar{padding:50px 20px 8px;display:flex;align-items:center;gap:12px;}
+  .topbar-title{font-family:'Baloo 2',sans-serif;font-size:16px;font-weight:700;color:var(--ink);}
+  .back{width:34px;height:34px;border-radius:11px;background:var(--surface);border:2px solid var(--line);display:flex;align-items:center;justify-content:center;flex-shrink:0;cursor:pointer;}
+
+  .content{flex:1;overflow-y:auto;padding:12px 20px 20px;}
+
+  .stat-row{display:flex;gap:10px;margin-bottom:16px;}
+  .stat-box{flex:1;background:var(--surface);border:2px solid var(--line);border-radius:16px;padding:16px;text-align:center;}
+  .stat-num{font-family:'Baloo 2',sans-serif;font-size:22px;font-weight:800;color:var(--orange);}
+  .stat-label{font-size:10px;font-weight:700;color:var(--muted);margin-top:2px;}
+
+  .avis-card{background:var(--surface);border:2px solid var(--line);border-radius:16px;padding:14px;margin-bottom:12px;}
+  .avis-header{display:flex;justify-content:space-between;align-items:flex-start;}
+  .avis-pro{font-family:'Baloo 2',sans-serif;font-size:14px;font-weight:700;color:var(--ink);}
+  .avis-date{font-size:10px;color:var(--muted);}
+  .avis-stars{color:var(--orange);font-size:13px;font-weight:700;margin-top:4px;}
+  .avis-comment{font-size:12.5px;color:var(--ink-soft);margin-top:8px;line-height:1.5;}
+  .avis-svc{font-size:10px;color:var(--muted);margin-top:6px;padding:4px 8px;background:var(--bg);border-radius:8px;display:inline-block;}
+
+  .empty{text-align:center;padding:40px 20px;font-size:13px;color:var(--muted);}
+  .empty svg{width:48px;height:48px;stroke:var(--line);fill:none;stroke-width:1.5;margin-bottom:12px;}
+
+  .section-label{font-size:12px;font-weight:800;color:var(--ink-soft);text-transform:uppercase;letter-spacing:0.04em;margin:4px 0 10px;}
+  .leave-card{background:var(--surface);border:2px solid var(--orange-light);border-radius:16px;padding:14px;margin-bottom:12px;}
+  .leave-title{font-family:'Baloo 2',sans-serif;font-size:14px;font-weight:700;color:var(--ink);margin-bottom:2px;}
+  .leave-sub{font-size:10.5px;color:var(--muted);margin-bottom:10px;}
+  .star-pick{display:flex;gap:6px;margin-bottom:10px;}
+  .star-pick span{font-size:24px;color:var(--line);cursor:pointer;}
+  .star-pick span.on{color:var(--orange);}
+  .leave-text{width:100%;border:2px solid var(--line);border-radius:12px;padding:10px 12px;font-size:12.5px;font-family:'Inter',sans-serif;color:var(--ink);background:var(--bg);resize:none;height:64px;outline:none;margin-bottom:10px;}
+  .leave-text:focus{border-color:var(--orange);background:#fff;}
+  .btn-sm{background:var(--orange);color:#fff;border:none;border-radius:12px;padding:10px 18px;font-weight:700;font-size:12.5px;font-family:'Inter',sans-serif;cursor:pointer;}
+  .btn-sm:disabled{opacity:0.5;}
+</style>
+</head>
+<body>
+  <div class="screen">
+    <div class="topbar">
+      <div class="back">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px"><polyline points="15 18 9 12 15 6"/></svg>
+      </div>
+      <div class="topbar-title">Mes avis</div>
+    </div>
+
+    <div class="content">
+      <div class="stat-row">
+        <div class="stat-box">
+          <div class="stat-num" id="totalAvis">0</div>
+          <div class="stat-label">Avis laissés</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-num" id="avgNote">-</div>
+          <div class="stat-label">Note moyenne</div>
+        </div>
+      </div>
+
+      <div id="leaveBlock" style="display:none">
+        <div class="section-label">Laisser un avis</div>
+        <div id="leaveList"></div>
+      </div>
+
+      <div id="avisList"></div>
+      <div class="empty" id="emptyState" style="display:none">
+        <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        <div>Vous n'avez laissé aucun avis</div>
+      </div>
+    </div>
+  </div>
+
+<script src="supabase.js"></script>
+<script src="nav.js"></script>
+<script>
+(function(){
+  var me = sessionUser();
+  if(!me){ location.href='login.html'; return; }
+
+  var list = document.getElementById('avisList');
+  var empty = document.getElementById('emptyState');
+  var leaveBlock = document.getElementById('leaveBlock');
+  var leaveList = document.getElementById('leaveList');
+
+  function stars(n){
+    var s = '';
+    for(var i=0;i<5;i++) s += i < n ? '★' : '☆';
+    return s;
+  }
+
+  function dateStr(d){
+    if(!d) return '';
+    var dt = new Date(d);
+    return dt.toLocaleDateString('fr-FR',{day:'numeric',month:'short',year:'numeric'});
+  }
+
+  function render(avis, prestataires){
+    var pMap = {};
+    (prestataires||[]).forEach(function(p){ pMap[p.id] = p.nom; });
+
+    document.getElementById('totalAvis').textContent = avis.length;
+    if(avis.length){
+      var sum = avis.reduce(function(a,v){ return a + (v.note||0); }, 0);
+      document.getElementById('avgNote').textContent = (sum/avis.length).toFixed(1);
+    }
+
+    list.innerHTML = '';
+    if(!avis.length){ empty.style.display='block'; return; }
+    empty.style.display='none';
+
+    avis.forEach(function(a){
+      var card = document.createElement('div');
+      card.className = 'avis-card';
+      card.innerHTML =
+        '<div class="avis-header">'+
+          '<div>'+
+            '<div class="avis-pro">'+esc(pMap[a.prestataire_id]||'Prestataire')+'</div>'+
+            '<div class="avis-stars">'+stars(a.note)+'</div>'+
+          '</div>'+
+          '<div class="avis-date">'+dateStr(a.created_at)+'</div>'+
+        '</div>'+
+        (a.commentaire ? '<div class="avis-comment">'+esc(a.commentaire)+'</div>' : '');
+      list.appendChild(card);
+    });
+  }
+
+  // Formulaire de dépôt pour les RDV terminés sans avis
+  function renderLeave(reservations, avis, prestataires){
+    var pMap = {};
+    (prestataires||[]).forEach(function(p){ pMap[p.id] = p.nom; });
+    var already = {};
+    avis.forEach(function(a){ if(a.reservation_id) already[a.reservation_id] = true; });
+
+    var cand = (reservations||[]).filter(function(r){
+      return r.statut === 'termine' && r.prestataire_id && !already[r.id];
+    });
+    if(!cand.length){ leaveBlock.style.display = 'none'; return; }
+    leaveBlock.style.display = 'block';
+    leaveList.innerHTML = '';
+
+    cand.forEach(function(r){
+      var note = 5;
+      var card = document.createElement('div');
+      card.className = 'leave-card';
+      card.innerHTML =
+        '<div class="leave-title">'+esc(pMap[r.prestataire_id]||'Prestataire')+'</div>'+
+        '<div class="leave-sub">RDV du '+esc(dateStr(r.date_rdv))+' · '+(r.heure_debut||'').substring(0,5)+'</div>'+
+        '<div class="star-pick">'+
+          '<span data-n="1">☆</span><span data-n="2">☆</span><span data-n="3">☆</span><span data-n="4">☆</span><span data-n="5" class="on">★</span>'+
+        '</div>'+
+        '<textarea class="leave-text" maxlength="300" placeholder="Partagez votre expérience…"></textarea>'+
+        '<button class="btn-sm">Publier l\'avis</button>';
+      leaveList.appendChild(card);
+
+      var pick = card.querySelector('.star-pick');
+      pick.addEventListener('click', function(e){
+        if(!e.target || e.target.tagName !== 'SPAN') return;
+        note = parseInt(e.target.getAttribute('data-n'), 10) || 5;
+        pick.querySelectorAll('span').forEach(function(s){
+          var n = parseInt(s.getAttribute('data-n'), 10);
+          s.textContent = n <= note ? '★' : '☆';
+          s.className = n <= note ? 'on' : '';
+        });
+      });
+
+      var btn = card.querySelector('.btn-sm');
+      var ta = card.querySelector('.leave-text');
+      btn.addEventListener('click', function(){
+        var txt = ta.value.trim();
+        if(txt.length < 3){ showToast('Écrivez quelques mots sur votre expérience.'); return; }
+        btn.disabled = true;
+        supabase.insert('avis', {
+          prestataire_id: r.prestataire_id,
+          client_id: me.id,
+          reservation_id: r.id,
+          note: note,
+          commentaire: txt
+        }).then(function(){
+          showToast('Merci pour votre avis !');
+          // Notifier la prestataire du nouvel avis
+          sendPush('prestataire', r.prestataire_id, null,
+            '⭐ Nouvel avis',
+            'Une cliente vient de laisser un avis ' + note + '★',
+            { page: 'fiche_avis.html' }
+          );
+          setTimeout(function(){ location.reload(); }, 900);
+        }).catch(function(e){
+          btn.disabled = false;
+          showToast('Erreur : ' + e.message, 4000);
+        });
+      });
+    });
+  }
+
+  Promise.all([
+    supabase.select('avis',{client_id:'eq.'+me.id,order:'created_at.desc'}),
+    supabase.select('prestataires'),
+    supabase.select('reservations',{client_id:'eq.'+me.id})
+  ]).then(function(res){
+    render(res[0], res[1]);
+    renderLeave(res[2], res[0], res[1]);
+  }).catch(function(e){
+    empty.style.display='block';
+    empty.textContent='Erreur : '+e.message;
+  });
+})();
+</script>
+</body>
+</html>

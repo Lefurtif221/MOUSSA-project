@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Ndoket — Paiement</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="animations.css">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --bg:#F5FAFC;
+    --surface:#FFFFFF;
+    --ink:#1F2A33;
+    --ink-soft:#54646F;
+    --muted:#8B98A1;
+    --orange:#F2871E;
+    --orange-dark:#D66A0C;
+    --orange-light:#FDE3C5;
+    --blue:#3FC2E8;
+    --blue-dark:#1E9BC2;
+    --blue-light:#D6F3FB;
+    --line:#E5EEF1;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:#EDEFF0;
+    font-family:'Inter',sans-serif;
+    padding:48px 16px;
+    display:flex;
+    justify-content:center;
+  }
+
+  .phone{
+    width:375px;
+    height:812px;
+    background:var(--surface);
+    border-radius:44px;
+    border:12px solid var(--ink);
+    overflow:hidden;
+    position:relative;
+    box-shadow: 0 30px 60px -25px rgba(31,42,51,0.4);
+  }
+  .notch{
+    position:absolute;
+    top:0; left:50%;
+    transform:translateX(-50%);
+    width:150px; height:26px;
+    background:var(--ink);
+    border-radius:0 0 16px 16px;
+    z-index:8;
+  }
+  .screen{
+    width:100%;
+    height:100%;
+    display:flex;
+    flex-direction:column;
+    overflow:hidden;
+  }
+
+  .topbar{
+    padding:52px 20px 8px;
+    display:flex;
+    align-items:center;
+    gap:12px;
+  }
+  .back{
+    width:34px;height:34px;
+    border-radius:11px;
+    background:var(--bg);
+    border:2px solid var(--line);
+    position:relative;
+    flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;}
+  
+  .steps{
+    display:flex;
+    gap:6px;
+    flex:1;
+  }
+  .step-bar{
+    height:4px;
+    flex:1;
+    border-radius:4px;
+    background:var(--line);
+  }
+  .step-bar.done{
+    background:var(--orange);
+  }
+
+  .body{
+    flex:1;
+    overflow-y:auto;
+    padding:22px 24px 24px;
+  }
+
+  .eyebrow{
+    font-size:11.5px;
+    font-weight:800;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    color:var(--orange-dark);
+    margin-bottom:8px;
+  }
+  h1{
+    font-family:'Baloo 2',sans-serif;
+    font-size:22px;
+    font-weight:700;
+    color:var(--ink);
+    margin:0 0 20px;
+  }
+
+  /* Récap réservation */
+  .recap{
+    background:var(--bg);
+    border-radius:16px;
+    padding:16px;
+    margin-bottom:24px;
+  }
+  .recap-row{
+    display:flex;
+    justify-content:space-between;
+    font-size:12px;
+    color:var(--ink-soft);
+    padding:6px 0;
+  }
+  .recap-row b{
+    color:var(--ink);
+    font-weight:700;
+  }
+  .recap-divider{
+    height:2px;
+    background:var(--line);
+    margin:8px 0;
+    border:none;
+  }
+  .recap-row.total{
+    padding-top:2px;
+  }
+  .recap-row.total b{
+    font-family:'Baloo 2',sans-serif;
+    font-size:16px;
+    color:var(--orange-dark);
+  }
+
+  .section-label{
+    font-size:12px;
+    font-weight:800;
+    color:var(--ink-soft);
+    text-transform:uppercase;
+    letter-spacing:0.04em;
+    margin-bottom:12px;
+  }
+
+  .pay-option{
+    display:flex;
+    align-items:center;
+    gap:14px;
+    border:2px solid var(--line);
+    border-radius:16px;
+    padding:14px;
+    margin-bottom:10px;
+  }
+  .pay-option.selected{
+    border-color:var(--orange);
+    background:var(--orange-light);
+  }
+  .pay-logo{
+    width:42px;height:42px;
+    border-radius:12px;
+    flex-shrink:0;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-family:'Baloo 2',sans-serif;
+    font-weight:800;
+    font-size:11px;
+    color:#fff;
+  }
+    .pay-logo .wordmark{font-family:'Inter',sans-serif;font-weight:800;text-transform:lowercase;color:#fff;letter-spacing:-0.3px;line-height:1;}
+.pay-logo.wave{ background:#4FD8F1; }
+  .pay-logo.om{ background:#FF7900; }
+  .pay-logo.free{ background:#2A2A72; }
+  .pay-logo.cash{ background:var(--ink-soft); }
+
+  .pay-text{
+    flex:1;
+  }
+  .pay-text .t1{
+    font-size:13px;
+    font-weight:700;
+    color:var(--ink);
+  }
+  .pay-text .t2{
+    font-size:10.5px;
+    color:var(--muted);
+  }
+  .radio{
+    width:20px;height:20px;
+    border-radius:50%;
+    border:2px solid var(--line);
+    flex-shrink:0;
+    background:var(--surface);
+  }
+  .radio.checked{
+    border-color:var(--orange);
+    background:var(--orange);
+    position:relative;
+  }
+  .radio.checked::after{
+    content:"";
+    position:absolute;
+    top:50%; left:50%;
+    width:7px;height:4px;
+    border-left:2px solid #fff;
+    border-bottom:2px solid #fff;
+    transform:translate(-50%,-60%) rotate(-45deg);
+  }
+
+  .secure-note{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    margin-top:16px;
+    padding:12px 14px;
+    background:var(--blue-light);
+    border-radius:12px;
+  }
+  .secure-note .dot{
+    width:8px;height:8px;
+    border-radius:50%;
+    background:var(--blue-dark);
+    flex-shrink:0;
+  }
+  .secure-note p{
+    margin:0;
+    font-size:10.5px;
+    color:var(--blue-dark);
+    font-weight:600;
+    line-height:1.4;
+  }
+
+  .footer{display:flex;align-items:center;
+    padding:16px 20px 26px;
+    border-top:2px solid var(--line);
+  }
+  .btn-primary{
+    min-width:200px;
+    background:var(--orange);
+    color:#FFFFFF;
+    text-align:center;
+    padding:14px 32px;
+    border-radius:16px;
+    font-weight:800;
+    font-size:14.5px;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    gap:8px;
+    border:none;
+    font-family:'Inter',sans-serif;
+    cursor:pointer;
+    min-height:52px;
+  }
+
+  /* === NDOKET : plein ecran (phone only) === */
+  html,body{height:100%;}
+  body{padding:0 !important;display:block !important;justify-content:flex-start !important;}
+  .phone{width:100% !important;height:100% !important;max-width:none !important;
+    border-radius:0 !important;border:none !important;box-shadow:none !important;}
+  .notch{display:none !important;}
+  .screen{height:100% !important;min-height:100dvh !important;}
+  .content{overflow-y:auto !important;}
+</style>
+</head>
+<body>
+
+  <div class="phone">
+    <div class="notch"></div>
+    <div class="screen">
+
+      <div class="topbar">
+        <div class="back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px"><polyline points="15 18 9 12 15 6"/></svg></div>
+        <div class="steps">
+          <div class="step-bar done"></div>
+          <div class="step-bar done"></div>
+          <div class="step-bar done"></div>
+          <div class="step-bar done"></div>
+        </div>
+      </div>
+
+      <div class="body">
+        <div class="eyebrow">Étape 4 sur 4</div>
+        <h1>Paiement</h1>
+
+        <div class="recap">
+          <div class="recap-row"><span>Prestataire</span><b id="rPro">—</b></div>
+          <div class="recap-row"><span>Service</span><b id="rService">—</b></div>
+          <div class="recap-row"><span>Créneau</span><b id="rCreneau">—</b></div>
+          <div class="recap-row"><span>Mode</span><b id="rMode">—</b></div>
+          <hr class="recap-divider" />
+          <div class="recap-row"><span>Prestation</span><span id="rBase">—</span></div>
+          <div class="recap-row" id="rBeadsRow"><span>Perles décoratives</span><span>1 000 FCFA</span></div>
+          <div class="recap-row" id="rFeeRow"><span>Frais de déplacement</span><span id="rFeeVal">0 FCFA</span></div>
+          <div class="recap-row total"><span>Total à payer</span><b id="rTotal">—</b></div>
+        </div>
+
+        <div class="section-label">Mode de paiement</div>
+
+        <div class="pay-option selected" data-pay="wave">
+          <div class="pay-logo wave"><svg viewBox="0 0 64 64" width="32" height="32"><path d="M18 28c-5-4-9-10-10-16 5 1 10 6 13 12z" fill="#0E0E10"/><ellipse cx="25" cy="55" rx="7" ry="6" fill="#FF8A1F"/><ellipse cx="39" cy="55" rx="7" ry="6" fill="#FF8A1F"/><path d="M32 7c-9 0-15 6-15 16v19c0 9 6 15 15 15s15-6 15-15V23c0-10-6-16-15-16z" fill="#0E0E10"/><ellipse cx="32" cy="41" rx="9" ry="12" fill="#fff"/><circle cx="26.5" cy="22" r="2.8" fill="#fff"/><circle cx="37.5" cy="22" r="2.8" fill="#fff"/><path d="M26 29c2.5-2.5 9.5-2.5 12 0-2.5 3-9.5 3-12 0z" fill="#FF8A1F"/></svg></div>
+          <div class="pay-text">
+            <div class="t1">Wave</div>
+            <div class="t2">Paiement mobile instantané</div>
+          </div>
+          <div class="radio checked"></div>
+        </div>
+
+        <div class="pay-option" data-pay="om">
+          <div class="pay-logo om"><span class="wordmark" style="font-size:9.5px">orange</span></div>
+          <div class="pay-text">
+            <div class="t1">Orange Money</div>
+            <div class="t2">Paiement mobile instantané</div>
+          </div>
+          <div class="radio"></div>
+        </div>
+
+        <div class="pay-option" data-pay="free_money">
+          <div class="pay-logo free"><span class="wordmark" style="font-size:13px">free</span></div>
+          <div class="pay-text">
+            <div class="t1">Free Money</div>
+            <div class="t2">Paiement mobile instantané</div>
+          </div>
+          <div class="radio"></div>
+        </div>
+
+        <div class="secure-note">
+          <div class="dot"></div>
+          <p>Paiement sécurisé en ligne via PayTech (Wave, Orange Money, Free Money). Votre rendez-vous est confirmé dès réception du paiement.</p>
+        </div>
+      </div>
+
+      <div class="footer">
+        <button type="button" class="btn-primary" id="payBtn">Confirmer la réservation</button>
+      </div>
+
+    </div>
+  </div>
+
+
+<script src="supabase.js"></script>
+<script src="icons.js"></script>
+<script src="nav.js"></script>
+<script>
+(function(){
+  var booking = ndoket.getBooking();
+  if(!booking.service_id){ location.href = 'fiche_services.html'; return; }
+
+  var pay = 'wave';
+  var fmt = function(n){ return (n || 0).toLocaleString('fr-FR') + ' FCFA'; };
+  var MONTHS = ['janv','févr','mars','avr','mai','juin','juil','août','sept','oct','nov','déc'];
+  var DOW = ['Dim','Lun','Mar','Mer','Jeu','Ven','Sam'];
+
+  var base = booking.prix || 0;
+  var fee = booking.mode === 'a_domicile' ? (parseInt(booking.frais, 10) || parseInt(ndoket.get('frais', 0), 10) || 0) : 0;
+  // Total = montant hors frais + frais (évite le double-comptage aller-retour)
+  var montantHt = parseInt(booking.montant_ht, 10);
+  if(isNaN(montantHt)){
+    montantHt = parseInt(booking.montant, 10) || base;
+    var oldFee = parseInt(booking.frais, 10) || 0;
+    if(oldFee > 0 && montantHt >= oldFee){ montantHt -= oldFee; }
+  }
+  var total = montantHt + fee;
+  if(total < base + fee){ total = base + fee; }
+
+  function renderRecap(){
+    document.getElementById('rService').textContent = booking.service_nom;
+    document.getElementById('rMode').textContent = booking.mode === 'a_domicile' ? 'À domicile' : 'Sur place';
+    // Afficher le montant hors frais (avec coupes/suppléments déjà inclus)
+    var montantHt = parseInt(booking.montant_ht, 10);
+    if(isNaN(montantHt)){ montantHt = parseInt(booking.montant, 10) || base; }
+    var detail = fmt(montantHt);
+    if(booking.nombre_coupes > 1){ detail += ' · ' + booking.nombre_coupes + ' coupes'; }
+    document.getElementById('rBase').textContent = booking.service_nom + ' — ' + detail;
+    document.getElementById('rBeadsRow').style.display = booking.perles ? 'flex' : 'none';
+    document.getElementById('rFeeVal').textContent = fmt(fee);
+    document.getElementById('rFeeRow').style.display = fee ? 'flex' : 'none';
+    document.getElementById('rTotal').textContent = fmt(total);
+  }
+  renderRecap();
+
+  if(booking.mode === 'a_domicile' && booking.frais === undefined){
+    var feePid = booking.prestataire_id || ndoket.prestataireId();
+    if(feePid){
+      supabase.select('prestataires', { id: 'eq.' + feePid }).then(function(rows){
+        if(rows && rows[0]){
+          fee = parseInt(rows[0].frais_deplacement, 10) || 0;
+          ndoket.set('frais', fee);
+          booking.frais = fee;
+          total = booking.montant || (base + fee);
+          if(total < base + fee){ total = base + fee; booking.montant = total; }
+          ndoket.setBooking(booking);
+          renderRecap();
+        }
+      }).catch(function(){});
+    }
+  }
+
+  // Paiement déjà en cours : proposer de vérifier ou d'annuler et recommencer
+  var pendingRef = ndoket.get('pending_ref');
+  if(pendingRef){
+    var cancelRow = document.createElement('div');
+    cancelRow.style.cssText = 'margin-top:10px;text-align:center;';
+    var cancelLink = document.createElement('a');
+    cancelLink.textContent = 'Annuler ce paiement et recommencer';
+    cancelLink.style.cssText = 'color:#E85D5D;font-size:12.5px;font-weight:700;cursor:pointer;text-decoration:underline;';
+    cancelLink.addEventListener('click', function(){
+      ndoket.set('pending_ref', null);
+      cancelRow.remove();
+      document.getElementById('payBtn').textContent = 'Confirmer la réservation';
+      showToast('Paiement annulé — vous pouvez réessayer.');
+    });
+    cancelRow.appendChild(cancelLink);
+    document.getElementById('payBtn').parentNode.insertBefore(cancelRow, document.getElementById('payBtn').nextSibling);
+  }
+
+  if(booking.date){
+    var d = new Date(booking.date + 'T00:00:00');
+    document.getElementById('rCreneau').textContent =
+      DOW[d.getDay()] + '. ' + d.getDate() + ' ' + MONTHS[d.getMonth()] + ', ' + booking.heure;
+  }
+
+  if(ndoket.prestataireId()){
+    supabase.select('prestataires', { id: 'eq.' + ndoket.prestataireId() }).then(function(rows){
+      if(rows && rows[0]){ document.getElementById('rPro').textContent = rows[0].nom; }
+    }).catch(function(){});
+  }
+
+  document.querySelectorAll('.pay-option').forEach(function(opt){
+    opt.addEventListener('click', function(){
+      document.querySelectorAll('.pay-option').forEach(function(o){
+        o.classList.remove('selected');
+        o.querySelector('.radio').classList.remove('checked');
+      });
+      opt.classList.add('selected');
+      opt.querySelector('.radio').classList.add('checked');
+      pay = opt.getAttribute('data-pay');
+    });
+  });
+
+  var payStarted = false;
+  document.getElementById('payBtn').addEventListener('click', function(){
+    // Double-clic pendant le même paiement : on vérifie le statut
+    if(payStarted){
+      location.href = 'paiement_statut.html';
+      return;
+    }
+    var btn = this;
+    var sess = loadSession();
+    var me = sessionUser();
+    if(!sess || !me){
+      ndoket.setBooking(booking);
+      location.href = 'login.html';
+      return;
+    }
+    btn.disabled = true;
+    btn.textContent = 'Connexion sécurisée…';
+
+    // Calculer heure_fin basée sur la durée du service
+    var hDebut = booking.heure || '09:00';
+    var duree = booking.duree_min || 60;
+    var parts = hDebut.split(':');
+    var debutMin = parseInt(parts[0], 10) * 60 + parseInt(parts[1], 10);
+    var finMin = debutMin + duree;
+    var hFin = ('0' + Math.floor(finMin / 60)).slice(-2) + ':' + ('0' + (finMin % 60)).slice(-2);
+
+    // Mode à domicile : capturer la position du client (silencieux si refusé)
+    var posPromise = Promise.resolve(null);
+    if((booking.mode || 'sur_place') === 'a_domicile'){
+      posPromise = getMyPosition(8000).catch(function(){ return null; });
+    }
+
+    // Paiement 100% en ligne via PayTech (la réservation est créée à la confirmation)
+    var METHODMAP = { wave: 'wave', om: 'orange', free_money: 'free' };
+    posPromise.then(function(pos){
+      var payload = {
+        service_id: booking.service_id,
+        prestataire_id: ndoket.prestataireId(),
+        date: booking.date,
+        heure_debut: hDebut,
+        heure_fin: hFin,
+        mode: booking.mode || 'sur_place',
+        adresse_domicile: booking.adresse_domicile || '',
+        montant: total,
+        method: METHODMAP[pay] || 'wave',
+        service_nom: booking.service_nom || 'Réservation Ndoket',
+        note: booking.note || '',
+        nombre_coupes: Math.min(10, Math.max(1, parseInt(booking.nombre_coupes, 10) || 1)),
+        perles: !!booking.perles,
+        photo_ref: booking.photo_ref || null,
+        localisation_client: pos ? (pos.latitude.toFixed(6) + ',' + pos.longitude.toFixed(6)) : null
+      };
+      return fetch(SUPABASE_URL + '/functions/v1/paytech-init', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'apikey': SUPABASE_ANON_KEY,
+          'Authorization': 'Bearer ' + sess.access_token
+        },
+        body: JSON.stringify(payload)
+      }).then(function(res){
+        return res.json().then(function(j){ return { ok: res.ok, body: j }; });
+      });
+    }).then(function(out){
+      if(!out.ok || !out.body.redirect_url){
+        throw new Error((out.body && out.body.error) || 'Paiement impossible pour le moment');
+      }
+      // On garde la réservation en cours : elle sera créée à la confirmation du paiement
+      ndoket.set('pending_ref', out.body.ref_command);
+      payStarted = true;
+      showToast('Finalisez le paiement dans le navigateur…');
+      // Bouton réactivé pour vérifier le statut
+      btn.disabled = false;
+      btn.textContent = 'Vérifier le statut du paiement';
+      setTimeout(function(){ window.openExternal(out.body.redirect_url); }, 600);
+    }).catch(function(err){
+      btn.disabled = false;
+      btn.textContent = 'Confirmer la réservation';
+      alert('Erreur : ' + err.message);
+    });
+  });
+})();
+</script>
+</body>
+</html>

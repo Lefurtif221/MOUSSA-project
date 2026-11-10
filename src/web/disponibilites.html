@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Ndoket — Mes disponibilités</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="animations.css">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#F5FAFC;
+    --surface:#FFFFFF;
+    --ink:#1F2A33;
+    --ink-soft:#54646F;
+    --muted:#8B98A1;
+    --orange:#F2871E;
+    --orange-dark:#D66A0C;
+    --orange-light:#FDE3C5;
+    --blue:#3FC2E8;
+    --blue-dark:#1E9BC2;
+    --blue-light:#D6F3FB;
+    --green:#3AA65A;
+    --green-light:#DCF3E2;
+    --line:#E5EEF1;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:#EDEFF0;font-family:'Inter',sans-serif;padding:0;display:flex;justify-content:center;}
+  .screen{width:100%;height:100dvh;display:flex;flex-direction:column;overflow:hidden;background:var(--surface);}
+
+  .topbar{padding:46px 20px 8px;display:flex;align-items:center;gap:12px;}
+  .back{width:34px;height:34px;border-radius:11px;background:var(--bg);border:2px solid var(--line);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+  .topbar-title{font-family:'Baloo 2',sans-serif;font-size:16px;font-weight:700;color:var(--ink);}
+
+  .body{flex:1;overflow-y:auto;padding:18px 20px 24px;}
+
+  .day-card{background:var(--bg);border-radius:16px;padding:14px 16px;margin-bottom:10px;}
+  .day-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
+  .day-name{font-size:13px;font-weight:700;color:var(--ink);}
+  .day-toggle{width:42px;height:24px;border-radius:20px;background:var(--line);position:relative;cursor:pointer;transition:background 0.2s;}
+  .day-toggle.on{background:var(--green);}
+  .day-toggle::after{content:"";position:absolute;top:3px;left:3px;width:18px;height:18px;border-radius:50%;background:#fff;transition:transform 0.2s;}
+  .day-toggle.on::after{transform:translateX(18px);}
+
+  .slots{display:none;}
+  .slots.show{display:block;}
+  .slot-row{display:flex;align-items:center;gap:8px;margin-bottom:8px;}
+  .slot-time{flex:1;background:var(--surface);border:2px solid var(--line);border-radius:12px;padding:10px 12px;font-size:13px;font-weight:600;color:var(--ink);text-align:center;}
+  .slot-sep{font-size:12px;color:var(--muted);font-weight:600;}
+  .slot-remove{width:28px;height:28px;border-radius:50%;background:var(--surface);border:2px solid var(--line);display:flex;align-items:center;justify-content:center;flex-shrink:0;cursor:pointer;}
+  .slot-remove svg{width:14px;height:14px;stroke:var(--muted);}
+
+  .add-slot-btn{display:flex;align-items:center;justify-content:center;gap:6px;padding:10px;border:2px dashed var(--blue);background:var(--blue-light);border-radius:12px;cursor:pointer;margin-top:4px;}
+  .add-slot-btn span{font-size:12px;font-weight:700;color:var(--blue-dark);}
+
+  .footer{padding:16px 20px 26px;border-top:2px solid var(--line);display:flex;justify-content:flex-end;}
+  .btn-primary{background:var(--orange);color:#fff;text-align:right;padding:14px 24px;border-radius:14px;font-weight:700;font-size:14px;border:none;display:inline-block;font-family:'Inter',sans-serif;cursor:pointer;}
+</style>
+</head>
+<body data-role="prestataire">
+  <div class="screen">
+    <div class="topbar">
+      <div class="back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px"><polyline points="15 18 9 12 15 6"/></svg></div>
+      <div class="topbar-title">Mes disponibilités</div>
+    </div>
+
+    <div class="body" id="daysList"></div>
+
+    <div class="footer">
+      <button type="button" class="btn-primary" id="saveBtn">Enregistrer</button>
+    </div>
+  </div>
+
+<script src="supabase.js"></script>
+<script src="icons.js"></script>
+<script src="nav.js"></script>
+<script>
+(function(){
+  var me = sessionUser();
+  if(!me){ location.href='login.html'; return; }
+
+  var DOW = ['Dimanche','Lundi','Mardi','Mercredi','Jeudi','Vendredi','Samedi'];
+  var DOW_SHORT = ['Dim','Lun','Mar','Mer','Jeu','Ven','Sam'];
+  var DAYS = [1,2,3,4,5]; // lun-ven par défaut
+  var disponibilites = {};
+  var prestataireId = null;
+
+  // Charger le profil prestataire
+  supabase.select('profils', { id: 'eq.' + me.id }).then(function(rows){
+    var p = (rows && rows[0]) || null;
+    if(p && p.prestataire_id){
+      prestataireId = p.prestataire_id;
+      loadDisponibilites();
+    }
+  });
+
+  function loadDisponibilites(){
+    supabase.select('disponibilites', { prestataire_id: 'eq.' + prestataireId }).then(function(rows){
+      rows = rows || [];
+      rows.forEach(function(d){
+        if(!disponibilites[d.jour_semaine]) disponibilites[d.jour_semaine] = [];
+        // Postgres renvoie "HH:MM:SS" → tronquer en "HH:MM" pour les inputs time
+        disponibilites[d.jour_semaine].push({
+          id: d.id,
+          debut: String(d.heure_debut || '').slice(0, 5),
+          fin: String(d.heure_fin || '').slice(0, 5)
+        });
+      });
+      renderDays();
+    });
+  }
+
+  function renderDays(){
+    var container = document.getElementById('daysList');
+    container.innerHTML = '';
+    for(var i = 0; i <= 6; i++){
+      var hasSlots = disponibilites[i] && disponibilites[i].length > 0;
+      var card = document.createElement('div');
+      card.className = 'day-card';
+      card.innerHTML =
+        '<div class="day-header">' +
+          '<div class="day-name">' + DOW[i] + '</div>' +
+          '<div class="day-toggle ' + (hasSlots ? 'on' : '') + '" data-day="' + i + '"></div>' +
+        '</div>' +
+        '<div class="slots ' + (hasSlots ? 'show' : '') + '" id="slots-' + i + '">' +
+          renderSlots(i) +
+          '<div class="add-slot-btn" data-day="' + i + '"><span>+ Ajouter un créneau</span></div>' +
+        '</div>';
+      container.appendChild(card);
+    }
+
+    // Toggle day
+    container.querySelectorAll('.day-toggle').forEach(function(toggle){
+      toggle.addEventListener('click', function(){
+        var day = parseInt(this.getAttribute('data-day'));
+        this.classList.toggle('on');
+        var slotsEl = document.getElementById('slots-' + day);
+        if(this.classList.contains('on')){
+          slotsEl.classList.add('show');
+          if(!disponibilites[day] || disponibilites[day].length === 0){
+            disponibilites[day] = [{ debut: '09:00', fin: '18:00' }];
+            renderDays();
+          }
+        } else {
+          slotsEl.classList.remove('show');
+          delete disponibilites[day];
+        }
+      });
+    });
+
+    // Add slot
+    container.querySelectorAll('.add-slot-btn').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        var day = parseInt(this.getAttribute('data-day'));
+        if(!disponibilites[day]) disponibilites[day] = [];
+        disponibilites[day].push({ debut: '09:00', fin: '18:00' });
+        renderDays();
+      });
+    });
+
+    // Remove slot
+    container.querySelectorAll('.slot-remove').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        var day = parseInt(this.getAttribute('data-day'));
+        var idx = parseInt(this.getAttribute('data-idx'));
+        disponibilites[day].splice(idx, 1);
+        if(disponibilites[day].length === 0) delete disponibilites[day];
+        renderDays();
+      });
+    });
+  }
+
+  function renderSlots(day){
+    var slots = disponibilites[day] || [];
+    var html = '';
+    slots.forEach(function(s, i){
+      html += '<div class="slot-row">' +
+        '<input type="time" class="slot-time" value="' + s.debut + '" data-day="' + day + '" data-idx="' + i + '" data-field="debut">' +
+        '<span class="slot-sep">→</span>' +
+        '<input type="time" class="slot-time" value="' + s.fin + '" data-day="' + day + '" data-idx="' + i + '" data-field="fin">' +
+        '<div class="slot-remove" data-day="' + day + '" data-idx="' + i + '">' +
+          '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>' +
+        '</div>' +
+      '</div>';
+    });
+    return html;
+  }
+
+  // Sauvegarder
+  document.getElementById('saveBtn').addEventListener('click', function(){
+    if(!prestataireId){ alert('Profil prestataire non trouvé.'); return; }
+
+    var btn = this;
+    btn.disabled = true;
+    btn.textContent = 'Enregistrement…';
+
+    // Récupérer les valeurs des inputs
+    document.querySelectorAll('.slot-time').forEach(function(input){
+      var day = parseInt(input.getAttribute('data-day'));
+      var idx = parseInt(input.getAttribute('data-idx'));
+      var field = input.getAttribute('data-field');
+      if(disponibilites[day] && disponibilites[day][idx]){
+        disponibilites[day][idx][field] = input.value;
+      }
+    });
+
+    // Validation : chaque créneau doit se terminer après son début
+    var invalid = false;
+    for(var dayV in disponibilites){
+      (disponibilites[dayV]||[]).forEach(function(s){
+        if(s.debut && s.fin && s.fin <= s.debut) invalid = true;
+      });
+    }
+    if(invalid){
+      btn.disabled = false;
+      btn.textContent = 'Enregistrer';
+      alert('Chaque créneau doit se terminer après son heure de début.');
+      return;
+    }
+
+    // Sauvegarde atomique via RPC (delete + insert dans une transaction)
+    var slots = [];
+    for(var day in disponibilites){
+      disponibilites[day].forEach(function(s){
+        slots.push({
+          jour_semaine: parseInt(day),
+          heure_debut: s.debut,
+          heure_fin: s.fin
+        });
+      });
+    }
+    supabase.rpc('save_disponibilites', {
+      p_prestataire_id: prestataireId,
+      p_slots: JSON.stringify(slots)
+    }).then(function(){
+      btn.disabled = false;
+      btn.textContent = 'Enregistrer';
+      showToast('Disponibilités enregistrées !');
+    }).catch(function(err){
+      btn.disabled = false;
+      btn.textContent = 'Enregistrer';
+      alert('Erreur : ' + err.message);
+    });
+  });
+})();
+</script>
+</body>
+</html>

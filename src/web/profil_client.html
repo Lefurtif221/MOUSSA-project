@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Ndoket — Profil client</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="animations.css">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --bg:#F5FAFC;
+    --surface:#FFFFFF;
+    --ink:#1F2A33;
+    --ink-soft:#54646F;
+    --muted:#8B98A1;
+    --orange:#F2871E;
+    --orange-dark:#D66A0C;
+    --orange-light:#FDE3C5;
+    --blue:#3FC2E8;
+    --blue-dark:#1E9BC2;
+    --blue-light:#D6F3FB;
+    --red:#E14848;
+    --red-light:#FBE3E3;
+    --line:#E5EEF1;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:#EDEFF0;
+    font-family:'Inter',sans-serif;
+    padding:48px 16px;
+    display:flex;
+    justify-content:center;
+  }
+
+  .phone{
+    width:375px;
+    height:812px;
+    background:var(--surface);
+    border-radius:44px;
+    border:12px solid var(--ink);
+    overflow:hidden;
+    position:relative;
+    box-shadow: 0 30px 60px -25px rgba(31,42,51,0.4);
+  }
+  .notch{
+    position:absolute;
+    top:0; left:50%;
+    transform:translateX(-50%);
+    width:150px; height:26px;
+    background:var(--ink);
+    border-radius:0 0 16px 16px;
+    z-index:8;
+  }
+  .screen{
+    width:100%;
+    height:100%;
+    display:flex;
+    flex-direction:column;
+    overflow:hidden;
+  }
+
+  .content{
+    flex:1;
+    overflow-y:auto;
+  }
+
+  /* Header profil */
+  .profile-header{
+    background:var(--orange);
+    padding:56px 20px 28px;
+    display:flex;
+    align-items:center;
+    gap:14px;
+    position:relative;
+    overflow:hidden;
+  }
+  .profile-header::after{
+    content:"";;
+    position:absolute;
+    right:-40px; top:-40px;
+    width:140px;height:140px;
+    border-radius:50%;
+    background:rgba(255,255,255,0.14);
+  }
+  .avatar-big{
+    width:64px;height:64px;
+    border-radius:50%;
+    background:#fff;
+    border:3px solid rgba(255,255,255,0.5);
+    position:relative;
+    z-index:1;
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    flex-shrink:0;
+  }
+  .avatar-big img{width:100%;height:100%;object-fit:cover;border-radius:50%;display:none;}
+  .avatar-big.has-img img{display:block;}
+  .avatar-big.has-img .av-icon{display:none;}
+  .avatar-big .av-icon{font-size:26px;color:var(--orange);}
+  .avatar-big .av-cam{
+    position:absolute;bottom:-2px;right:-2px;width:20px;height:20px;border-radius:50%;
+    background:var(--blue-dark);color:#fff;font-size:10px;display:flex;align-items:center;
+    justify-content:center;z-index:2;border:2px solid var(--orange);
+  }
+  .profile-name-block{
+    position:relative;
+    z-index:1;
+  }
+  .profile-name{
+    font-family:'Baloo 2',sans-serif;
+    font-size:19px;
+    font-weight:700;
+    color:#fff;
+  }
+  .profile-phone{
+    font-size:11.5px;
+    color:#FFEFE0;
+    margin-top:2px;
+    font-weight:600;
+  }
+  .edit-btn{
+    margin-left:auto;
+    width:34px;height:34px;
+    border-radius:11px;
+    background:rgba(255,255,255,0.25);
+    position:relative;
+    z-index:1;
+    flex-shrink:0;
+  }
+
+  /* Stats rapides */
+  .stat-row{
+    display:flex;
+    margin:-18px 20px 20px;
+    background:var(--surface);
+    border-radius:16px;
+    border:2px solid var(--line);
+    position:relative;
+    z-index:2;
+    box-shadow:0 10px 20px -14px rgba(31,42,51,0.25);
+  }
+  .stat-item{
+    flex:1;
+    text-align:center;
+    padding:14px 8px;
+  }
+  .stat-item + .stat-item{
+    border-left:2px solid var(--line);
+  }
+  .stat-num{
+    font-family:'Baloo 2',sans-serif;
+    font-size:16px;
+    font-weight:800;
+    color:var(--orange-dark);
+  }
+  .stat-label{
+    font-size:9.5px;
+    color:var(--muted);
+    margin-top:2px;
+    font-weight:600;
+  }
+
+  /* Bandeau devenir prestataire */
+  .become-provider{
+    margin:0 20px 20px;
+    background:var(--blue-light);
+    border-radius:16px;
+    padding:14px 16px;
+    display:flex;
+    align-items:center;
+    gap:12px;
+  }
+  .become-provider .icon{
+    width:36px;height:36px;
+    border-radius:10px;
+    background:var(--blue-dark);
+    flex-shrink:0;
+  }
+  .become-provider .txt h4{
+    font-family:'Baloo 2',sans-serif;
+    font-size:13px;
+    font-weight:700;
+    color:var(--blue-dark);
+    margin:0 0 2px;
+  }
+  .become-provider .txt p{
+    font-size:10.5px;
+    color:var(--blue-dark);
+    margin:0;
+    opacity:0.85;
+  }
+
+  /* Menu */
+  .menu-group{
+    margin:0 20px 18px;
+  }
+  .menu-label{
+    font-size:11px;
+    font-weight:800;
+    color:var(--muted);
+    text-transform:uppercase;
+    letter-spacing:0.05em;
+    margin-bottom:8px;
+    padding-left:2px;
+  }
+  .menu-list{
+    background:var(--surface);
+    border:2px solid var(--line);
+    border-radius:16px;
+    overflow:hidden;
+  }
+  .menu-row{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    padding:13px 16px;
+    border-bottom:2px solid var(--line);
+  }
+  .menu-row:last-child{
+    border-bottom:none;
+  }
+  .menu-icon{
+    width:32px;height:32px;
+    border-radius:10px;
+    background:var(--bg);
+    flex-shrink:0;
+  }
+  .menu-text{
+    flex:1;
+    font-size:12.5px;
+    font-weight:600;
+    color:var(--ink);
+  }
+  .menu-chevron{
+    width:16px;height:16px;
+    position:relative;
+    flex-shrink:0;
+  }
+  .menu-chevron::after{
+    content:"";;
+    position:absolute;
+    top:50%; left:40%;
+    width:6px;height:6px;
+    border-top:2px solid var(--muted);
+    border-right:2px solid var(--muted);
+    transform:translate(-50%,-50%) rotate(45deg);
+  }
+
+  .menu-row.danger .menu-text{
+    color:var(--red);
+  }
+  .menu-row.danger .menu-icon{
+    background:var(--red-light);
+  }
+
+  .app-version{
+    text-align:center;
+    font-size:10.5px;
+    color:var(--muted);
+    padding:6px 0 26px;
+  }
+
+
+  .topbar{
+    padding:52px 20px 8px;
+    display:flex;
+    align-items:center;
+    gap:12px;
+  }
+  .back{
+    width:34px;height:34px;
+    border-radius:11px;
+    background:var(--bg);
+    border:2px solid var(--line);
+    position:relative;
+    flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;}
+  
+  .topbar-title{
+    font-family:'Baloo 2',sans-serif;
+    font-size:16px;
+    font-weight:700;
+    color:var(--ink);
+  }
+
+  /* Tabbar bas */
+  .tabbar{display:flex;justify-content:space-around;padding:12px 0 10px;background:var(--surface);border-top:2px solid var(--line);flex-shrink:0;}
+  .tab{display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;-webkit-tap-highlight-color:transparent;}
+  .tab-icon{width:22px;height:22px;display:flex;align-items:center;justify-content:center;}
+  .tab-icon svg{width:20px;height:20px;}
+  .tab-text{font-size:9px;font-weight:700;color:var(--muted);}
+  .tab.active .tab-text{color:var(--orange-dark);}
+  .tab.active .tab-icon{color:var(--orange-dark);}
+  /* === NDOKET : plein Ã©cran (hors maquette) === */
+  html,body{height:100%;}
+  body{padding:0 !important;display:block !important;justify-content:flex-start !important;}
+  .phone{width:100% !important;height:100% !important;max-width:none !important;
+    border-radius:0 !important;border:none !important;box-shadow:none !important;}
+  .notch{display:none !important;}
+  .screen{height:100% !important;min-height:100dvh !important;}
+  .content{overflow-y:auto !important;}
+</style>
+</head>
+<body>
+
+  <div class="phone">
+    <div class="notch"></div>
+    <div class="screen">
+      <div class="topbar">
+          <div class="back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px"><polyline points="15 18 9 12 15 6"/></svg></div>
+          <div class="topbar-title">Mon profil</div>
+        </div>
+        <div class="content">
+
+        <div class="profile-header">
+          <div class="avatar-big" id="avatarBox">
+            <span class="av-icon">👤</span>
+            <img id="avatarImg" alt="" />
+            <span class="av-cam">📷</span>
+          </div>
+          <div class="profile-name-block">
+            <div class="profile-name" id="proName">—</div>
+            <div class="profile-phone" id="proPhone">—</div>
+          </div>
+          <div class="edit-btn" id="editProfileBtn">✏️</div>
+        </div>
+        <input type="file" id="avatarInput" accept="image/*" style="display:none" />
+
+        <div class="stat-row">
+          <div class="stat-item">
+            <div class="stat-num" id="statResa">0</div>
+            <div class="stat-label">Réservations</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-num" id="statAvis">—</div>
+            <div class="stat-label">Avis laissés</div>
+          </div>
+        </div>
+
+        <div class="become-provider" id="becomeProRow">
+          <div class="icon"></div>
+          <div class="txt">
+            <h4>Devenir prestataire</h4>
+            <p>Proposez vos services sur Ndoket, en 5 minutes</p>
+          </div>
+        </div>
+
+        <div class="menu-group">
+          <div class="menu-label">Mon activité</div>
+          <div class="menu-list">
+            <div class="menu-row" data-nav="mes_reservations">
+              <div class="menu-icon"></div>
+              <div class="menu-text">Mes réservations</div>
+              <div class="menu-chevron"></div>
+            </div>
+            <div class="menu-row" data-nav="mes_avis_client">
+              <div class="menu-icon"></div>
+              <div class="menu-text">Mes avis</div>
+              <div class="menu-chevron"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="menu-group">
+          <div class="menu-label">Compte</div>
+          <div class="menu-list">
+            <div class="menu-row" data-nav="mon_compte">
+              <div class="menu-icon"></div>
+              <div class="menu-text">Mon compte</div>
+              <div class="menu-chevron"></div>
+            </div>
+            <div class="menu-row" data-nav="mes_informations">
+              <div class="menu-icon"></div>
+              <div class="menu-text">Mes informations</div>
+              <div class="menu-chevron"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="menu-group">
+          <div class="menu-label">Aide</div>
+          <div class="menu-list">
+            <div class="menu-row" data-nav="aide">
+              <div class="menu-icon"></div>
+              <div class="menu-text">Centre d'aide</div>
+              <div class="menu-chevron"></div>
+            </div>
+            <div class="menu-row danger" id="logoutRow">
+              <div class="menu-icon"></div>
+              <div class="menu-text">Se déconnecter</div>
+              <div class="menu-chevron"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="app-version">Ndoket · Version 1.0.0</div>
+
+      </div>
+
+      <div class="tabbar">
+        <div class="tab" data-nav="accueil_client">
+          <span class="tab-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></span>
+          <div class="tab-text">Accueil</div>
+        </div>
+        <div class="tab" data-nav="recherche">
+          <span class="tab-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></span>
+          <div class="tab-text">Recherche</div>
+        </div>
+        <div class="tab" data-nav="mes_reservations">
+          <span class="tab-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></span>
+          <div class="tab-text">RDV</div>
+        </div>
+        <div class="tab active" data-nav="profil_client">
+          <span class="tab-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span>
+          <div class="tab-text">Profil</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<script src="supabase.js"></script>
+<script src="icons.js"></script>
+  <script src="nav.js"></script>
+<script>
+(function(){
+  var me = sessionUser();
+  if(!me){ location.href = 'login.html'; return; }
+
+  // Photo de profil
+  var avatarBox = document.getElementById('avatarBox');
+  var avatarInput = document.getElementById('avatarInput');
+  var avatarImg = document.getElementById('avatarImg');
+  avatarBox.addEventListener('click', function(){ avatarInput.click(); });
+  avatarInput.addEventListener('change', function(){
+    var f = this.files && this.files[0];
+    if(!f) return;
+    var r = new FileReader();
+    r.onload = function(e){
+      avatarImg.src = e.target.result;
+      avatarBox.classList.add('has-img');
+    };
+    r.readAsDataURL(f);
+    var ext = (f.type || 'image/jpeg').split('/')[1] || 'jpeg';
+    supabase.uploadPhoto(f, 'avatars/' + me.id + '_' + Date.now() + '.' + ext).then(function(url){
+      return supabase.update('profils', { avatar_url: url }, 'id', me.id);
+    }).then(function(){
+      showToast('Photo de profil mise à jour !');
+    }).catch(function(e){
+      showToast('Erreur photo : ' + e.message);
+    });
+  });
+
+  supabase.select('profils', { id: 'eq.' + me.id }).then(function(rows){
+    if(rows && rows[0]){
+      var p = rows[0];
+      document.getElementById('proName').textContent = p.prenom + ' ' + p.nom;
+      document.getElementById('proPhone').textContent = p.telephone || '—';
+      if(p.avatar_url){
+        avatarImg.src = p.avatar_url;
+        avatarBox.classList.add('has-img');
+      }
+    }
+  }).catch(function(){});
+
+  supabase.select('reservations', { client_id: 'eq.' + me.id }).then(function(rows){
+    document.getElementById('statResa').textContent = (rows || []).length;
+  }).catch(function(){});
+
+  // Nombre réel d'avis laissés
+  supabase.select('avis', { client_id: 'eq.' + me.id }).then(function(rows){
+    document.getElementById('statAvis').textContent = rows ? rows.length : 0;
+  }).catch(function(){});
+
+  // Crayon d'édition du profil → page Mes informations
+  document.getElementById('editProfileBtn').addEventListener('click', function(){
+    location.href = 'mes_informations.html';
+  });
+
+  document.getElementById('becomeProRow').addEventListener('click', function(){
+    showToast('Un seul rôle par compte : utilisez une autre adresse e-mail pour devenir prestataire.', 3500);
+    setTimeout(function(){ location.href = 'inscription_email_pro.html'; }, 800);
+  });
+  
+  document.getElementById('logoutRow').addEventListener('click', function(){
+    supabase.signOut().then(function(){
+      ndoket.clearBooking();
+      location.href = 'index.html';
+    });
+  });
+})();
+</script>
+</body>
+</html>

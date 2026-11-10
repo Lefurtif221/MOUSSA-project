@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Ndoket — Se connecter</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="animations.css">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --bg:#F5FAFC;
+    --surface:#FFFFFF;
+    --ink:#1F2A33;
+    --ink-soft:#54646F;
+    --muted:#8B98A1;
+    --orange:#F2871E;
+    --orange-dark:#D66A0C;
+    --orange-light:#FDE3C5;
+    --blue:#3FC2E8;
+    --blue-dark:#1E9BC2;
+    --blue-light:#D6F3FB;
+    --line:#E5EEF1;
+  }
+  *{box-sizing:border-box;}
+  html,body{height:100%;}
+  body{
+    margin:0;
+    background:#EDEFF0;
+    font-family:'Inter',sans-serif;
+    display:flex;
+    justify-content:center;
+  }
+  .phone{
+    width:100%;height:100%;
+    background:var(--surface);
+    border-radius:0;
+    border:none;
+    overflow:hidden;
+    position:relative;
+    max-width:none;
+  }
+  .notch{display:none !important;}
+  .screen{
+    width:100%;height:100%;
+    display:flex;
+    flex-direction:column;
+    min-height:100dvh;
+  }
+  .topbar{
+    padding:46px 20px 8px;
+    display:flex;
+    align-items:center;
+    gap:12px;
+  }
+  .back{
+    width:34px;height:34px;
+    border-radius:11px;
+    background:var(--bg);
+    border:2px solid var(--line);
+    position:relative;
+    flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;}
+  
+  .topbar-title{
+    font-family:'Baloo 2',sans-serif;
+    font-size:16px;
+    font-weight:700;
+    color:var(--ink);
+  }
+  .body{
+    flex:1;
+    overflow-y:auto;
+    padding:20px 24px 24px;
+  }
+  .eyebrow{
+    font-size:11.5px;
+    font-weight:800;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    color:var(--orange-dark);
+    margin-bottom:8px;
+  }
+  h1{
+    font-family:'Baloo 2',sans-serif;
+    font-size:24px;
+    font-weight:700;
+    color:var(--ink);
+    margin:0 0 8px;
+  }
+  .subtitle{
+    font-size:13px;
+    color:var(--ink-soft);
+    line-height:1.55;
+    margin:0 0 26px;
+  }
+  .role-switch{
+    display:flex;
+    gap:8px;
+    margin-bottom:22px;
+  }
+  .role-pill{
+    flex:1;
+    text-align:center;
+    font-size:12.5px;
+    font-weight:700;
+    padding:11px;
+    border-radius:12px;
+    border:2px solid var(--line);
+    color:var(--muted);
+    cursor:pointer;
+    -webkit-tap-highlight-color:transparent;
+    transition:transform 0.18s cubic-bezier(0.22,1,0.36,1),background-color 0.2s ease,border-color 0.2s ease,color 0.2s ease;
+  }
+  .role-pill:active{ transform:scale(0.95); }
+  .role-pill.active{
+    background:var(--orange-light);
+    border-color:var(--orange);
+    color:var(--orange-dark);
+    animation:chipBounce 0.3s cubic-bezier(0.22,1,0.36,1);
+  }
+  .field{
+    margin-bottom:18px;
+  }
+  .field-label{
+    font-size:12px;
+    font-weight:700;
+    color:var(--ink-soft);
+    margin-bottom:7px;
+  }
+  .field-input{
+    border:2px solid var(--line);
+    border-radius:14px;
+    padding:14px 16px;
+    background:var(--bg);
+    font-size:13.5px;
+  }
+  input.field-input{
+    width:100%;
+    outline:none;
+    font-family:'Inter',sans-serif;
+    color:var(--ink);
+  }
+  input.field-input:focus{
+    border-color:var(--blue);
+    background:#fff;
+  }
+  input.field-input::placeholder{ color:var(--muted); }
+  .field-input.password{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+  }
+  .field-input.password input{
+    flex:1;
+    border:none;
+    outline:none;
+    background:transparent;
+    font-family:'Inter',sans-serif;
+    font-size:13.5px;
+    color:var(--ink);
+  }
+  .field-input.password input::placeholder{ color:var(--muted); }
+  .show-toggle{
+    font-size:11px;
+    font-weight:700;
+    color:var(--blue-dark);
+    cursor:pointer;
+    flex-shrink:0;
+  }
+  .form-error{
+    display:none;
+    background:#FBE3E3;
+    color:#C0392B;
+    font-size:12px;
+    font-weight:600;
+    border-radius:12px;
+    padding:10px 12px;
+    margin-top:4px;
+    margin-bottom:14px;
+  }
+  .footer{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    padding:16px 20px 28px;
+    border-top:2px solid var(--line);
+  }
+  .btn-primary{
+    min-width:230px;
+    background:var(--orange);
+    color:#FFFFFF;
+    border:none;
+    text-align:center;
+    padding:14px 40px;
+    border-radius:16px;
+    font-family:'Inter',sans-serif;
+    font-weight:800;
+    font-size:14.5px;
+    cursor:pointer;
+  }
+  .btn-primary:disabled{ opacity:0.6; }
+  .login-hint{
+    text-align:center;
+    font-size:11.5px;
+    color:var(--muted);
+    margin-top:20px;
+  }
+  .login-hint b{
+    color:var(--blue-dark);
+    font-weight:700;
+    cursor:pointer;
+  }
+  .divider{
+    display:flex;align-items:center;gap:12px;width:100%;margin:14px 0;
+  }
+  .divider::before,.divider::after{content:"";flex:1;height:1px;background:var(--line);}
+  .divider span{font-size:11px;font-weight:700;color:var(--muted);}
+  .btn-google{
+    width:100%;display:flex;align-items:center;justify-content:center;gap:10px;
+    background:#fff;border:2px solid var(--line);border-radius:14px;
+    padding:14px;font-size:13.5px;font-weight:700;color:var(--ink);
+    font-family:'Inter',sans-serif;cursor:pointer;
+  }
+  .btn-google:active{background:var(--bg);}
+</style>
+</head>
+<body>
+
+  <div class="phone">
+    <div class="notch"></div>
+    <div class="screen">
+
+      <div class="topbar">
+        <div class="back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px"><polyline points="15 18 9 12 15 6"/></svg></div>
+        <div class="topbar-title">Se connecter</div>
+      </div>
+
+      <div class="body">
+        <div class="eyebrow">Bienvenue</div>
+        <h1>Connectez-vous</h1>
+        <p class="subtitle">Accédez à vos réservations et gérez votre activité.</p>
+
+        <button type="button" class="btn-google" id="googleBtn">
+          <svg viewBox="0 0 24 24" width="18" height="18"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
+          Continuer avec Google
+        </button>
+
+        <div class="divider"><span>OU</span></div>
+
+        <div class="role-switch">
+          <div class="role-pill active" id="roleClient">Cliente</div>
+          <div class="role-pill" id="rolePro">Prestataire</div>
+        </div>
+
+        <div class="field">
+          <div class="field-label">Adresse e-mail</div>
+          <input type="email" class="field-input" id="email" placeholder="nom@exemple.com" autocomplete="email" />
+        </div>
+
+        <div class="field">
+          <div class="field-label">Mot de passe</div>
+          <div class="field-input password">
+            <input type="password" id="password" placeholder="••••••••" autocomplete="current-password" />
+            <span class="show-toggle" id="showToggle">Afficher</span>
+          </div>
+          <div style="text-align:right;margin-top:6px;">
+            <a href="forgot_password.html" style="font-size:11.5px;font-weight:700;color:var(--orange);text-decoration:none;">Mot de passe oublié ?</a>
+          </div>
+        </div>
+
+        <div class="form-error" id="formError"></div>
+
+        <div class="login-hint">Pas encore de compte ? <b data-nav="inscription_email">Créer un compte</b></div>
+      </div>
+
+      <div class="footer">
+        <button type="button" class="btn-primary" id="loginBtn">Se connecter</button>
+      </div>
+
+    </div>
+  </div>
+
+<script src="supabase.js"></script>
+<script src="icons.js"></script>
+<script src="nav.js"></script>
+<script>
+(function(){
+  var role = 'client';
+  var GOOGLE_SVG = '<svg viewBox="0 0 24 24" width="18" height="18"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>';
+  var roleClient = document.getElementById('roleClient');
+  var rolePro = document.getElementById('rolePro');
+  var email = document.getElementById('email');
+  var password = document.getElementById('password');
+  var error = document.getElementById('formError');
+  var btn = document.getElementById('loginBtn');
+  var showToggle = document.getElementById('showToggle');
+
+  showToggle.addEventListener('click', function(){
+    var show = password.type === 'password';
+    password.type = show ? 'text' : 'password';
+    showToggle.textContent = show ? 'Masquer' : 'Afficher';
+  });
+
+  roleClient.addEventListener('click', function(){
+    role = 'client';
+    roleClient.classList.add('active');
+    rolePro.classList.remove('active');
+  });
+  rolePro.addEventListener('click', function(){
+    role = 'prestataire';
+    rolePro.classList.add('active');
+    roleClient.classList.remove('active');
+  });
+
+  function setError(msg){
+    error.textContent = msg || '';
+    error.style.display = msg ? 'block' : 'none';
+  }
+
+  btn.addEventListener('click', function(e){
+    e.preventDefault();
+    var em = email.value.trim();
+    var pw = password.value;
+    setError('');
+
+    if(!em || !pw){
+      setError('Veuillez saisir votre e-mail et votre mot de passe.');
+      return;
+    }
+
+    btn.disabled = true;
+    btn.textContent = 'Connexion…';
+
+    supabase.signIn(em, pw).then(function(s){
+      saveSession(s);
+      return supabase.select('profils', { id: 'eq.' + s.user.id }).then(function(rows){
+        var p = rows && rows[0];
+        if(!p){
+          var target = role === 'prestataire' ? 'inscription_pro.html' : 'inscription_profil.html';
+          location.href = target;
+          return;
+        }
+        // Un seul rôle par compte : un mail = client OU prestataire
+        var isPro = p.role === 'prestataire' || !!p.prestataire_id;
+        if(role === 'client' && isPro){
+          btn.disabled = false;
+          btn.textContent = 'Se connecter';
+          setError('Ce compte est déjà utilisé en tant que prestataire. Connectez-vous dans l\'onglet Prestataire.');
+          return;
+        }
+        if(role === 'prestataire' && !isPro){
+          btn.disabled = false;
+          btn.textContent = 'Se connecter';
+          setError('Ce compte est déjà utilisé en tant que cliente. Utilisez une autre adresse e-mail pour devenir prestataire.');
+          return;
+        }
+        // C'est l'onglet choisi qui décide de l'espace
+        if(role === 'prestataire'){
+          if(p.prestataire_id){
+            ndoket.setPrestataire(p.prestataire_id);
+            localStorage.setItem('ndoket_space','pro'); location.href = 'accueil_prestataire.html';
+          } else {
+            location.href = 'inscription_pro.html';
+          }
+        } else {
+          ndoket.setPrestataire(p.prestataire_id || null);
+          localStorage.setItem('ndoket_space','client'); location.href = 'accueil_client.html';
+        }
+      });
+    }).catch(function(err){
+      btn.disabled = false;
+      btn.textContent = 'Se connecter';
+      setError(err.message);
+    });
+  });
+
+  // Google Sign-In
+  document.getElementById('googleBtn').addEventListener('click', function(){
+    setError('');
+    var gBtn = document.getElementById('googleBtn');
+    gBtn.disabled = true;
+    gBtn.textContent = 'Connexion…';
+
+    signInWithGoogle().then(function(s){
+      return supabase.select('profils', { id: 'eq.' + s.user.id }).then(function(rows){
+        var p = rows && rows[0];
+        // Récupérer la photo Google si pas de photo de profil
+        var meta = s.user && s.user.user_metadata;
+        var gPhoto = meta && (meta.avatar_url || meta.picture);
+        if(p && gPhoto && !p.avatar_url){
+          supabase.update('profils', { avatar_url: gPhoto }, 'id', s.user.id).catch(function(){});
+        }
+        if(!p){
+          location.href = role === 'prestataire' ? 'inscription_pro.html' : 'inscription_profil.html';
+          return;
+        }
+        var isPro = p.role === 'prestataire' || !!p.prestataire_id;
+        if(role === 'client' && isPro){
+          gBtn.disabled = false;
+          gBtn.innerHTML = GOOGLE_SVG + ' Continuer avec Google';
+          setError('Ce compte est déjà utilisé en tant que prestataire. Connectez-vous dans l\'onglet Prestataire.');
+          return;
+        }
+        if(role === 'prestataire' && !isPro){
+          gBtn.disabled = false;
+          gBtn.innerHTML = GOOGLE_SVG + ' Continuer avec Google';
+          setError('Ce compte est déjà utilisé en tant que cliente. Utilisez une autre adresse e-mail pour devenir prestataire.');
+          return;
+        }
+        // C'est l'onglet choisi qui décide de l'espace
+        if(role === 'prestataire'){
+          if(p.prestataire_id){
+            ndoket.setPrestataire(p.prestataire_id);
+            localStorage.setItem('ndoket_space','pro'); location.href = 'accueil_prestataire.html';
+          } else {
+            location.href = 'inscription_pro.html';
+          }
+        } else {
+          ndoket.setPrestataire(p.prestataire_id || null);
+          localStorage.setItem('ndoket_space','client'); location.href = 'accueil_client.html';
+        }
+      });
+    }).catch(function(err){
+      gBtn.disabled = false;
+      gBtn.innerHTML = GOOGLE_SVG + ' Continuer avec Google';
+      setError('Erreur Google : ' + err.message);
+    });
+  });
+
+  // Déjà connecté(e) ? On renvoie directement vers son espace
+  autoRouteHome();
+})();
+</script>
+</body>
+</html>

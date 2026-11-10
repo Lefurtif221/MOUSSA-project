@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Ndoket — Mes rendez-vous</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="animations.css">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#F5FAFC;--surface:#FFFFFF;--ink:#1F2A33;--ink-soft:#54646F;--muted:#8B98A1;
+    --orange:#F2871E;--orange-dark:#D66A0C;--orange-light:#FDE3C5;
+    --blue:#3FC2E8;--blue-dark:#1E9BC2;--blue-light:#D6F3FB;
+    --green:#3AA65A;--green-light:#DCF3E2;--red:#C0392B;--red-light:#FBE3E3;
+    --line:#E5EEF1;
+  }
+  *{box-sizing:border-box;}
+  html,body{height:100%;}
+  body{margin:0;background:var(--surface);font-family:'Inter',sans-serif;}
+  .screen{width:100%;height:100dvh;display:flex;flex-direction:column;overflow:hidden;}
+  .topbar{padding:46px 20px 8px;display:flex;align-items:center;gap:12px;}
+  .back{width:34px;height:34px;border-radius:11px;background:var(--bg);border:2px solid var(--line);display:flex;align-items:center;justify-content:center;flex-shrink:0;cursor:pointer;}
+  .topbar-title{font-family:'Baloo 2',sans-serif;font-size:16px;font-weight:700;color:var(--ink);}
+  .body{flex:1;overflow-y:auto;padding:0 20px 24px;}
+
+  .tabs{display:flex;gap:0;margin:0 20px;border-bottom:2px solid var(--line);}
+  .tab{flex:1;text-align:center;padding:12px 0;font-size:12px;font-weight:700;color:var(--muted);cursor:pointer;position:relative;transition:color 0.2s;}
+  .tab.active{color:var(--orange-dark);}
+  .tab.active::after{content:"";position:absolute;bottom:-2px;left:20%;width:60%;height:3px;border-radius:2px;background:var(--orange);}
+
+  .section-label{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em;padding:14px 0 8px;}
+
+  .rdv-card{background:var(--bg);border-radius:16px;padding:14px 16px;margin-bottom:10px;cursor:pointer;transition:transform 0.15s;}
+  .rdv-card:active{transform:scale(0.98);}
+  .rdv-top{display:flex;justify-content:space-between;align-items:start;}
+  .rdv-client{font-size:14px;font-weight:700;color:var(--ink);}
+  .rdv-service{font-size:12px;color:var(--ink-soft);margin-top:2px;}
+  .rdv-bottom{display:flex;justify-content:space-between;align-items:center;margin-top:10px;}
+  .rdv-date{font-size:12px;font-weight:600;color:var(--ink-soft);}
+  .rdv-price{font-family:'Baloo 2',sans-serif;font-size:14px;font-weight:800;color:var(--orange-dark);}
+  .status-tag{font-size:10px;font-weight:700;padding:4px 8px;border-radius:8px;}
+  .status-tag.confirmed{background:var(--green-light);color:var(--green);}
+  .status-tag.paid{background:var(--blue-light);color:var(--blue-dark);}
+  .status-tag.done{background:var(--line);color:var(--muted);}
+  .status-tag.cancelled{background:var(--red-light);color:var(--red);}
+  .rdv-cancel{position:absolute;right:14px;bottom:14px;width:30px;height:30px;border-radius:50%;background:var(--red-light);border:none;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--red);font-size:16px;font-weight:700;padding:0;line-height:1;}
+  .rdv-card{position:relative;}
+
+  .empty{text-align:center;padding:60px 20px;color:var(--muted);font-size:13px;line-height:1.6;}
+</style>
+</head>
+<body data-role="prestataire">
+  <div class="screen">
+    <div class="topbar">
+      <div class="back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px"><polyline points="15 18 9 12 15 6"/></svg></div>
+      <div class="topbar-title">Mes rendez-vous</div>
+    </div>
+
+    <div class="tabs">
+      <div class="tab active" data-filter="a_venir">À venir</div>
+      <div class="tab" data-filter="passees">Passées</div>
+      <div class="tab" data-filter="annulees">Annulées</div>
+    </div>
+
+    <div class="body" id="rdvList"></div>
+  </div>
+
+<script src="supabase.js"></script>
+<script src="icons.js"></script>
+<script src="nav.js"></script>
+<script>
+(function(){
+  var me = sessionUser();
+  if(!me){ location.href='login.html'; return; }
+
+  var DOW=['Dim','Lun','Mar','Mer','Jeu','Ven','Sam'];
+  var MONTHS=['janv','févr','mars','avr','mai','juin','juil','août','sept','oct','nov','déc'];
+  var STATUS={confirme:'Confirmé',paye:'Payé',termine:'Terminé',annule:'Annulé'};
+  var STATUS_CLASS={confirme:'confirmed',paye:'paid',termine:'done',annule:'cancelled'};
+  var fmt=function(n){return (n||0).toLocaleString('fr-FR')+' F';};
+
+  var allRdv=[];
+  var filter='a_venir';
+  var pid=null;
+
+  // Proximité : position du prestataire + des clientes
+  var myPos=null;
+  var clientPos={};
+  function distKm(a,b,c,d){
+    var R=6371, toRad=Math.PI/180;
+    var dLat=(c-a)*toRad, dLng=(d-b)*toRad;
+    var x=Math.sin(dLat/2)*Math.sin(dLat/2)+Math.cos(a*toRad)*Math.cos(c*toRad)*Math.sin(dLng/2)*Math.sin(dLng/2);
+    return R*2*Math.atan2(Math.sqrt(x),Math.sqrt(1-x));
+  }
+  function fmtDist(km){
+    if(km==null) return '';
+    return 'À '+(km<10?km.toFixed(1):Math.round(km))+' km';
+  }
+  function loadMyPos(){
+    supabase.select('profils',{id:'eq.'+me.id}).then(function(rows){
+      var p=rows&&rows[0];
+      if(p&&p.latitude!=null&&p.longitude!=null){ myPos={latitude:p.latitude,longitude:p.longitude}; render(); }
+      else{
+        getMyPosition().then(function(pos){
+          myPos=pos;
+          supabase.update('profils',{latitude:pos.latitude,longitude:pos.longitude},'id',me.id).catch(function(){});
+          render();
+        }).catch(function(){});
+      }
+    }).catch(function(){});
+  }
+
+  // Get prestataire ID
+  var storedPid=ndoket.prestataireId();
+  if(storedPid){
+    pid=storedPid;
+    load();
+  } else {
+    supabase.select('profils',{id:'eq.'+me.id}).then(function(rows){
+      var p=rows&&rows[0];
+      if(p&&p.prestataire_id){ pid=p.prestataire_id; ndoket.setPrestataire(pid); load(); }
+      else { showEmpty('Profil prestataire introuvable.'); }
+    }).catch(function(e){ showEmpty('Erreur : '+e.message); });
+  }
+
+  function showEmpty(msg){ document.getElementById('rdvList').innerHTML='<div class="empty">'+msg+'</div>'; }
+
+  function load(){
+    if(!pid) return;
+    loadMyPos();
+    supabase.select('reservations',{prestataire_id:'eq.'+pid}).then(function(rows){
+      allRdv=rows||[];
+      // Positions des clientes (distance sur chaque carte)
+      var ids=[];
+      allRdv.forEach(function(r){ if(r.client_id&&ids.indexOf(r.client_id)===-1) ids.push(r.client_id); });
+      if(!ids.length){ render(); return; }
+      // Positions des clientes (RPC : RLS interdit de lire les profils des autres)
+      supabase.rpc('get_profils_brief', { p_ids: ids }).then(function(cs){
+        (cs||[]).forEach(function(c){
+          if(c.latitude!=null&&c.longitude!=null) clientPos[c.id]={latitude:c.latitude,longitude:c.longitude};
+        });
+        render();
+      }).catch(function(){ render(); });
+    }).catch(function(e){ showEmpty('Erreur : '+e.message); });
+  }
+
+  function render(){
+    var today=new Date().toISOString().slice(0,10);
+    var list=[];
+    allRdv.forEach(function(r){
+      if(filter==='annulees'){ if(r.statut==='annule') list.push(r); }
+      else if(filter==='passees'){ if(r.statut==='termine'||r.date_rdv<today) list.push(r); }
+      else { if(r.statut!=='annule'&&r.date_rdv>=today) list.push(r); }
+    });
+
+    list.sort(function(a,b){ return (a.date_rdv+' '+(a.heure_debut||'')).localeCompare(b.date_rdv+' '+(b.heure_debut||'')); });
+
+    var el=document.getElementById('rdvList');
+    if(!list.length){
+      var msg=filter==='annulees'?'Aucun rendez-vous annulé.':filter==='passees'?'Aucun rendez-vous passé.':'Aucun rendez-vous à venir.';
+      el.innerHTML='<div class="empty">'+msg+'</div>';
+      return;
+    }
+
+    var html='';
+    var lastDate='';
+    list.forEach(function(r){
+      var d=new Date(r.date_rdv+'T00:00:00');
+      var dateLabel=DOW[d.getDay()]+'. '+d.getDate()+' '+MONTHS[d.getMonth()];
+      if(dateLabel!==lastDate){
+        lastDate=dateLabel;
+        html+='<div class="section-label">'+dateLabel+'</div>';
+      }
+      var h=(r.heure_debut||'').substring(0,5);
+      var st=STATUS[r.statut]||r.statut;
+      var stCls=STATUS_CLASS[r.statut]||'confirmed';
+      var dist='';
+      if(myPos&&clientPos[r.client_id]){
+        dist=' · '+fmtDist(distKm(myPos.latitude,myPos.longitude,clientPos[r.client_id].latitude,clientPos[r.client_id].longitude));
+      }
+      html+='<div class="rdv-card" data-id="'+r.id+'">'+
+        '<div class="rdv-top">'+
+          '<div><div class="rdv-client">Client #'+(r.code||r.id.slice(0,6))+'</div>'+
+          '<div class="rdv-service">'+h+'</div></div>'+
+          '<span class="status-tag '+stCls+'">'+st+'</span>'+
+        '</div>'+
+        '<div class="rdv-bottom">'+
+          '<div class="rdv-date">'+(r.mode==='a_domicile'?'À domicile':'Sur place')+dist+'</div>'+
+          '<div class="rdv-price">'+fmt(r.montant_total)+'</div>'+
+        '</div>'+
+        ((r.statut==='confirme'||r.statut==='paye')?'<button class="rdv-cancel" data-cancel="'+r.id+'" title="Annuler">&times;</button>':'')+
+      '</div>';
+    });
+    el.innerHTML=html;
+
+    // Click handler for each card
+    el.querySelectorAll('.rdv-card').forEach(function(card){
+      card.onclick=function(e){
+        if(e.target && e.target.dataset && e.target.dataset.cancel){
+          e.stopPropagation();
+          if(!confirm('Annuler ce rendez-vous ?')) return;
+          var cid = e.target.dataset.cancel;
+          supabase.update('reservations',{statut:'annule'},'id',cid).then(function(){
+            // Notifier la cliente
+            var cancelled = allRdv.find(function(x){ return x.id === cid; });
+            if(cancelled && cancelled.client_id){
+              sendPush('user', null, cancelled.client_id,
+                '❌ Rendez-vous annulé',
+                'Votre prestataire a annulé le rendez-vous du ' + (cancelled.date_rdv || '') + '.',
+                { page: 'mes_reservations.html' }
+              );
+            }
+            load();
+          }).catch(function(err){ alert('Erreur : '+err.message); });
+          return;
+        }
+        ndoket.setBooking({_reservation_id:this.dataset.id});
+        location.href='fiche_client.html';
+      };
+    });
+  }
+
+  // Tab switching
+  document.querySelectorAll('.tabs .tab').forEach(function(t){
+    t.onclick=function(){
+      document.querySelectorAll('.tabs .tab').forEach(function(x){x.classList.remove('active');});
+      this.classList.add('active');
+      filter=this.dataset.filter;
+      render();
+    };
+  });
+})();
+</script>
+</body>
+</html>

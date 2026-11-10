@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Ndoket — Personnaliser votre coiffure</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="animations.css">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --bg:#F5FAFC;
+    --surface:#FFFFFF;
+    --ink:#1F2A33;
+    --ink-soft:#54646F;
+    --muted:#8B98A1;
+    --orange:#F2871E;
+    --orange-dark:#D66A0C;
+    --orange-light:#FDE3C5;
+    --blue:#3FC2E8;
+    --blue-dark:#1E9BC2;
+    --blue-light:#D6F3FB;
+    --line:#E5EEF1;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:#EDEFF0;
+    font-family:'Inter',sans-serif;
+    padding:48px 16px;
+    display:flex;
+    justify-content:center;
+  }
+
+  .phone{
+    width:375px;
+    height:812px;
+    background:var(--surface);
+    border-radius:44px;
+    border:12px solid var(--ink);
+    overflow:hidden;
+    position:relative;
+    box-shadow: 0 30px 60px -25px rgba(31,42,51,0.4);
+  }
+  .notch{
+    position:absolute;
+    top:0; left:50%;
+    transform:translateX(-50%);
+    width:150px; height:26px;
+    background:var(--ink);
+    border-radius:0 0 16px 16px;
+    z-index:8;
+  }
+  .screen{
+    width:100%;
+    height:100%;
+    display:flex;
+    flex-direction:column;
+    overflow:hidden;
+  }
+
+  .topbar{
+    padding:52px 20px 8px;
+    display:flex;
+    align-items:center;
+    gap:12px;
+  }
+  .back{
+    width:34px;height:34px;
+    border-radius:11px;
+    background:var(--bg);
+    border:2px solid var(--line);
+    position:relative;
+    flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;}
+  
+  .steps{
+    display:flex;
+    gap:6px;
+    flex:1;
+  }
+  .step-bar{
+    height:4px;
+    flex:1;
+    border-radius:4px;
+    background:var(--line);
+  }
+  .step-bar.done{
+    background:var(--orange);
+  }
+
+  .body{
+    flex:1;
+    overflow-y:auto;
+    padding:20px 24px 24px;
+  }
+
+  .eyebrow{
+    font-size:11.5px;
+    font-weight:800;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    color:var(--orange-dark);
+    margin-bottom:8px;
+  }
+  h1{
+    font-family:'Baloo 2',sans-serif;
+    font-size:21px;
+    font-weight:700;
+    color:var(--ink);
+    margin:0 0 8px;
+  }
+  .subtitle{
+    font-size:12.5px;
+    color:var(--ink-soft);
+    line-height:1.5;
+    margin:0 0 20px;
+  }
+
+  /* Résumé du service choisi */
+  .summary-chip{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    background:var(--bg);
+    border-radius:14px;
+    padding:10px 14px;
+    margin-bottom:24px;
+  }
+  .summary-chip .avatar{
+    width:34px;height:34px;
+    border-radius:10px;
+    background:linear-gradient(135deg, var(--blue-light), var(--orange-light) 140%);
+    flex-shrink:0;
+  }
+  .summary-chip .txt .name{
+    font-size:12.5px;
+    font-weight:700;
+    color:var(--ink);
+  }
+  .summary-chip .txt .service{
+    font-size:11px;
+    color:var(--muted);
+  }
+  .summary-chip .price{
+    margin-left:auto;
+    font-family:'Baloo 2',sans-serif;
+    font-size:14px;
+    font-weight:700;
+    color:var(--orange-dark);
+  }
+
+  .section-title{
+    font-size:11px;
+    font-weight:800;
+    color:var(--ink-soft);
+    text-transform:uppercase;
+    letter-spacing:0.05em;
+    margin-bottom:10px;
+  }
+  .section-block{
+    margin-bottom:22px;
+  }
+
+  /* Nombre de coupes */
+  .cut-grid{
+    display:grid;
+    grid-template-columns:repeat(3, 1fr);
+    gap:8px;
+  }
+  .cut-chip{
+    text-align:center;
+    padding:10px 4px;
+    border-radius:12px;
+    border:2px solid var(--line);
+    background:var(--surface);
+  }
+  .cut-chip.selected{
+    border-color:var(--orange);
+    background:var(--orange);
+  }
+  .cut-chip .cut-name{
+    font-size:11.5px;
+    font-weight:700;
+    color:var(--ink);
+  }
+  .cut-chip.selected .cut-name{
+    color:#fff;
+  }
+  .cut-chip .cut-price{
+    font-size:10px;
+    font-weight:700;
+    color:var(--muted);
+    margin-top:2px;
+  }
+  .cut-chip.selected .cut-price{
+    color:rgba(255,255,255,0.9);
+  }
+
+  /* Toggle perles */
+  .beads-toggle{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    background:var(--bg);
+    border-radius:14px;
+    padding:12px 14px;
+  }
+  .beads-info .t1{
+    font-size:12px;
+    font-weight:700;
+    color:var(--ink);
+  }
+  .beads-info .t2{
+    font-size:10.5px;
+    color:var(--muted);
+    margin-top:1px;
+  }
+  .beads-switch{
+    width:38px;height:22px;
+    border-radius:20px;
+    background:var(--line);
+    position:relative;
+    flex-shrink:0;
+  }
+  .beads-switch::after{
+    content:"";
+    position:absolute;
+    top:2px; left:2px;
+    width:18px;height:18px;
+    border-radius:50%;
+    background:#fff;
+  }
+  .beads-switch.active{
+    background:var(--orange);
+  }
+  .beads-switch.active::after{
+    left:auto; right:2px;
+  }
+
+  /* Upload photo */
+  .upload-box{
+    border:2px dashed var(--blue);
+    background:var(--blue-light);
+    border-radius:16px;
+    padding:18px 14px;
+    text-align:center;
+  }
+  .upload-box .icon-circle{
+    width:40px;height:40px;
+    border-radius:50%;
+    background:#fff;
+    margin:0 auto 8px;
+    position:relative;
+  }
+  .upload-box .icon-circle::before, .upload-box .icon-circle::after{
+    content:"";
+    position:absolute;
+    background:var(--blue-dark);
+  }
+  .upload-box .icon-circle::before{ width:14px;height:2.5px; top:50%; left:50%; transform:translate(-50%,-50%); border-radius:2px; }
+  .upload-box .icon-circle::after{ width:2.5px;height:14px; top:50%; left:50%; transform:translate(-50%,-50%); border-radius:2px; }
+  .upload-box .t1{
+    font-size:12.5px;
+    font-weight:700;
+    color:var(--blue-dark);
+    margin-bottom:2px;
+  }
+  .upload-box .t2{
+    font-size:10.5px;
+    color:var(--blue-dark);
+    opacity:0.8;
+  }
+
+  .preview-row{
+    display:flex;
+    gap:8px;
+    margin-top:10px;
+  }
+  .preview-tile{
+    width:64px;height:64px;
+    border-radius:12px;
+    position:relative;
+    flex-shrink:0;
+  }
+  .preview-tile .remove{
+    position:absolute;
+    top:-6px; right:-6px;
+    width:20px;height:20px;
+    border-radius:50%;
+    background:var(--ink);
+    border:2px solid var(--surface);
+  }
+  .preview-tile .remove::before, .preview-tile .remove::after{
+    content:"";
+    position:absolute;
+    top:50%; left:50%;
+    width:8px;height:1.6px;
+    background:#fff;
+  }
+  .preview-tile .remove::before{ transform:translate(-50%,-50%) rotate(45deg); }
+  .preview-tile .remove::after{ transform:translate(-50%,-50%) rotate(-45deg); }
+  .preview-add{
+    width:64px;height:64px;
+    border-radius:12px;
+    border:2px dashed var(--line);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    flex-shrink:0;
+    position:relative;
+  }
+  .preview-add::before, .preview-add::after{
+    content:"";
+    position:absolute;
+    background:var(--muted);
+  }
+  .preview-add::before{ width:14px;height:2px; }
+  .preview-add::after{ width:2px;height:14px; }
+
+  /* Commentaire */
+  .note-input{
+    width:100%;
+    min-height:90px;
+    border:2px solid var(--line);
+    border-radius:16px;
+    padding:14px;
+    font-family:inherit;
+    font-size:12.5px;
+    color:var(--ink);
+    outline:none;
+    resize:none;
+    background:var(--bg);
+  }
+  .note-input::placeholder{
+    color:var(--muted);
+  }
+  .char-count{
+    text-align:right;
+    font-size:10px;
+    color:var(--muted);
+    margin-top:6px;
+  }
+
+  .footer{
+    padding:14px 20px 24px;
+    border-top:2px solid var(--line);
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:14px;
+  }
+  .footer-total .label{
+    font-size:10.5px;
+    color:var(--muted);
+    font-weight:600;
+  }
+  .footer-total .amount{
+    font-family:'Baloo 2',sans-serif;
+    font-size:17px;
+    font-weight:700;
+    color:var(--ink);
+  }
+  .btn-primary{
+    min-width:170px;
+    background:var(--orange);
+    color:#fff;
+    text-align:center;
+    padding:14px 32px;
+    border-radius:16px;
+    font-weight:800;
+    font-size:14.5px;
+    border:none;
+    font-family:'Inter',sans-serif;
+    cursor:pointer;
+  }
+
+  /* === NDOKET : plein ecran (phone only) === */
+  html,body{height:100%;}
+  body{padding:0 !important;display:block !important;justify-content:flex-start !important;}
+  .phone{width:100% !important;height:100% !important;max-width:none !important;
+    border-radius:0 !important;border:none !important;box-shadow:none !important;}
+  .notch{display:none !important;}
+  .screen{height:100% !important;min-height:100dvh !important;}
+  .content{overflow-y:auto !important;}
+</style>
+</head>
+<body>
+
+  <div class="phone">
+    <div class="notch"></div>
+    <div class="screen">
+
+      <div class="topbar">
+        <div class="back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px"><polyline points="15 18 9 12 15 6"/></svg></div>
+        <div class="steps">
+          <div class="step-bar done"></div>
+          <div class="step-bar"></div>
+          <div class="step-bar"></div>
+          <div class="step-bar"></div>
+        </div>
+      </div>
+
+      <div class="body">
+        <div class="eyebrow">Étape 1 sur 4</div>
+        <h1>Personnalisez votre coiffure</h1>
+        <p class="subtitle">Précisez vos préférences pour que la prestataire prépare tout à l'avance.</p>
+
+        <div class="summary-chip">
+          <div class="avatar"></div>
+          <div class="txt">
+            <div class="name" id="proName">—</div>
+            <div class="service" id="serviceName">—</div>
+          </div>
+          <div class="price" id="servicePrice">0 F</div>
+        </div>
+
+        <div class="section-block">
+          <div class="section-title">Nombre de coupes (mèches)</div>
+          <div class="cut-grid" id="cutGrid">
+            <div class="cut-chip selected" data-nb="1" data-mult="1">
+              <div class="cut-name">1 coupe</div>
+              <div class="cut-price">Base</div>
+            </div>
+            <div class="cut-chip" data-nb="2" data-mult="1.4">
+              <div class="cut-name">2 coupes</div>
+              <div class="cut-price">+40%</div>
+            </div>
+            <div class="cut-chip" data-nb="3" data-mult="1.8">
+              <div class="cut-name">3 coupes</div>
+              <div class="cut-price">+80%</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="section-block">
+          <div class="section-title">Suppléments</div>
+          <div id="defaultBeads">
+            <div class="beads-toggle">
+              <div class="beads-info">
+                <div class="t1">Ajouter des perles</div>
+                <div class="t2">+ 1 000 FCFA · finition décorative</div>
+              </div>
+              <div class="beads-switch active" id="beadsSwitch"></div>
+            </div>
+          </div>
+          <div id="suppBlock"></div>
+        </div>
+
+        <div class="section-block">
+          <div class="section-title">Photo du modèle souhaité (optionnel)</div>
+          <div class="upload-box" id="uploadBox">
+            <div class="icon-circle"></div>
+            <div class="t1">Ajouter une photo</div>
+            <div class="t2">Pinterest, Instagram, ou depuis votre galerie</div>
+          </div>
+          <input type="file" id="refInput" accept="image/*" style="display:none" />
+          <div class="preview-row" id="previewRow"></div>
+        </div>
+
+        <div class="section-block">
+          <div class="section-title">Remarques / précisions</div>
+          <textarea class="note-input" id="noteInput" rows="3" maxlength="300" placeholder="Ex : nattes fines vers l'arrière, longueur épaules, cuir chevelu sensible..."></textarea>
+          <div class="char-count" id="charCount">0 / 300</div>
+        </div>
+      </div>
+
+      <div class="footer">
+        <div class="footer-total">
+          <div class="label">Total sélectionné</div>
+          <div class="amount" id="totalAmount">0 FCFA</div>
+        </div>
+        <button type="button" class="btn-primary" id="continueBtn">Continuer</button>
+      </div>
+
+    </div>
+  </div>
+
+
+<script src="supabase.js"></script>
+<script src="icons.js"></script>
+  <script src="nav.js"></script>
+<script>
+(function(){
+  var booking = ndoket.getBooking();
+  if(!booking.service_id){ location.href = 'fiche_services.html'; return; }
+
+  var basePrix = booking.prix || 0;
+  var cut = 1;
+  var beads = true;
+  var variantMode = false;
+  var realSupps = [];
+  var suppOn = {};
+
+  // Prix réellement configurés par la prestataire (variantes + suppléments)
+  supabase.select('services', { id: 'eq.' + booking.service_id }).then(function(rows){
+    var s = rows && rows[0];
+    if(s){
+      var supps = (s.supplements || []).filter(function(x){ return x && x.actif && x.nom; });
+      if(supps.length){
+        realSupps = supps;
+        beads = false;
+        document.getElementById('defaultBeads').style.display = 'none';
+        var block = document.getElementById('suppBlock');
+        supps.forEach(function(sp, i){
+          suppOn[i] = false;
+          var row = document.createElement('div');
+          row.className = 'beads-toggle';
+          row.style.marginBottom = '10px';
+          row.innerHTML = '<div class="beads-info"><div class="t1"></div><div class="t2"></div></div><div class="beads-switch"></div>';
+          row.querySelector('.t1').textContent = sp.nom;
+          row.querySelector('.t2').textContent = '+ ' + (sp.prix || 0).toLocaleString('fr-FR') + ' FCFA';
+          var sw = row.querySelector('.beads-switch');
+          sw.addEventListener('click', function(){
+            suppOn[i] = !suppOn[i];
+            sw.classList.toggle('active', suppOn[i]);
+            refresh();
+          });
+          block.appendChild(row);
+        });
+      }
+      var vars = (s.variantes || []).filter(function(v){ return v && v.nom && v.prix; });
+      if(vars.length){
+        variantMode = true;
+        var grid = document.getElementById('cutGrid');
+        grid.innerHTML = '';
+        var mkBase = function(){
+          var chip = document.createElement('div');
+          chip.className = 'cut-chip selected';
+          chip.setAttribute('data-extra', '0');
+          var n = document.createElement('div'); n.className = 'cut-name'; n.textContent = 'Base';
+          var p = document.createElement('div'); p.className = 'cut-price'; p.textContent = basePrix.toLocaleString('fr-FR') + ' F';
+          chip.appendChild(n); chip.appendChild(p);
+          return chip;
+        };
+        var mkVar = function(v){
+          var chip = document.createElement('div');
+          chip.className = 'cut-chip';
+          chip.setAttribute('data-extra', v.prix);
+          var n = document.createElement('div'); n.className = 'cut-name'; n.textContent = v.nom;
+          var p = document.createElement('div'); p.className = 'cut-price'; p.textContent = '+' + v.prix.toLocaleString('fr-FR') + ' F';
+          chip.appendChild(n); chip.appendChild(p);
+          return chip;
+        };
+        grid.appendChild(mkBase());
+        vars.forEach(function(v){ grid.appendChild(mkVar(v)); });
+      }
+    }
+    refresh();
+  }).catch(function(){ refresh(); });
+
+  function suppTotal(){
+    var t = 0;
+    realSupps.forEach(function(sp, i){ if(suppOn[i]) t += (sp.prix || 0); });
+    if(!realSupps.length && beads) t += 1000;
+    return t;
+  }
+
+  var totalEl = document.getElementById('totalAmount');
+
+  function refresh(){
+    var total;
+    if(variantMode){
+      // Variantes ADDITIVES : base + supplément choisi
+      var sel = document.querySelector('.cut-chip.selected');
+      var extra = parseInt(sel && sel.getAttribute('data-extra'), 10) || 0;
+      total = basePrix + extra;
+    } else {
+      var mult = 1;
+      document.querySelectorAll('.cut-chip').forEach(function(chip){
+        if(chip.classList.contains('selected')){ mult = parseFloat(chip.getAttribute('data-mult')) || 1; }
+      });
+      total = Math.round(basePrix * mult);
+    }
+    total += suppTotal();
+    totalEl.textContent = total.toLocaleString('fr-FR') + ' FCFA';
+    ndoket.setBooking({
+      nombre_coupes: cut,
+      perles: beads && !realSupps.length,
+      montant_ht: total,
+      montant: total
+    });
+  }
+
+  document.getElementById('cutGrid').addEventListener('click', function(e){
+    var chip = e.target.closest('.cut-chip');
+    if(!chip) return;
+    document.querySelectorAll('.cut-chip').forEach(function(c){ c.classList.remove('selected'); });
+    chip.classList.add('selected');
+    cut = parseInt(chip.getAttribute('data-nb'), 10) || 1;
+    refresh();
+  });
+
+  var bs = document.getElementById('beadsSwitch');
+  if(bs){
+    bs.addEventListener('click', function(){
+      if(realSupps.length) return;
+      beads = !beads;
+      this.classList.toggle('active', beads);
+      refresh();
+    });
+  }
+
+  document.getElementById('serviceName').textContent = booking.service_nom;
+  document.getElementById('servicePrice').textContent = booking.prix.toLocaleString('fr-FR') + ' F';
+
+  if(ndoket.prestataireId()){
+    supabase.select('prestataires', { id: 'eq.' + ndoket.prestataireId() }).then(function(rows){
+      if(rows && rows[0]){ document.getElementById('proName').textContent = rows[0].nom; }
+    }).catch(function(){});
+  }
+
+  var note = document.getElementById('noteInput');
+  note.addEventListener('input', function(){
+    document.getElementById('charCount').textContent = note.value.length + ' / 300';
+    ndoket.setBooking({ note: note.value });
+  });
+
+  // Photo du modèle souhaité (upload réel)
+  var refInput = document.getElementById('refInput');
+  var previewRow = document.getElementById('previewRow');
+  function renderRefPreview(){
+    var bk = ndoket.getBooking() || {};
+    previewRow.innerHTML = '';
+    if(bk.photo_ref){
+      var tile = document.createElement('div');
+      tile.className = 'preview-tile';
+      tile.style.backgroundImage = 'url(' + bk.photo_ref + ')';
+      tile.style.backgroundSize = 'cover';
+      tile.style.backgroundPosition = 'center';
+      var rm = document.createElement('div');
+      rm.className = 'remove';
+      rm.addEventListener('click', function(e){
+        e.stopPropagation();
+        ndoket.setBooking({ photo_ref: null });
+        refInput.value = '';
+        renderRefPreview();
+      });
+      tile.appendChild(rm);
+      previewRow.appendChild(tile);
+    }
+    var add = document.createElement('div');
+    add.className = 'preview-add';
+    add.addEventListener('click', function(){ refInput.click(); });
+    previewRow.appendChild(add);
+  }
+  document.getElementById('uploadBox').addEventListener('click', function(){ refInput.click(); });
+  refInput.addEventListener('change', function(){
+    var f = this.files && this.files[0];
+    if(!f) return;
+    var u = sessionUser();
+    if(!u){ alert('Connectez-vous pour ajouter une photo.'); return; }
+    showToast('Envoi de la photo…');
+    var ext = (f.type || 'image/jpeg').split('/')[1] || 'jpeg';
+    supabase.uploadPhoto(f, 'references/' + u.id + '_' + Date.now() + '.' + ext).then(function(url){
+      ndoket.setBooking({ photo_ref: url });
+      renderRefPreview();
+      showToast('Photo ajoutée ✓');
+    }).catch(function(err){
+      showToast('Échec de l\'envoi : ' + err.message);
+    });
+  });
+  renderRefPreview();
+
+  document.getElementById('continueBtn').addEventListener('click', function(){
+    refresh();
+    location.href = 'choix_mode.html';
+  });
+
+  refresh();
+})();
+</script>
+</body>
+</html>

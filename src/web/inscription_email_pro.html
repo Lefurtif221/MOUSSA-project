@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Ndoket — Créer un compte prestataire</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="animations.css">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --bg:#F5FAFC;
+    --surface:#FFFFFF;
+    --ink:#1F2A33;
+    --ink-soft:#54646F;
+    --muted:#8B98A1;
+    --orange:#F2871E;
+    --orange-dark:#D66A0C;
+    --orange-light:#FDE3C5;
+    --blue:#3FC2E8;
+    --blue-dark:#1E9BC2;
+    --blue-light:#D6F3FB;
+    --line:#E5EEF1;
+    --red:#E53935;
+    --red-light:#FDECEA;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:#EDEFF0;
+    font-family:'Inter',sans-serif;
+    padding:48px 16px;
+    display:flex;
+    justify-content:center;
+  }
+
+  .phone{
+    width:375px;
+    height:812px;
+    background:var(--surface);
+    border-radius:44px;
+    border:12px solid var(--ink);
+    overflow:hidden;
+    position:relative;
+    box-shadow: 0 30px 60px -25px rgba(31,42,51,0.4);
+  }
+  .notch{
+    position:absolute;
+    top:0; left:50%;
+    transform:translateX(-50%);
+    width:150px; height:26px;
+    background:var(--ink);
+    border-radius:0 0 16px 16px;
+    z-index:5;
+  }
+  .screen{
+    width:100%;
+    height:100%;
+    display:flex;
+    flex-direction:column;
+    overflow:hidden;
+  }
+
+  .topbar{
+    padding:52px 20px 8px;
+    display:flex;
+    align-items:center;
+    gap:12px;
+  }
+  .back{
+    width:34px;height:34px;
+    border-radius:11px;
+    background:var(--bg);
+    border:2px solid var(--line);
+    position:relative;
+    flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;}
+  
+  .steps{
+    display:flex;
+    gap:6px;
+    flex:1;
+  }
+  .step-bar{
+    height:4px;
+    flex:1;
+    border-radius:4px;
+    background:var(--line);
+  }
+  .step-bar.done{
+    background:var(--blue);
+  }
+
+  .body{
+    flex:1;
+    overflow-y:auto;
+    padding:20px 24px 24px;
+  }
+
+  .eyebrow{
+    font-size:11.5px;
+    font-weight:800;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    color:var(--blue-dark);
+    margin-bottom:8px;
+  }
+  h1{
+    font-family:'Baloo 2',sans-serif;
+    font-size:23px;
+    font-weight:700;
+    color:var(--ink);
+    margin:0 0 8px;
+  }
+  .subtitle{
+    font-size:13px;
+    color:var(--ink-soft);
+    line-height:1.55;
+    margin:0 0 26px;
+  }
+
+  /* Bouton Google */
+  .google-btn{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:10px;
+    border:2px solid var(--line);
+    background:var(--surface);
+    border-radius:14px;
+    padding:14px;
+    margin-bottom:20px;
+  }
+  .google-icon{
+    width:20px;height:20px;
+    border-radius:50%;
+    background:conic-gradient(
+      #4285F4 0deg 90deg,
+      #34A853 90deg 180deg,
+      #FBBC05 180deg 270deg,
+      #EA4335 270deg 360deg
+    );
+    position:relative;
+    flex-shrink:0;
+  }
+  .google-icon::after{
+    content:"";
+    position:absolute;
+    inset:4px;
+    border-radius:50%;
+    background:#fff;
+  }
+  .google-btn span{
+    font-size:13.5px;
+    font-weight:700;
+    color:var(--ink);
+  }
+
+  .divider{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    margin-bottom:20px;
+  }
+  .divider .line{
+    flex:1;
+    height:1px;
+    background:var(--line);
+  }
+  .divider span{
+    font-size:11px;
+    font-weight:700;
+    color:var(--muted);
+    text-transform:uppercase;
+    letter-spacing:0.04em;
+  }
+
+  .field{
+    margin-bottom:18px;
+  }
+  .field-label{
+    font-size:12px;
+    font-weight:700;
+    color:var(--ink-soft);
+    margin-bottom:7px;
+  }
+  .field-input{
+    border:2px solid var(--line);
+    border-radius:14px;
+    padding:14px 16px;
+    background:var(--bg);
+    font-size:13.5px;
+  }
+  .field-input.placeholder{
+    color:var(--muted);
+  }
+  .field-input.password{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+  }
+  .show-toggle{
+    font-size:11px;
+    font-weight:700;
+    color:var(--blue-dark);
+  }
+  .field-hint{
+    font-size:10.5px;
+    color:var(--muted);
+    margin-top:6px;
+  }
+
+
+  input.field-input{
+    background:var(--surface);
+    border:2px solid var(--line);
+    border-radius:14px;
+    padding:13px 15px;
+    font-size:13px;
+    font-family:'Inter',sans-serif;
+    color:var(--ink);
+    width:100%;
+    box-sizing:border-box;
+  }
+  input.field-input:focus{ outline:none; border-color:var(--orange); }
+  input.field-input::placeholder{ color:var(--muted); }
+  .form-error{
+    display:none;
+    background:var(--red-light);
+    color:var(--red);
+    font-size:11.5px;
+    font-weight:600;
+    padding:10px 12px;
+    border-radius:10px;
+    margin-top:10px;
+  }
+  .form-error:empty{ display:none; }
+  .terms{
+    display:flex;
+    align-items:flex-start;
+    gap:10px;
+    margin-top:8px;
+    margin-bottom:8px;
+  }
+  .checkbox{
+    width:18px;height:18px;
+    border-radius:6px;
+    background:var(--blue-dark);
+    flex-shrink:0;
+    margin-top:1px;
+    position:relative;
+  }
+  .checkbox::after{
+    content:"";
+    position:absolute;
+    top:45%; left:50%;
+    width:8px;height:4px;
+    border-left:2px solid #fff;
+    border-bottom:2px solid #fff;
+    transform:translate(-50%,-60%) rotate(-45deg);
+    display:none;
+  }
+  .checkbox.checked::after{ display:block; }
+  .terms p{
+    margin:0;
+    font-size:11.5px;
+    color:var(--ink-soft);
+    line-height:1.5;
+  }
+  .terms a{
+    color:var(--blue-dark);
+    font-weight:700;
+  }
+
+  .login-hint{
+    text-align:center;
+    font-size:11.5px;
+    color:var(--muted);
+    margin-top:14px;
+  }
+  .login-hint b{
+    color:var(--blue-dark);
+    font-weight:700;
+  }
+
+  .footer{display:flex;justify-content:center;align-items:center;
+    padding:16px 20px 28px;
+    border-top:2px solid var(--line);
+  }
+  .btn-primary{
+    min-width:230px;
+    background:var(--blue-dark);
+    color:#FFFFFF;
+    border:none;
+    text-align:center;
+    padding:14px 40px;
+    border-radius:16px;
+    font-family:'Inter',sans-serif;
+    font-weight:800;
+    font-size:14.5px;
+    cursor:pointer;
+  }
+
+  /* === NDOKET : plein Ã©cran (hors maquette) === */
+  html,body{height:100%;}
+  body{padding:0 !important;display:block !important;justify-content:flex-start !important;}
+  .phone{width:100% !important;height:100% !important;max-width:none !important;
+    border-radius:0 !important;border:none !important;box-shadow:none !important;}
+  .notch{display:none !important;}
+  .screen{height:100% !important;min-height:100dvh !important;}
+  .content{overflow-y:auto !important;}
+</style>
+</head>
+<body>
+
+  <div class="phone">
+    <div class="notch"></div>
+    <div class="screen">
+
+      <div class="topbar">
+        <div class="back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px"><polyline points="15 18 9 12 15 6"/></svg></div>
+        <div class="steps">
+          <div class="step-bar done"></div>
+          <div class="step-bar"></div>
+          <div class="step-bar"></div>
+          <div class="step-bar"></div>
+          <div class="step-bar"></div>
+        </div>
+      </div>
+
+      <div class="body">
+        <div class="eyebrow">Étape 1 sur 5 — Prestataire</div>
+        <h1>Créez votre compte pro</h1>
+        <p class="subtitle">Proposez vos services beauté sur Ndoket, à Dakar.</p>
+
+        <div class="google-btn" id="googleBtn">
+          <svg viewBox="0 0 24 24" width="18" height="18"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
+          <span>Continuer avec Google</span>
+        </div>
+
+        <div class="divider">
+          <div class="line"></div>
+          <span>ou avec un e-mail</span>
+          <div class="line"></div>
+        </div>
+
+        <div class="field">
+          <div class="field-label">Adresse e-mail</div>
+          <input type="email" class="field-input" id="email" placeholder="nom@exemple.com" autocomplete="email" />
+        </div>
+
+        <div class="field">
+          <div class="field-label">Mot de passe</div>
+          <input type="password" class="field-input" id="password" placeholder="••••••••" autocomplete="new-password" />
+          <div class="field-hint">8 caractères minimum</div>
+        </div>
+
+        <div class="form-error" id="formError"></div>
+
+        <div class="terms">
+          <div class="checkbox" id="termsBox"></div>
+          <p>J'accepte les <a data-nav="privacy">conditions prestataires</a> et la <a data-nav="privacy">politique de confidentialité</a> de Ndoket.</p>
+        </div>
+
+        <div class="login-hint">Déjà inscrite ? <b data-nav="login">Se connecter</b></div>
+      </div>
+
+      <div class="footer">
+        <button type="button" class="btn-primary" id="continueBtn">Continuer</button>
+      </div>
+
+    </div>
+  </div>
+
+<script src="supabase.js"></script>
+<script src="icons.js"></script>
+  <script src="nav.js"></script>
+<script>
+(function(){
+  var email = document.getElementById('email');
+  var password = document.getElementById('password');
+  var termsBox = document.getElementById('termsBox');
+  var error = document.getElementById('formError');
+  var btn = document.getElementById('continueBtn');
+  var terms = false;
+
+  document.getElementById('googleBtn').addEventListener('click', function(){
+    setError('');
+    var gBtn = document.getElementById('googleBtn');
+    gBtn.style.opacity = '0.5';
+    gBtn.style.pointerEvents = 'none';
+
+    signInWithGoogle().then(function(s){
+      return supabase.select('profils', { id: 'eq.' + s.user.id }).then(function(rows){
+        var p = rows && rows[0];
+        if(!p){
+          location.href = 'inscription_pro.html';
+        } else if(p.prestataire_id || p.role === 'prestataire'){
+          if(p.prestataire_id){ ndoket.setPrestataire(p.prestataire_id); }
+          location.href = p.prestataire_id ? 'accueil_prestataire.html' : 'inscription_pro.html';
+        } else {
+          gBtn.style.opacity = '1';
+          gBtn.style.pointerEvents = 'auto';
+          setError('Ce compte est déjà utilisé en tant que cliente. Utilisez une autre adresse e-mail pour devenir prestataire.');
+        }
+      });
+    }).catch(function(err){
+      gBtn.style.opacity = '1';
+      gBtn.style.pointerEvents = 'auto';
+      setError('Erreur Google : ' + err.message);
+    });
+  });
+
+  termsBox.addEventListener('click', function(){
+    terms = !terms;
+    this.classList.toggle('checked', terms);
+  });
+
+  function setError(msg){
+    error.textContent = msg || '';
+    error.style.display = msg ? 'block' : 'none';
+  }
+
+  btn.addEventListener('click', function(){
+    var em = email.value.trim();
+    var pw = password.value;
+    setError('');
+
+    if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em)){
+      setError('Veuillez saisir une adresse e-mail valide.');
+      return;
+    }
+    if(pw.length < 8){
+      setError('Le mot de passe doit contenir au moins 8 caractères.');
+      return;
+    }
+    if(!terms){
+      setError('Veuillez accepter les conditions prestataires et la politique de confidentialité.');
+      return;
+    }
+
+    btn.disabled = true;
+    btn.textContent = 'Création du compte…';
+
+    supabase.signUp(em, pw).then(function(data){
+      if(data && data.access_token){
+        saveSession(data);
+        ndoket.set('pro_email', em);
+        location.href = 'inscription_pro.html';
+      } else {
+        return supabase.signIn(em, pw).then(function(s){
+          saveSession(s);
+          ndoket.set('pro_email', em);
+          location.href = 'inscription_pro.html';
+        });
+      }
+    }).catch(function(err){
+      btn.disabled = false;
+      btn.textContent = 'Continuer';
+      setError(err.message);
+    });
+  });
+})();
+</script>
+</body>
+</html>

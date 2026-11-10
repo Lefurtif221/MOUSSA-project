@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Ndoket — Fiche prestataire multi-services</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="animations.css">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --bg:#F5FAFC;
+    --surface:#FFFFFF;
+    --ink:#1F2A33;
+    --ink-soft:#54646F;
+    --muted:#8B98A1;
+    --orange:#F2871E;
+    --orange-dark:#D66A0C;
+    --orange-light:#FDE3C5;
+    --blue:#3FC2E8;
+    --blue-dark:#1E9BC2;
+    --blue-light:#D6F3FB;
+    --line:#E5EEF1;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:#EDEFF0;
+    font-family:'Inter',sans-serif;
+    padding:48px 16px;
+    display:flex;
+    justify-content:center;
+  }
+
+  .phone{
+    width:375px;
+    height:812px;
+    background:var(--surface);
+    border-radius:44px;
+    border:12px solid var(--ink);
+    overflow:hidden;
+    position:relative;
+    box-shadow: 0 30px 60px -25px rgba(31,42,51,0.4);
+  }
+  .notch{
+    position:absolute;
+    top:0; left:50%;
+    transform:translateX(-50%);
+    width:150px; height:26px;
+    background:var(--ink);
+    border-radius:0 0 16px 16px;
+    z-index:8;
+  }
+  .screen{
+    width:100%;
+    height:100%;
+    display:flex;
+    flex-direction:column;
+    overflow:hidden;
+  }
+
+  .content{
+    flex:1;
+    overflow-y:auto;
+  }
+
+  /* Cover */
+  .cover{
+    height:170px;
+    background:linear-gradient(135deg, var(--blue-light), var(--orange-light) 140%);
+    position:relative;
+    background-size:cover;
+    background-position:center;
+  }
+  .cover-top{
+    position:absolute;
+    top:52px; left:20px; right:20px;
+    display:flex;
+    justify-content:space-between;
+  }
+  .icon-btn{
+    width:34px;height:34px;
+    border-radius:11px;
+    background:rgba(255,255,255,0.85);
+    position:relative;
+  }
+  .icon-btn
+  .icon-btn.heart::after{
+    content:"";
+    position:absolute;
+    top:50%; left:50%;
+    width:14px;height:14px;
+    transform:translate(-50%,-50%);
+    background:var(--orange);
+    clip-path: path('M7 13 C 2 9, 0 5, 3.2 2.6 C 5 1.2 7 2 7 4 C 7 2 9 1.2 10.8 2.6 C 14 5 12 9 7 13 Z');
+  }
+
+  /* Carte profil */
+  .profile-card{
+    margin:-34px 20px 0;
+    background:var(--surface);
+    border-radius:20px;
+    padding:16px 16px 14px;
+    box-shadow:0 12px 24px -14px rgba(31,42,51,0.3);
+    position:relative;
+    z-index:2;
+    display:flex;
+    gap:12px;
+    align-items:center;
+  }
+  .pro-avatar{
+    width:52px;height:52px;
+    border-radius:14px;
+    background:linear-gradient(135deg, var(--blue-light), var(--orange-light) 140%);
+    flex-shrink:0;
+    overflow:hidden;
+    border:2px solid var(--line);
+  }
+  .pro-avatar img{width:100%;height:100%;object-fit:cover;}
+  .profile-name{
+    font-family:'Baloo 2',sans-serif;
+    font-size:19px;
+    font-weight:700;
+    color:var(--ink);
+    margin-bottom:6px;
+  }
+
+  /* Icônes de catégories proposées, sous le nom */
+  .specialty-row{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    margin-bottom:8px;
+  }
+  .specialty-icon{
+    width:26px;height:26px;
+    border-radius:8px;
+    background:var(--bg);
+    border:1.5px solid var(--line);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  }
+  .mini-scissors{ width:11px;height:11px; position:relative; }
+  .mini-scissors::before, .mini-scissors::after{
+    content:""; position:absolute; width:4px;height:4px; border-radius:50%;
+    border:1.4px solid var(--orange); bottom:0;
+  }
+  .mini-scissors::before{ left:0; }
+  .mini-scissors::after{ right:0; }
+  .mini-polish{ width:9px;height:11px; position:relative; }
+  .mini-polish::before{ content:""; position:absolute; top:0; left:50%; transform:translateX(-50%); width:4px;height:3px; background:var(--blue-dark); border-radius:1px 1px 0 0; }
+  .mini-polish::after{ content:""; position:absolute; bottom:0; left:50%; transform:translateX(-50%); width:9px;height:7px; background:var(--blue); border-radius:2px; }
+  .mini-lash{ width:13px;height:8px; position:relative; }
+  .mini-lash::before{ content:""; position:absolute; left:0; right:0; bottom:1px; height:7px; border:1.4px solid var(--orange-dark); border-top:none; border-radius:0 0 6px 6px; clip-path:inset(1px 0 0 0); }
+
+  .profile-meta{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    font-size:12px;
+    color:var(--ink-soft);
+    margin-bottom:4px;
+  }
+  .profile-meta .rating{
+    color:var(--orange-dark);
+    font-weight:700;
+  }
+  .profile-address{
+    font-size:11.5px;
+    color:var(--muted);
+  }
+
+  /* Tabs */
+  .tabs{
+    display:flex;
+    gap:22px;
+    padding:16px 20px 0;
+    border-bottom:2px solid var(--line);
+  }
+  .tab{
+    font-size:13px;
+    font-weight:700;
+    color:var(--muted);
+    padding-bottom:12px;
+  }
+  .tab.active{
+    color:var(--ink);
+    border-bottom:3px solid var(--orange);
+  }
+
+  /* Filtres rapides par catégorie */
+  .filter-row{
+    display:flex;
+    gap:8px;
+    padding:12px 20px;
+    overflow-x:auto;
+    border-bottom:1px solid var(--line);
+  }
+  .filter-chip{
+    flex-shrink:0;
+    font-size:11.5px;
+    font-weight:700;
+    padding:8px 14px;
+    border-radius:20px;
+    background:var(--bg);
+    border:2px solid var(--line);
+    color:var(--ink-soft);
+    white-space:nowrap;
+  }
+  .filter-chip.active{
+    background:var(--orange);
+    border-color:var(--orange);
+    color:#fff;
+  }
+
+  /* Sections de services groupées */
+  .service-section{
+    padding:16px 20px 4px;
+  }
+  .service-section-title{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    font-size:12px;
+    font-weight:800;
+    color:var(--ink-soft);
+    text-transform:uppercase;
+    letter-spacing:0.05em;
+    margin-bottom:10px;
+  }
+  .service-section-title .sec-icon{
+    width:22px;height:22px;
+    border-radius:7px;
+    background:var(--bg);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  }
+
+  .services{
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+    margin-bottom:6px;
+  }
+  .service-row{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    border:2px solid var(--line);
+    border-radius:16px;
+    padding:10px;
+  }
+  .service-row.selected{
+    border-color:var(--orange);
+    background:var(--orange-light);
+  }
+  .service-photo{
+    width:48px;height:48px;
+    border-radius:11px;
+    flex-shrink:0;
+  }
+  .service-main{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    flex:1;
+    min-width:0;
+  }
+  .service-info h4{
+    font-size:13px;
+    font-weight:700;
+    color:var(--ink);
+    margin:0 0 3px;
+  }
+  .service-info .service-meta{
+    font-size:10.5px;
+    color:var(--muted);
+  }
+  .price-val{
+    font-size:12.5px;
+    font-weight:800;
+    color:var(--ink);
+    white-space:nowrap;
+  }
+
+  /* Footer réservation */
+  .footer{
+    padding:14px 20px 24px;
+    border-top:2px solid var(--line);
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:14px;
+  }
+  .footer-total .label{
+    font-size:10.5px;
+    color:var(--muted);
+    font-weight:600;
+  }
+  .footer-total .amount{
+    font-family:'Baloo 2',sans-serif;
+    font-size:16px;
+    font-weight:700;
+    color:var(--ink);
+  }
+  .btn-primary{
+    min-width:170px;
+    background:var(--orange);
+    color:#fff;
+    text-align:center;
+    padding:14px 32px;
+    border-radius:16px;
+    font-family:'Inter',sans-serif;
+    font-weight:800;
+    font-size:14.5px;
+    border:none;
+    cursor:pointer;
+  }
+
+  .list-empty{
+    text-align:center;
+    font-size:13px;
+    color:var(--muted);
+    padding:30px 16px;
+  }
+
+  /* === NDOKET : plein ecran (phone only) === */
+  html,body{height:100%;}
+  body{padding:0 !important;display:block !important;justify-content:flex-start !important;}
+  .phone{width:100% !important;height:100% !important;max-width:none !important;
+    border-radius:0 !important;border:none !important;box-shadow:none !important;}
+  .notch{display:none !important;}
+  .screen{height:100% !important;min-height:100dvh !important;}
+  .content{overflow-y:auto !important;}
+</style>
+</head>
+<body>
+
+  <div class="phone">
+    <div class="notch"></div>
+    <div class="screen">
+      <div class="content">
+
+        <div class="cover">
+          <div class="cover-top">
+            <div class="icon-btn back"></div>
+          </div>
+        </div>
+
+          <div class="profile-card">
+          <div class="pro-avatar" id="proAvatar"></div>
+          <div style="flex:1;min-width:0;">
+            <div class="profile-name" id="proName">—</div>
+            <div class="profile-meta">
+              <span class="rating" id="proRating">★ 5.0</span>
+              <span id="proCount">(0 avis)</span>
+            </div>
+            <div class="profile-address" id="proAddress">—</div>
+          </div>
+        </div>
+
+        <div class="tabs">
+          <div class="tab active" data-nav="fiche_services"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;vertical-align:middle;margin-right:4px"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>Services</div>
+          <div class="tab" data-nav="fiche_avis">Avis</div>
+          <div class="tab" data-nav="fiche_apropos">À propos</div>
+        </div>
+
+        <div class="service-section" id="serviceSection">
+          <div id="serviceList" class="services stagger-reveal"></div>
+        </div>
+        <div class="list-empty" id="listEmpty" style="display:none">Aucun service pour le moment.</div>
+
+      </div>
+
+      <div class="footer">
+        <div class="footer-total">
+          <div class="label">Total sélectionné</div>
+          <div class="amount" id="totalAmount">0 FCFA</div>
+        </div>
+        <button type="button" class="btn-primary" id="nextBtn">Suivant</button>
+      </div>
+
+    </div>
+  </div>
+
+
+<script src="supabase.js"></script>
+<script src="icons.js"></script>
+  <script src="nav.js"></script>
+<script>
+(function(){
+  var id = ndoket.prestataireId();
+  if(!id){ location.href = 'accueil_client.html'; return; }
+
+  var selected = null;
+  var list = document.getElementById('serviceList');
+  var totalEl = document.getElementById('totalAmount');
+  var empty = document.getElementById('listEmpty');
+
+  var gradients = [
+    'linear-gradient(135deg, #F2871E, #D66A0C 140%)',
+    'linear-gradient(135deg, #FDE3C5, #F2871E 140%)',
+    'linear-gradient(135deg, #D6F3FB, #3FC2E8 140%)',
+    'linear-gradient(135deg, #3FC2E8, #1E9BC2 140%)',
+    'linear-gradient(135deg, #1F2A33, #3FC2E8 140%)',
+    'linear-gradient(135deg, #DCF3E2, #3AA65A 140%)'
+  ];
+
+  function fmt(n){ return n.toLocaleString('fr-FR'); }
+
+  function render(services){
+    list.innerHTML = '';
+    services.forEach(function(s, i){
+      var row = document.createElement('div');
+      row.className = 'service-row' + (selected && selected.id === s.id ? ' selected' : '');
+      var photoHtml = s.photo_url
+        ? '<img class="service-photo" src="' + escUrl(s.photo_url) + '" alt="" style="object-fit:cover" />'
+        : '<div class="service-photo" style="background:' + gradients[i % gradients.length] + '"></div>';
+      row.innerHTML =
+        photoHtml +
+        '<div class="service-main">' +
+          '<div class="service-info">' +
+            '<h4>' + esc(s.nom) + '</h4>' +
+            '<div class="service-meta">' + (s.duree_min ? s.duree_min + ' min' : '') + '</div>' +
+          '</div>' +
+          '<span class="price-val">' + fmt(s.prix) + ' F</span>' +
+        '</div>';
+      row.addEventListener('click', function(){
+        selected = s;
+        ndoket.setBooking({ service_id: s.id, service_nom: s.nom, prix: s.prix, prestataire_id: id, duree_min: s.duree_min });
+        totalEl.textContent = fmt(s.prix) + ' FCFA';
+        render(services);
+      });
+      list.appendChild(row);
+    });
+    empty.style.display = services.length ? 'none' : 'block';
+    var nextBtn = document.getElementById('nextBtn');
+    if(nextBtn){
+      if(services.length && !selected){
+        nextBtn.textContent = 'Choisissez un service';
+        nextBtn.style.opacity = '0.55';
+      } else if(selected){
+        nextBtn.textContent = 'Suivant';
+        nextBtn.style.opacity = '1';
+      }
+    }
+  }
+
+  supabase.select('prestataires', { id: 'eq.' + id }).then(function(rows){
+    if(rows && rows[0]){
+      var p = rows[0];
+      document.getElementById('proName').textContent = p.nom;
+      document.getElementById('proRating').textContent = '★ ' + Number(p.note_globale).toFixed(1);
+      document.getElementById('proCount').textContent = '(' + p.note_count + ' avis)';
+      document.getElementById('proAddress').textContent = p.adresse;
+      document.title = p.nom + ' — Services';
+      if(p.photo_url){
+        var av = document.getElementById('proAvatar');
+        av.innerHTML = '<img src="' + escUrl(p.photo_url) + '" alt="" />';
+      }
+      if(p.cover_url){
+        document.querySelector('.cover').style.backgroundImage = 'url(' + escUrl(p.cover_url) + ')';
+      }
+    }
+  }).catch(function(){});
+
+  supabase.select('services', { prestataire_id: 'eq.' + id }).then(function(services){
+    render(services || []);
+  }).catch(function(err){
+    empty.style.display = 'block';
+    empty.textContent = 'Erreur : ' + err.message;
+  });
+
+  document.getElementById('nextBtn').addEventListener('click', function(){
+    if(!selected){
+      totalEl.style.color = '#C0392B';
+      return;
+    }
+    location.href = 'personnalisation.html';
+  });
+})();
+</script>
+</body>
+</html>

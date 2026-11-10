@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Ndoket · Frais de déplacement</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="animations.css">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --bg:#F5FAFC;
+    --surface:#FFFFFF;
+    --ink:#1F2A33;
+    --ink-soft:#54646F;
+    --muted:#8B98A1;
+    --orange:#F2871E;
+    --orange-dark:#D66A0C;
+    --orange-light:#FDE3C5;
+    --blue:#3FC2E8;
+    --blue-dark:#1E9BC2;
+    --blue-light:#D6F3FB;
+    --line:#E5EEF1;
+    --green:#2FB574;
+    --green-light:#E1F7EC;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:#EDEFF0;
+    font-family:'Inter',sans-serif;
+    padding:48px 16px;
+    display:flex;
+    justify-content:center;
+  }
+
+  .phone{
+    width:375px;
+    height:812px;
+    background:var(--surface);
+    border-radius:44px;
+    border:12px solid var(--ink);
+    overflow:hidden;
+    position:relative;
+    box-shadow: 0 30px 60px -25px rgba(31,42,51,0.4);
+  }
+  .notch{
+    position:absolute;
+    top:0; left:50%;
+    transform:translateX(-50%);
+    width:150px; height:26px;
+    background:var(--ink);
+    border-radius:0 0 16px 16px;
+    z-index:8;
+  }
+  .screen{
+    width:100%;
+    height:100%;
+    display:flex;
+    flex-direction:column;
+    overflow:hidden;
+  }
+
+  .topbar{
+    padding:52px 20px 8px;
+    display:flex;
+    align-items:center;
+    gap:12px;
+  }
+  .back{
+    width:34px;height:34px;
+    border-radius:11px;
+    background:var(--bg);
+    border:2px solid var(--line);
+    position:relative;
+    flex-shrink:0;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .topbar-title{
+    font-family:'Baloo 2',sans-serif;
+    font-size:16px;
+    font-weight:700;
+    color:var(--ink);
+  }
+
+  .content{
+    flex:1;
+    overflow-y:auto;
+    padding:18px 20px 24px;
+  }
+
+  .info-card{
+    background:var(--blue-light);
+    border-radius:16px;
+    padding:14px 16px;
+    font-size:12.5px;
+    line-height:1.55;
+    color:var(--blue-dark);
+    font-weight:600;
+    margin-bottom:20px;
+  }
+
+  .free-row{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    background:var(--surface);
+    border:2px solid var(--line);
+    border-radius:16px;
+    padding:14px 16px;
+    margin-bottom:16px;
+  }
+  .free-row .fr-label{
+    font-size:13px;
+    font-weight:700;
+    color:var(--ink);
+  }
+  .free-row .fr-sub{
+    font-size:11px;
+    color:var(--muted);
+    font-weight:500;
+    margin-top:3px;
+  }
+  .switch{
+    width:46px;height:26px;
+    border-radius:20px;
+    background:var(--line);
+    position:relative;
+    cursor:pointer;
+    flex-shrink:0;
+    transition:background .2s;
+  }
+  .switch::after{
+    content:'';
+    position:absolute;
+    top:3px;left:3px;
+    width:20px;height:20px;
+    border-radius:50%;
+    background:#fff;
+    box-shadow:0 1px 4px rgba(0,0,0,.2);
+    transition:left .2s;
+  }
+  .switch.on{background:var(--green);}
+  .switch.on::after{left:23px;}
+
+  .field{margin-bottom:18px;}
+  .field-label{
+    font-size:12px;
+    font-weight:700;
+    color:var(--ink-soft);
+    margin-bottom:7px;
+  }
+  input.field-input{
+    background:var(--surface);
+    border:2px solid var(--line);
+    border-radius:14px;
+    padding:13px 15px;
+    font-size:13px;
+    font-family:'Inter',sans-serif;
+    color:var(--ink);
+    width:100%;
+    box-sizing:border-box;
+    font-weight:600;
+  }
+  input.field-input:focus{
+    outline:none;
+    border-color:var(--orange);
+  }
+  input.field-input::placeholder{ color:var(--muted); }
+  input.field-input:disabled{
+    background:var(--bg);
+    color:var(--muted);
+  }
+
+  .preview-card{
+    background:var(--green-light);
+    border-radius:16px;
+    padding:14px 16px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:20px;
+  }
+  .preview-card .pc-label{
+    font-size:11.5px;
+    font-weight:800;
+    color:var(--green);
+    text-transform:uppercase;
+    letter-spacing:.04em;
+  }
+  .preview-card .pc-amount{
+    font-family:'Baloo 2',sans-serif;
+    font-size:19px;
+    font-weight:800;
+    color:var(--ink);
+  }
+
+  .footer{
+    display:flex;
+    justify-content:flex-end;
+    align-items:center;
+    padding:16px 20px 24px;
+    border-top:2px solid var(--line);
+  }
+  .btn-primary{
+    background:var(--orange);
+    color:#FFFFFF;
+    text-align:center;
+    width:100%;
+    padding:16px;
+    border-radius:16px;
+    font-weight:700;
+    font-size:14px;
+    border:none;
+    font-family:'Inter',sans-serif;
+    cursor:pointer;
+  }
+  .btn-primary:active{background:var(--orange-dark);}
+
+  /* Plein écran dans l'app */
+  html,body{height:100%;}
+  body{padding:0 !important;display:block !important;justify-content:flex-start !important;}
+  .phone{width:100% !important;height:100% !important;max-width:none !important;
+    border-radius:0 !important;border:none !important;box-shadow:none !important;}
+  .notch{display:none !important;}
+  .screen{height:100% !important;min-height:100dvh !important;}
+  .content{overflow-y:auto !important;}
+</style>
+</head>
+<body data-role="prestataire">
+
+  <div class="phone">
+    <div class="notch"></div>
+    <div class="screen">
+
+      <div class="topbar">
+        <div class="back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px"><polyline points="15 18 9 12 15 6"/></svg></div>
+        <div class="topbar-title">Frais de déplacement</div>
+      </div>
+
+      <div class="content">
+
+        <div class="info-card">
+          Lorsque vous vous déplacez chez la cliente, ce montant s'ajoute au prix du service. La cliente voit le total avant de confirmer sa réservation.
+        </div>
+
+        <div class="free-row">
+          <div>
+            <div class="fr-label">Déplacement gratuit</div>
+            <div class="fr-sub">Aucun frais ajouté au prix du service</div>
+          </div>
+          <div class="switch" id="freeSwitch"></div>
+        </div>
+
+        <div class="field">
+          <div class="field-label">Montant du déplacement (FCFA)</div>
+          <input type="number" id="feeInput" class="field-input" placeholder="Ex : 1500" inputmode="numeric" min="0" />
+        </div>
+
+        <div class="preview-card">
+          <div class="pc-label">Vu par la cliente</div>
+          <div class="pc-amount" id="feePreview">Gratuit</div>
+        </div>
+
+      </div>
+
+      <div class="footer">
+        <button type="button" class="btn-primary" id="saveBtn">Enregistrer</button>
+      </div>
+
+    </div>
+  </div>
+
+<script src="supabase.js"></script>
+<script src="icons.js"></script>
+<script src="nav.js"></script>
+<script>
+(function(){
+  var me = sessionUser();
+  if(!me){ location.href = 'login.html'; return; }
+
+  var pid = ndoket.prestataireId() || null;
+  var gratuit = false;
+
+  var freeSwitch = document.getElementById('freeSwitch');
+  var feeInput = document.getElementById('feeInput');
+  var feePreview = document.getElementById('feePreview');
+
+  function renderPreview(){
+    if(gratuit){
+      feePreview.textContent = 'Gratuit';
+      feeInput.disabled = true;
+    } else {
+      var v = parseInt(feeInput.value, 10) || 0;
+      feePreview.textContent = v.toLocaleString('fr-FR') + ' FCFA';
+      feeInput.disabled = false;
+    }
+  }
+
+  freeSwitch.addEventListener('click', function(){
+    gratuit = !gratuit;
+    freeSwitch.classList.toggle('on', gratuit);
+    renderPreview();
+  });
+  feeInput.addEventListener('input', renderPreview);
+
+  function fill(fee){
+    fee = parseInt(fee, 10) || 0;
+    gratuit = (fee === 0);
+    freeSwitch.classList.toggle('on', gratuit);
+    feeInput.value = gratuit ? '' : String(fee);
+    renderPreview();
+  }
+
+  function load(){
+    if(!pid){ return; }
+    supabase.select('prestataires', { id: 'eq.' + pid }).then(function(rows){
+      if(rows && rows[0]) fill(rows[0].frais_deplacement);
+    }).catch(function(){});
+  }
+
+  supabase.select('profils', { id: 'eq.' + me.id }).then(function(rows){
+    if(rows && rows[0] && rows[0].prestataire_id){
+      pid = rows[0].prestataire_id;
+      ndoket.setPrestataire(pid);
+    }
+    load();
+  }).catch(function(){ load(); });
+
+  document.getElementById('saveBtn').addEventListener('click', function(){
+    var btn2 = this;
+    function doSave(fee){
+      if(!pid){ showToast('Profil introuvable — reconnectez-vous'); return; }
+      supabase.update('prestataires', { frais_deplacement: fee }, 'id', pid).then(function(rows){
+        if(!rows || !rows.length){
+          showToast('Erreur : mise à jour refusée. Reconnectez-vous.', 4000);
+          return;
+        }
+        showToast('Frais de déplacement enregistrés !');
+        setTimeout(function(){ history.back(); }, 700);
+      }).catch(function(e){
+        showToast('Erreur : ' + e.message, 4000);
+      });
+    }
+    var fee = gratuit ? 0 : (parseInt(feeInput.value, 10) || 0);
+    if(!gratuit && fee <= 0){
+      showToast('Indiquez un montant ou activez "gratuit"');
+      return;
+    }
+    if(pid){ doSave(fee); return; }
+    // Recharger le pid depuis le profil avant de sauvegarder
+    supabase.select('profils', { id: 'eq.' + me.id }).then(function(rows){
+      if(rows && rows[0] && rows[0].prestataire_id){
+        pid = rows[0].prestataire_id;
+        ndoket.setPrestataire(pid);
+      }
+      doSave(fee);
+    }).catch(function(){ doSave(fee); });
+  });
+})();
+</script>
+</body>
+</html>

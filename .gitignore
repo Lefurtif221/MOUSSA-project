@@ -1,0 +1,31 @@
+# --- Dépendances & builds ---
+node_modules/
+android/app/build/
+android/build/
+android/capacitor-cordova-android-plugins/build/
+android/.gradle/
+*.apk
+*.aab
+*.hprof
+
+# --- Secrets & signature Android (JAMAIS dans le repo) ---
+android/keystore.properties
+android/*.keystore
+android/*.jks
+*.keystore
+*.jks
+
+# --- Config locale / IDE ---
+.idea/
+.vscode/
+*.iml
+android/local.properties
+android/.idea/
+
+# --- Supabase local ---
+supabase/.temp/
+
+# --- Divers ---
+.DS_Store
+Thumbs.db
+*.log

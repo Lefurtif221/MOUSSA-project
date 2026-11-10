@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Ndoket — Fiche prestataire</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="animations.css">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --bg:#F5FAFC;
+    --surface:#FFFFFF;
+    --ink:#1F2A33;
+    --ink-soft:#54646F;
+    --muted:#8B98A1;
+    --orange:#F2871E;
+    --orange-dark:#D66A0C;
+    --orange-light:#FDE3C5;
+    --blue:#3FC2E8;
+    --blue-dark:#1E9BC2;
+    --blue-light:#D6F3FB;
+    --line:#E5EEF1;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:#EDEFF0;
+    font-family:'Inter',sans-serif;
+    padding:48px 16px;
+    display:flex;
+    justify-content:center;
+  }
+
+  .phone{
+    width:375px;
+    height:812px;
+    background:var(--surface);
+    border-radius:44px;
+    border:12px solid var(--ink);
+    overflow:hidden;
+    position:relative;
+    box-shadow: 0 30px 60px -25px rgba(31,42,51,0.4);
+  }
+  .notch{
+    position:absolute;
+    top:0; left:50%;
+    transform:translateX(-50%);
+    width:150px; height:26px;
+    background:var(--ink);
+    border-radius:0 0 16px 16px;
+    z-index:8;
+  }
+  .screen{
+    width:100%;
+    height:100%;
+    display:flex;
+    flex-direction:column;
+    overflow:hidden;
+  }
+
+  .content{
+    flex:1;
+    overflow-y:auto;
+  }
+
+  /* Cover */
+  .cover{
+    height:190px;
+    background:linear-gradient(135deg, var(--blue-light), var(--orange-light) 140%);
+    position:relative;
+  }
+  .cover-top{
+    position:absolute;
+    top:52px; left:20px; right:20px;
+    display:flex;
+    justify-content:space-between;
+  }
+  .icon-btn{
+    width:34px;height:34px;
+    border-radius:11px;
+    background:rgba(255,255,255,0.85);
+    position:relative;
+  }
+  .icon-btn
+  .icon-btn.heart::after{
+    content:"";
+    position:absolute;
+    top:50%; left:50%;
+    width:14px;height:14px;
+    transform:translate(-50%,-50%);
+    background:var(--orange);
+    clip-path: path('M7 13 C 2 9, 0 5, 3.2 2.6 C 5 1.2 7 2 7 4 C 7 2 9 1.2 10.8 2.6 C 14 5 12 9 7 13 Z');
+  }
+
+  /* Carte profil superposée */
+  .profile-card{
+    margin:-34px 20px 0;
+    background:var(--surface);
+    border-radius:20px;
+    padding:16px 16px 14px;
+    box-shadow:0 12px 24px -14px rgba(31,42,51,0.3);
+    position:relative;
+    z-index:2;
+  }
+  .pro-avatar{
+    width:64px;height:64px;
+    border-radius:18px;
+    background:linear-gradient(135deg, var(--blue-light), var(--orange-light) 140%);
+    overflow:hidden;
+    border:2px solid var(--line);
+    margin-bottom:10px;
+  }
+  .pro-avatar img{width:100%;height:100%;object-fit:cover;}  .badge-row{
+    display:flex;
+    gap:6px;
+    margin-bottom:8px;
+  }
+  .type-badge{
+    font-size:9.5px;
+    font-weight:800;
+    padding:3px 9px;
+    border-radius:8px;
+    white-space:nowrap;
+  }
+  .type-badge.salon{ background:var(--blue-light); color:var(--blue-dark); }
+  .type-badge.freelance{ background:var(--orange-light); color:var(--orange-dark); }
+
+  .profile-name{
+    font-family:'Baloo 2',sans-serif;
+    font-size:19px;
+    font-weight:700;
+    color:var(--ink);
+    margin-bottom:4px;
+  }
+  .profile-meta{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    font-size:12px;
+    color:var(--ink-soft);
+    margin-bottom:4px;
+  }
+  .profile-meta .rating{
+    color:var(--orange-dark);
+    font-weight:700;
+  }
+  .profile-address{
+    font-size:11.5px;
+    color:var(--muted);
+  }
+
+  /* Tabs */
+  .tabs{
+    display:flex;
+    gap:22px;
+    padding:18px 20px 0;
+    border-bottom:2px solid var(--line);
+  }
+  .tab{
+    font-size:13px;
+    font-weight:700;
+    color:var(--muted);
+    padding-bottom:12px;
+  }
+  .tab.active{
+    color:var(--ink);
+    border-bottom:3px solid var(--orange);
+  }
+
+  /* Services */
+  .services{
+    padding:16px 20px 8px;
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+  }
+  .service-row{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    border:2px solid var(--line);
+    border-radius:16px;
+    padding:14px;
+  }
+  .service-row.selected{
+    border-color:var(--orange);
+    background:var(--orange-light);
+  }
+  .service-info h4{
+    font-size:13px;
+    font-weight:700;
+    color:var(--ink);
+    margin:0 0 4px;
+  }
+  .service-info .service-meta{
+    font-size:11px;
+    color:var(--muted);
+  }
+  .service-price{
+    display:flex;
+    align-items:center;
+    gap:10px;
+  }
+  .price-val{
+    font-size:13px;
+    font-weight:800;
+    color:var(--ink);
+  }
+  .radio{
+    width:20px;height:20px;
+    border-radius:50%;
+    border:2px solid var(--line);
+    flex-shrink:0;
+  }
+  .radio.checked{
+    border-color:var(--orange);
+    background:var(--orange);
+    position:relative;
+  }
+  .radio.checked::after{
+    content:"";
+    position:absolute;
+    top:50%; left:50%;
+    width:7px;height:4px;
+    border-left:2px solid #fff;
+    border-bottom:2px solid #fff;
+    transform:translate(-50%,-60%) rotate(-45deg);
+  }
+
+  .mode-note{
+    margin:10px 20px 4px;
+    display:flex;
+    align-items:center;
+    gap:8px;
+    background:var(--blue-light);
+    border-radius:12px;
+    padding:10px 12px;
+  }
+  .mode-note .dot{
+    width:8px;height:8px;
+    border-radius:50%;
+    background:var(--blue-dark);
+    flex-shrink:0;
+  }
+  .mode-note p{
+    margin:0;
+    font-size:11px;
+    color:var(--blue-dark);
+    font-weight:600;
+    line-height:1.4;
+  }
+
+  /* À propos */
+  .about{
+    padding:18px 20px 8px;
+  }
+  .about-bio{
+    font-size:12.5px;
+    color:var(--ink-soft);
+    line-height:1.6;
+    margin-bottom:20px;
+  }
+  .about-block{
+    margin-bottom:18px;
+  }
+  .about-block h5{
+    font-size:11.5px;
+    font-weight:800;
+    color:var(--ink-soft);
+    text-transform:uppercase;
+    letter-spacing:0.04em;
+    margin:0 0 10px;
+  }
+  .about-row{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    padding:11px 0;
+    border-bottom:1px solid var(--line);
+  }
+  .about-row:last-child{
+    border-bottom:none;
+  }
+  .about-icon{
+    width:32px;height:32px;
+    border-radius:10px;
+    background:var(--bg);
+    flex-shrink:0;
+  }
+  .about-text .t1{
+    font-size:12px;
+    font-weight:700;
+    color:var(--ink);
+  }
+  .about-text .t2{
+    font-size:10.5px;
+    color:var(--muted);
+    margin-top:1px;
+  }
+  .about-text .t1.open{
+    color:#3AA65A;
+  }
+
+  .chip-row{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+  }
+  .about-chip{
+    font-size:11px;
+    font-weight:700;
+    padding:7px 13px;
+    border-radius:20px;
+    background:var(--bg);
+    border:2px solid var(--line);
+    color:var(--ink-soft);
+  }
+
+  .social-links{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+  }
+  .social-link{
+    display:inline-flex;
+    align-items:center;
+    gap:7px;
+    font-size:11.5px;
+    font-weight:700;
+    padding:8px 14px;
+    border-radius:20px;
+    background:var(--bg);
+    border:2px solid var(--line);
+    color:var(--ink-soft);
+    text-decoration:none;
+  }
+  .social-link:active{background:var(--blue-light);border-color:var(--blue-light);}
+  .social-link svg{flex:none;}
+
+  .about-gallery{
+    display:grid;
+    grid-template-columns:repeat(4, 1fr);
+    gap:6px;
+  }
+  .about-gallery .tile{
+    aspect-ratio:1/1;
+    border-radius:10px;
+  }
+
+  .about-cta{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    background:var(--blue-light);
+    border-radius:14px;
+    padding:12px 14px;
+    margin-top:4px;
+  }
+  .about-cta .dot{
+    width:8px;height:8px;
+    border-radius:50%;
+    background:var(--blue-dark);
+    flex-shrink:0;
+  }
+  .about-cta p{
+    margin:0;
+    font-size:11px;
+    color:var(--blue-dark);
+    font-weight:600;
+    line-height:1.4;
+  }
+
+  /* Footer réservation */
+  .footer{
+    padding:14px 20px 24px;
+    border-top:2px solid var(--line);
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:14px;
+  }
+  .footer-total .label{
+    font-size:10.5px;
+    color:var(--muted);
+    font-weight:600;
+  }
+  .footer-total .amount{
+    font-family:'Baloo 2',sans-serif;
+    font-size:17px;
+    font-weight:700;
+    color:var(--ink);
+  }
+  .btn-primary{
+    flex:1;
+    background:var(--orange);
+    color:#fff;
+    text-align:right;
+    padding:15px;
+    border-radius:16px;
+    font-weight:700;
+    font-size:13.5px;
+    max-width:190px;
+  }
+
+  /* === NDOKET : plein ecran (phone only) === */
+  html,body{height:100%;}
+  body{padding:0 !important;display:block !important;justify-content:flex-start !important;}
+  .phone{width:100% !important;height:100% !important;max-width:none !important;
+    border-radius:0 !important;border:none !important;box-shadow:none !important;}
+  .notch{display:none !important;}
+  .screen{height:100% !important;min-height:100dvh !important;}
+  .content{overflow-y:auto !important;}
+</style>
+</head>
+<body>
+
+  <div class="phone">
+    <div class="notch"></div>
+    <div class="screen">
+      <div class="content">
+
+        <div class="cover">
+          <div class="cover-top">
+            <div class="icon-btn back"></div>
+          </div>
+        </div>
+
+        <div class="profile-card">
+          <div class="badge-row">
+            <span class="type-badge freelance">Prestataire Ndoket</span>
+          </div>
+          <div class="pro-avatar" id="proAvatar"></div>
+          <div class="profile-name" id="proName">—</div>
+          <div class="profile-meta">
+            <span class="rating" id="proRating">★ 5.0</span>
+            <span id="proCount">(0 avis)</span>
+          </div>
+          <div class="profile-address" id="proAddress">—</div>
+        </div>
+
+        <div class="tabs">
+          <div class="tab" data-nav="fiche_services">Services</div>
+          <div class="tab" data-nav="fiche_avis">Avis</div>
+          <div class="tab active" data-nav="fiche_apropos">À propos</div>
+        </div>
+
+        <div class="about">
+          <p class="about-bio" id="proBio">—</p>
+
+          <div class="about-block">
+            <h5>Infos pratiques</h5>
+            <div class="about-row">
+              <div class="about-icon"></div>
+              <div class="about-text">
+                <div class="t1 open" id="aboutHours">Horaires</div>
+                <div class="t2" id="aboutHoursSub"></div>
+              </div>
+            </div>
+            <div class="about-row">
+              <div class="about-icon"></div>
+              <div class="about-text">
+                <div class="t1" id="aboutAddr">—</div>
+                <div class="t2">Déplacement à domicile</div>
+              </div>
+            </div>
+            <div class="about-row">
+              <div class="about-icon"></div>
+              <div class="about-text">
+                <div class="t1" id="aboutRdv">0 rendez-vous réalisés</div>
+                <div class="t2">Sur Ndoket</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="about-block">
+            <h5>Spécialités</h5>
+            <div class="chip-row" id="specRow">
+              <div class="about-chip">—</div>
+            </div>
+          </div>
+
+          <div class="about-block" id="socialBlock" style="display:none">
+            <h5>Réseaux sociaux</h5>
+            <div class="social-links" id="socialLinks"></div>
+          </div>
+
+          <div class="about-block" id="galleryBlock" style="display:none">
+            <h5>Galerie</h5>
+            <div class="about-gallery" id="aboutGallery"></div>
+          </div>
+
+          <div class="about-cta">
+            <div class="dot"></div>
+            <p>Prestataire enregistrée sur Ndoket.</p>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="footer">
+        <div class="footer-total">
+          <div class="label">Total sélectionné</div>
+          <div class="amount" id="aboutTotal">0 FCFA</div>
+        </div>
+        <div class="btn-primary" data-nav="fiche_services">Voir les services</div>
+      </div>
+
+    </div>
+  </div>
+
+
+<script src="supabase.js"></script>
+<script src="icons.js"></script>
+  <script src="nav.js"></script>
+<script>
+(function(){
+  var id = ndoket.prestataireId();
+  if(!id){ location.href = 'accueil_client.html'; return; }
+
+  supabase.select('prestataires', { id: 'eq.' + id }).then(function(rows){
+    if(!rows || !rows[0]) return;
+    var p = rows[0];
+    document.getElementById('proName').textContent = p.nom;
+    document.getElementById('proRating').textContent = '★ ' + Number(p.note_globale).toFixed(1);
+    document.getElementById('proCount').textContent = '(' + p.note_count + ' avis)';
+    document.getElementById('proAddress').textContent = p.adresse + (p.ville ? ', ' + p.ville : '');
+    document.getElementById('proBio').textContent = p.bio || p.description || 'Prestataire vérifié Ndoket. Consultez nos services et réservez en quelques clics.';
+    document.getElementById('aboutAddr').textContent = (p.adresse || '') + (p.ville ? ', ' + p.ville : '');
+    if(p.photo_url){
+      var av = document.getElementById('proAvatar');
+      if(av) av.innerHTML = '<img src="' + escUrl(p.photo_url) + '" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:inherit" />';
+    }
+    if(p.categorie){
+      var fb = document.querySelector('.type-badge.freelance');
+      if(fb) fb.textContent = p.categorie;
+    }
+    // Spécialités depuis description
+    var specs = (p.description || '').split(',').map(function(s){ return s.trim(); }).filter(function(s){ return s.length > 1 && s.length < 40; });
+    if(specs.length){
+      document.getElementById('specRow').innerHTML = specs.map(function(s){
+        return '<div class="about-chip">' + s.replace(/</g, '&lt;') + '</div>';
+      }).join('');
+    }
+    // Réseaux sociaux
+    function socialUrl(net, v){
+      var s = (v || '').trim();
+      if(/^https?:\/\//i.test(s)) return s;
+      var h = s.replace(/^@/, '');
+      if(net === 'instagram') return 'https://www.instagram.com/' + h;
+      if(net === 'tiktok') return 'https://www.tiktok.com/@' + h;
+      return 'https://www.facebook.com/' + h;
+    }
+    var socials = [];
+    if(p.instagram && p.instagram.trim()) socials.push(['instagram', 'Instagram', p.instagram]);
+    if(p.tiktok && p.tiktok.trim()) socials.push(['tiktok', 'TikTok', p.tiktok]);
+    if(p.facebook && p.facebook.trim()) socials.push(['facebook', 'Facebook', p.facebook]);
+    if(socials.length){
+      document.getElementById('socialBlock').style.display = 'block';
+      document.getElementById('socialLinks').innerHTML = socials.map(function(s){
+        var url = escUrl(socialUrl(s[0], s[2]));
+        return '<a class="social-link" href="' + url + '" target="_blank" rel="noopener">' +
+          icon(s[0], 15, '#54646F') + '<span>' + s[1] + '</span></a>';
+      }).join('');
+    }
+
+    document.title = p.nom + ' — Ndoket';
+  }).catch(function(){});
+
+  // Nombre de RDV réalisés (RPC : la RLS bloquait le comptage public)
+  supabase.rpc('count_rdv_realises', { p_pid: id }).then(function(n){
+    document.getElementById('aboutRdv').textContent = (parseInt(n, 10) || 0) + ' rendez-vous réalisés';
+  }).catch(function(){});
+
+  // Horaires réels depuis les disponibilités de la prestataire
+  var DOWH = ['Dim','Lun','Mar','Mer','Jeu','Ven','Sam'];
+  supabase.select('disponibilites', { prestataire_id: 'eq.' + id }).then(function(rows){
+    var d = rows || [];
+    if(!d.length){
+      document.getElementById('aboutHours').textContent = 'Horaires communiqués à la réservation';
+      document.getElementById('aboutHoursSub').textContent = '';
+      return;
+    }
+    var today = new Date().getDay();
+    var todayRows = d.filter(function(x){ return x.jour_semaine === today; });
+    if(todayRows.length){
+      var starts = todayRows.map(function(x){ return String(x.heure_debut).slice(0,5); }).sort();
+      var ends = todayRows.map(function(x){ return String(x.heure_fin).slice(0,5); }).sort();
+      document.getElementById('aboutHours').textContent = 'Ouvert aujourd\'hui · ' + starts[0] + '–' + ends[ends.length - 1];
+    } else {
+      document.getElementById('aboutHours').textContent = 'Fermé aujourd\'hui';
+    }
+    var days = d.map(function(x){ return x.jour_semaine; });
+    document.getElementById('aboutHoursSub').textContent =
+      [0,1,2,3,4,5,6].filter(function(j){ return days.indexOf(j) > -1; })
+        .map(function(j){ return DOWH[j]; }).join(', ');
+  }).catch(function(){});
+
+  // Galerie réelle
+  supabase.select('photos', { prestataire_id: 'eq.' + id }).then(function(rows){
+    var ph = rows || [];
+    if(!ph.length) return;
+    document.getElementById('galleryBlock').style.display = 'block';
+    document.getElementById('aboutGallery').innerHTML = ph.slice(0, 8).map(function(p){
+      return '<div class="tile" style="background:url(\'' + escUrl(p.url) + '\') center/cover no-repeat, linear-gradient(135deg,#D6F3FB,#3FC2E8)"></div>';
+    }).join('');
+  }).catch(function(){});
+
+  // Total réel de la sélection en cours
+  var b = ndoket.getBooking();
+  if(b && b.prix){
+    var tot = document.getElementById('aboutTotal');
+    if(tot) tot.textContent = Number(b.prix).toLocaleString('fr-FR') + ' FCFA';
+  } else {
+    var ft = document.querySelector('.footer');
+    if(ft) ft.style.display = 'none';
+  }
+})();
+</script>
+</body>
+</html>

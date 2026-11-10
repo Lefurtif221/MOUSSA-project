@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Ndoket — Mes informations</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="animations.css">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --bg:#F5FAFC;
+    --surface:#FFFFFF;
+    --ink:#1F2A33;
+    --ink-soft:#54646F;
+    --muted:#8B98A1;
+    --orange:#F2871E;
+    --orange-dark:#D66A0C;
+    --orange-light:#FDE3C5;
+    --blue:#3FC2E8;
+    --blue-dark:#1E9BC2;
+    --blue-light:#D6F3FB;
+    --line:#E5EEF1;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:#EDEFF0;
+    font-family:'Inter',sans-serif;
+    padding:48px 16px;
+    display:flex;
+    justify-content:center;
+  }
+
+  .phone{
+    width:375px;
+    height:812px;
+    background:var(--surface);
+    border-radius:44px;
+    border:12px solid var(--ink);
+    overflow:hidden;
+    position:relative;
+    box-shadow: 0 30px 60px -25px rgba(31,42,51,0.4);
+  }
+  .notch{
+    position:absolute;
+    top:0; left:50%;
+    transform:translateX(-50%);
+    width:150px; height:26px;
+    background:var(--ink);
+    border-radius:0 0 16px 16px;
+    z-index:8;
+  }
+  .screen{
+    width:100%;
+    height:100%;
+    display:flex;
+    flex-direction:column;
+    overflow:hidden;
+  }
+
+  .topbar{
+    padding:52px 20px 8px;
+    display:flex;
+    align-items:center;
+    gap:12px;
+  }
+  .back{
+    width:34px;height:34px;
+    border-radius:11px;
+    background:var(--bg);
+    border:2px solid var(--line);
+    position:relative;
+    flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;}
+  
+  .topbar-title{
+    font-family:'Baloo 2',sans-serif;
+    font-size:16px;
+    font-weight:700;
+    color:var(--ink);
+  }
+
+  .tabs{
+    display:flex;
+    gap:22px;
+    padding:14px 20px 0;
+    border-bottom:2px solid var(--line);
+  }
+  .tab{
+    font-size:13px;
+    font-weight:700;
+    color:var(--muted);
+    padding-bottom:12px;
+  }
+  .tab.active{
+    color:var(--ink);
+    border-bottom:3px solid var(--orange);
+  }
+
+  .content{
+    flex:1;
+    overflow-y:auto;
+    padding:18px 20px 24px;
+  }
+
+  .avatar-picker{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    margin-bottom:26px;
+  }
+  .avatar-circle{
+    width:84px;height:84px;
+    border-radius:50%;
+    background:linear-gradient(135deg, var(--blue-light), var(--orange-light) 140%);
+    border:3px solid var(--surface);
+    box-shadow:0 0 0 2px var(--line);
+    position:relative;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    margin-bottom:10px;
+  }
+  .avatar-edit{
+    position:absolute;
+    bottom:0; right:0;
+    width:28px;height:28px;
+    border-radius:50%;
+    background:var(--orange);
+    border:3px solid var(--surface);
+  }
+  .avatar-label{
+    font-size:11.5px;
+    font-weight:700;
+    color:var(--blue-dark);
+  }
+
+  .field{
+    margin-bottom:18px;
+  }
+  .field-label{
+    font-size:12px;
+    font-weight:700;
+    color:var(--ink-soft);
+    margin-bottom:7px;
+  }
+  .field-input{
+    border:2px solid var(--line);
+    border-radius:14px;
+    padding:14px 16px;
+    background:var(--bg);
+    font-size:13.5px;
+    color:var(--ink);
+    font-weight:600;
+  }
+  .field-input.locked{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    background:var(--blue-light);
+    border-color:var(--blue-light);
+    color:var(--blue-dark);
+    font-weight:700;
+  }
+  .field-input.locked .edit-link{
+    font-size:10.5px;
+    font-weight:800;
+    color:var(--blue-dark);
+    background:#fff;
+    padding:3px 8px;
+    border-radius:8px;
+  }
+
+  .footer{display:flex;justify-content:flex-end;align-items:center;
+    padding:16px 20px 24px;
+    border-top:2px solid var(--line);
+  }
+  .btn-primary{
+    background:var(--orange);
+    color:#FFFFFF;
+    text-align:right;
+    padding:16px;
+    border-radius:16px;
+    font-weight:700;
+    font-size:14px;
+  }
+
+  /* Onglet Mon compte */
+  .section-label{
+    font-size:11px;
+    font-weight:800;
+    color:var(--ink-soft);
+    text-transform:uppercase;
+    letter-spacing:0.05em;
+    margin:20px 0 10px;
+  }
+  .section-label:first-child{
+    margin-top:18px;
+  }
+  .account-list{
+    background:var(--surface);
+    border:2px solid var(--line);
+    border-radius:16px;
+    overflow:hidden;
+  }
+  .account-row{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    padding:14px 16px;
+    border-bottom:2px solid var(--line);
+  }
+  .account-row:last-child{
+    border-bottom:none;
+  }
+  .account-icon{
+    width:34px;height:34px;
+    border-radius:10px;
+    background:var(--bg);
+    flex-shrink:0;
+  }
+  .account-info{
+    flex:1;
+    min-width:0;
+  }
+  .account-info .t1{
+    font-size:12.5px;
+    font-weight:700;
+    color:var(--ink);
+  }
+  .account-info .t2{
+    font-size:10.5px;
+    color:var(--muted);
+    margin-top:1px;
+  }
+  .google-badge{
+    display:flex;
+    align-items:center;
+    gap:6px;
+    font-size:10px;
+    font-weight:700;
+    color:var(--green, #3AA65A);
+    background:var(--green-light, #DCF3E2);
+    padding:4px 9px;
+    border-radius:8px;
+    flex-shrink:0;
+  }
+  .google-icon-mini{
+    width:12px;height:12px;
+    border-radius:50%;
+    background:conic-gradient(#4285F4 0deg 90deg, #34A853 90deg 180deg, #FBBC05 180deg 270deg, #EA4335 270deg 360deg);
+    position:relative;
+    flex-shrink:0;
+  }
+  .google-icon-mini::after{
+    content:"";
+    position:absolute;
+    inset:2.5px;
+    border-radius:50%;
+    background:#fff;
+  }
+  .menu-chevron{
+    width:16px;height:16px;
+    position:relative;
+    flex-shrink:0;
+  }
+  .menu-chevron::after{
+    content:"";
+    position:absolute;
+    top:50%; left:40%;
+    width:6px;height:6px;
+    border-top:2px solid var(--muted);
+    border-right:2px solid var(--muted);
+    transform:translate(-50%,-50%) rotate(45deg);
+  }
+  .account-row.danger .account-info .t1{
+    color:#E14848;
+  }
+  .account-row.danger .account-icon{
+    background:#FBE3E3;
+  }
+
+  /* === NDOKET : plein Ã©cran (hors maquette) === */
+  html,body{height:100%;}
+  body{padding:0 !important;display:block !important;justify-content:flex-start !important;}
+  .phone{width:100% !important;height:100% !important;max-width:none !important;
+    border-radius:0 !important;border:none !important;box-shadow:none !important;}
+  .notch{display:none !important;}
+  .screen{height:100% !important;min-height:100dvh !important;}
+  .content{overflow-y:auto !important;}
+</style>
+</head>
+<body>
+
+  <div class="phone">
+    <div class="notch"></div>
+    <div class="screen">
+
+      <div class="topbar">
+        <div class="back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px"><polyline points="15 18 9 12 15 6"/></svg></div>
+        <div class="topbar-title">Mon compte</div>
+      </div>
+
+      <div class="tabs">
+        <div class="tab active">Mon compte</div>
+      </div>
+
+      <div class="content">
+
+        <div class="section-label">Connexion</div>
+        <div class="account-list">
+          <div class="account-row">
+            <div class="account-icon"></div>
+            <div class="account-info">
+              <div class="t1">Adresse e-mail</div>
+              <div class="t2" id="emailVal">—</div>
+            </div>
+          </div>
+          <div class="account-row">
+            <div class="account-icon"></div>
+            <div class="account-info">
+              <div class="t1">Compte</div>
+              <div class="t2" id="roleVal">—</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="section-label">Confidentialité</div>
+        <div class="account-list">
+          <div class="account-row" data-nav="privacy">
+            <div class="account-icon"></div>
+            <div class="account-info">
+              <div class="t1">Conditions d'utilisation</div>
+            </div>
+            <div class="menu-chevron"></div>
+          </div>
+          <div class="account-row" data-nav="privacy">
+            <div class="account-icon"></div>
+            <div class="account-info">
+              <div class="t1">Politique de confidentialité</div>
+            </div>
+            <div class="menu-chevron"></div>
+          </div>
+        </div>
+
+        <div class="section-label">Zone de danger</div>
+        <div class="account-list">
+          <div class="account-row" id="logoutRow">
+            <div class="account-icon"></div>
+            <div class="account-info">
+              <div class="t1">Se déconnecter</div>
+              <div class="t2">Revenir à l'écran d'accueil</div>
+            </div>
+            <div class="menu-chevron"></div>
+          </div>
+          <div class="account-row danger">
+            <div class="account-icon"></div>
+            <div class="account-info">
+              <div class="t1">Supprimer mon compte</div>
+              <div class="t2">Cette action est irréversible</div>
+            </div>
+            <div class="menu-chevron"></div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+<script src="supabase.js"></script>
+<script src="icons.js"></script>
+  <script src="nav.js"></script>
+<script>
+(function(){
+  var me = sessionUser();
+  if(!me){ location.href = 'login.html'; return; }
+
+  document.getElementById('emailVal').textContent = me.email;
+  document.getElementById('roleVal').textContent = 'Client(e) Ndoket';
+
+  supabase.select('profils', { id: 'eq.' + me.id }).then(function(rows){
+    if(rows && rows[0]){
+      var p = rows[0];
+      document.getElementById('roleVal').textContent = p.role === 'prestataire' ? 'Prestataire Ndoket' : 'Client(e) Ndoket';
+    }
+  }).catch(function(){});
+
+  document.getElementById('logoutRow').addEventListener('click', function(){
+    supabase.signOut().then(function(){
+      ndoket.clearBooking();
+      location.href = 'index.html';
+    });
+  });
+
+  var delRow = document.querySelector('.account-row.danger');
+  if(delRow){
+    delRow.addEventListener('click', function(){
+      if(!confirm('Supprimer définitivement votre compte ? Toutes vos données seront supprimées.')) return;
+      delRow.style.opacity = '0.5';
+      supabase.rpc('delete_my_account').then(function(){
+        clearSession();
+        ndoket.clearBooking();
+        location.href = 'index.html';
+      }).catch(function(e){
+        delRow.style.opacity = '1';
+        alert('Erreur : ' + e.message);
+      });
+    });
+  }
+})();
+</script>
+</body>
+</html>

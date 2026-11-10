@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "20251538365",
+    "project_id": "ndoket-cac43",
+    "storage_bucket": "ndoket-cac43.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:20251538365:android:c025d852c4248aaae058d4",
+        "android_client_info": {
+          "package_name": "com.ndoket.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBRlrFOUvDtpaYck-I0x45Yln8ZrmjceCg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

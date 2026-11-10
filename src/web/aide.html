@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Ndoket · Aide & Support</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="animations.css">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --bg:#F5FAFC;
+    --surface:#FFFFFF;
+    --ink:#1F2A33;
+    --ink-soft:#54646F;
+    --muted:#8B98A1;
+    --orange:#F2871E;
+    --blue:#3FC2E8;
+    --blue-dark:#1E9BC2;
+    --blue-light:#D6F3FB;
+    --line:#E5EEF1;
+    --green:#2FB574;
+    --green-light:#E1F7EC;
+    --red:#E14848;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:#EDEFF0;
+    font-family:'Inter',sans-serif;
+    padding:48px 16px;
+    display:flex;
+    justify-content:center;
+  }
+  .phone{
+    width:375px;
+    height:812px;
+    background:var(--surface);
+    border-radius:44px;
+    border:12px solid var(--ink);
+    overflow:hidden;
+    position:relative;
+    box-shadow: 0 30px 60px -25px rgba(31,42,51,0.4);
+  }
+  .notch{
+    position:absolute;
+    top:0; left:50%;
+    transform:translateX(-50%);
+    width:150px; height:26px;
+    background:var(--ink);
+    border-radius:0 0 16px 16px;
+    z-index:8;
+  }
+  .screen{
+    width:100%;
+    height:100%;
+    display:flex;
+    flex-direction:column;
+    overflow:hidden;
+  }
+  .topbar{
+    padding:52px 20px 8px;
+    display:flex;
+    align-items:center;
+    gap:12px;
+  }
+  .back{
+    width:34px;height:34px;
+    border-radius:11px;
+    background:var(--bg);
+    border:2px solid var(--line);
+    flex-shrink:0;
+    display:flex;align-items:center;justify-content:center;
+    color:var(--ink);
+    cursor:pointer;
+  }
+  .back svg{width:18px;height:18px;}
+  .topbar-title{
+    font-family:'Baloo 2',sans-serif;
+    font-size:16px;
+    font-weight:700;
+    color:var(--ink);
+  }
+  .content{
+    flex:1;
+    overflow-y:auto;
+    padding:18px 20px 30px;
+  }
+
+  .hello-card{
+    background:var(--blue-light);
+    border-radius:18px;
+    padding:16px;
+    margin-bottom:18px;
+  }
+  .hello-card h2{
+    margin:0 0 6px;
+    font-family:'Baloo 2',sans-serif;
+    font-size:16px;
+    color:var(--ink);
+  }
+  .hello-card p{
+    margin:0;
+    font-size:12.5px;
+    line-height:1.6;
+    color:var(--blue-dark);
+    font-weight:600;
+  }
+
+  .contact-card{
+    display:flex;
+    align-items:center;
+    gap:14px;
+    width:100%;
+    padding:16px;
+    border:2px solid var(--line);
+    border-radius:18px;
+    background:var(--surface);
+    margin-bottom:14px;
+    cursor:pointer;
+    font-family:inherit;
+    text-align:left;
+    transition:transform .15s, border-color .15s;
+  }
+  .contact-card:active{ transform:scale(.98); }
+  .contact-card .cc-ic{
+    width:46px;height:46px;
+    border-radius:14px;
+    display:flex;align-items:center;justify-content:center;
+    flex-shrink:0;
+  }
+  .contact-card .cc-ic svg{width:24px;height:24px;}
+  .contact-card.wa{ border-color:#B8E8CF; }
+  .contact-card.wa .cc-ic{ background:var(--green-light); color:var(--green); }
+  .contact-card.mail{ border-color:var(--line); }
+  .contact-card.mail .cc-ic{ background:var(--blue-light); color:var(--blue-dark); }
+  .contact-card .cc-txt{ flex:1; min-width:0; }
+  .contact-card .cc-title{
+    display:block;
+    font-size:13.5px;
+    font-weight:800;
+    color:var(--ink);
+    margin-bottom:2px;
+  }
+  .contact-card .cc-sub{
+    display:block;
+    font-size:11.5px;
+    font-weight:600;
+    color:var(--muted);
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+  }
+  .contact-card.wa .cc-sub{ color:var(--green); }
+  .contact-card .cc-go{
+    width:18px;height:18px;
+    color:var(--muted);
+    flex-shrink:0;
+  }
+
+  .faq-title{
+    font-family:'Baloo 2',sans-serif;
+    font-size:14px;
+    font-weight:700;
+    color:var(--ink);
+    margin:22px 0 10px;
+  }
+  details.faq{
+    border:2px solid var(--line);
+    border-radius:14px;
+    background:var(--surface);
+    margin-bottom:10px;
+    overflow:hidden;
+  }
+  details.faq summary{
+    list-style:none;
+    padding:13px 15px;
+    font-size:12.5px;
+    font-weight:700;
+    color:var(--ink);
+    cursor:pointer;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:10px;
+  }
+  details.faq summary::-webkit-details-marker{display:none;}
+  details.faq summary::after{
+    content:'+';
+    font-size:16px;
+    font-weight:800;
+    color:var(--blue-dark);
+    flex-shrink:0;
+  }
+  details.faq[open] summary::after{content:'−';}
+  details.faq p{
+    margin:0;
+    padding:0 15px 14px;
+    font-size:12px;
+    line-height:1.6;
+    color:var(--ink-soft);
+  }
+
+  .foot-note{
+    margin-top:18px;
+    text-align:center;
+    font-size:11px;
+    color:var(--muted);
+    line-height:1.6;
+  }
+
+  .toast{
+    position:fixed;left:50%;bottom:90px;transform:translateX(-50%) translateY(10px);
+    background:var(--ink);color:#fff;
+    padding:11px 18px;border-radius:999px;
+    font-size:12.5px;font-weight:700;
+    opacity:0;pointer-events:none;
+    transition:opacity .25s, transform .25s;
+    z-index:50;max-width:85%;text-align:center;
+  }
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+  /* NDOKET : plein ecran (phone only) */
+  html,body{height:100%;}
+  body{padding:0 !important;display:block !important;}
+  .phone{width:100% !important;height:100% !important;max-width:none !important;
+    border-radius:0 !important;border:none !important;box-shadow:none !important;}
+  .notch{display:none !important;}
+  .screen{height:100% !important;min-height:100dvh !important;}
+  .content{overflow-y:auto !important;}
+</style>
+</head>
+<body>
+
+  <div class="phone">
+    <div class="notch"></div>
+    <div class="screen">
+
+      <div class="topbar">
+        <div class="back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg></div>
+        <div class="topbar-title">Aide & Support</div>
+      </div>
+
+      <div class="content">
+
+        <div class="hello-card">
+          <h2>Comment pouvons-nous vous aider&nbsp;?</h2>
+          <p>Une question sur un rendez-vous, un paiement ou votre compte&nbsp;? Contactez-nous, on vous répond rapidement.</p>
+        </div>
+
+        <button type="button" class="contact-card wa" id="waCard">
+          <span class="cc-ic">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+          </span>
+          <span class="cc-txt">
+            <span class="cc-title">WhatsApp</span>
+            <span class="cc-sub">+33 7 45 95 48 18</span>
+          </span>
+          <svg class="cc-go" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+
+        <button type="button" class="contact-card mail" id="mailCard">
+          <span class="cc-ic">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          </span>
+          <span class="cc-txt">
+            <span class="cc-title">E-mail</span>
+            <span class="cc-sub">ndoketproject@gmail.com</span>
+          </span>
+          <svg class="cc-go" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+
+        <div class="faq-title">Questions fréquentes</div>
+
+        <details class="faq">
+          <summary>Comment réserver un rendez-vous&nbsp;?</summary>
+          <p>Choisissez un prestataire sur l'accueil, puis un service, le mode (à domicile ou sur place), un créneau, et validez le paiement. Vous recevez un code de rendez-vous à présenter.</p>
+        </details>
+
+        <details class="faq">
+          <summary>Comment annuler un rendez-vous&nbsp;?</summary>
+          <p>Ouvrez le rendez-vous dans «&nbsp;Mes réservations&nbsp;» et appuyez sur «&nbsp;Annuler le rendez-vous&nbsp;». L'annulation est possible jusqu'à 1 heure avant l'heure prévue.</p>
+        </details>
+
+        <details class="faq">
+          <summary>Comment devenir prestataire&nbsp;?</summary>
+          <p>Créez un compte dans l'onglet «&nbsp;Prestataire&nbsp;» de la page de connexion. Un seul rôle par adresse e-mail&nbsp;: utilisez une adresse différente de votre compte cliente.</p>
+        </details>
+
+        <details class="faq">
+          <summary>Comment partager ma position&nbsp;?</summary>
+          <p>Dans le détail d'un rendez-vous, appuyez sur «&nbsp;Envoyer ma position&nbsp;». L'autre personne la verra sur la carte et pourra l'ouvrir dans Google Maps.</p>
+        </details>
+
+        <div class="foot-note">
+          Ndoket · Support client<br>
+          WhatsApp +33 7 45 95 48 18 · ndoketproject@gmail.com
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+<script src="supabase.js"></script>
+<script src="icons.js"></script>
+<script src="nav.js"></script>
+<script>
+(function(){
+  document.getElementById('waCard').addEventListener('click', function(){
+    window.openExternal('https://wa.me/33745954818');
+  });
+  document.getElementById('mailCard').addEventListener('click', function(){
+    window.openExternal('mailto:ndoketproject@gmail.com');
+  });
+})();
+</script>
+</body>
+</html>

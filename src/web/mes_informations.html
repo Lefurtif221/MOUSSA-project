@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Ndoket — Mes informations</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="animations.css">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --bg:#F5FAFC;
+    --surface:#FFFFFF;
+    --ink:#1F2A33;
+    --ink-soft:#54646F;
+    --muted:#8B98A1;
+    --orange:#F2871E;
+    --orange-dark:#D66A0C;
+    --orange-light:#FDE3C5;
+    --blue:#3FC2E8;
+    --blue-dark:#1E9BC2;
+    --blue-light:#D6F3FB;
+    --line:#E5EEF1;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:#EDEFF0;
+    font-family:'Inter',sans-serif;
+    padding:48px 16px;
+    display:flex;
+    justify-content:center;
+  }
+
+  .phone{
+    width:375px;
+    height:812px;
+    background:var(--surface);
+    border-radius:44px;
+    border:12px solid var(--ink);
+    overflow:hidden;
+    position:relative;
+    box-shadow: 0 30px 60px -25px rgba(31,42,51,0.4);
+  }
+  .notch{
+    position:absolute;
+    top:0; left:50%;
+    transform:translateX(-50%);
+    width:150px; height:26px;
+    background:var(--ink);
+    border-radius:0 0 16px 16px;
+    z-index:8;
+  }
+  .screen{
+    width:100%;
+    height:100%;
+    display:flex;
+    flex-direction:column;
+    overflow:hidden;
+  }
+
+  .topbar{
+    padding:52px 20px 8px;
+    display:flex;
+    align-items:center;
+    gap:12px;
+  }
+  .back{
+    width:34px;height:34px;
+    border-radius:11px;
+    background:var(--bg);
+    border:2px solid var(--line);
+    position:relative;
+    flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;}
+  
+  .topbar-title{
+    font-family:'Baloo 2',sans-serif;
+    font-size:16px;
+    font-weight:700;
+    color:var(--ink);
+  }
+
+  .content{
+    flex:1;
+    overflow-y:auto;
+    padding:18px 20px 24px;
+  }
+
+  .avatar-picker{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    margin-bottom:26px;
+  }
+  .avatar-circle{
+    width:84px;height:84px;
+    border-radius:50%;
+    background:linear-gradient(135deg, var(--blue-light), var(--orange-light) 140%);
+    border:3px solid var(--surface);
+    box-shadow:0 0 0 2px var(--line);
+    position:relative;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    margin-bottom:10px;
+ 
+    overflow:hidden;
+  }
+  .avatar-circle img{width:100%;height:100%;object-fit:cover;border-radius:50%;}
+  .avatar-edit{
+    position:absolute;
+    bottom:0; right:0;
+    width:28px;height:28px;
+    border-radius:50%;
+    background:var(--orange);
+    border:3px solid var(--surface);
+  }
+  .avatar-label{
+    font-size:11.5px;
+    font-weight:700;
+    color:var(--blue-dark);
+  }
+
+  .field{
+    margin-bottom:18px;
+  }
+  .field-label{
+    font-size:12px;
+    font-weight:700;
+    color:var(--ink-soft);
+    margin-bottom:7px;
+  }
+  .field-input{
+    border:2px solid var(--line);
+    border-radius:14px;
+    padding:14px 16px;
+    background:var(--bg);
+    font-size:13.5px;
+    color:var(--ink);
+    font-weight:600;
+  }
+  .field-input.locked{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    background:var(--blue-light);
+    border-color:var(--blue-light);
+    color:var(--blue-dark);
+    font-weight:700;
+  }
+  .field-input.locked .edit-link{
+    font-size:10.5px;
+    font-weight:800;
+    color:var(--blue-dark);
+    background:#fff;
+    padding:3px 8px;
+    border-radius:8px;
+  }
+
+  .footer{display:flex;justify-content:center;align-items:center;
+    padding:16px 20px 24px;
+    border-top:2px solid var(--line);
+  }
+
+  input.field-input{
+    background:var(--surface);
+    border:2px solid var(--line);
+    border-radius:14px;
+    padding:13px 15px;
+    font-size:13px;
+    font-family:'Inter',sans-serif;
+    color:var(--ink);
+    width:100%;
+    box-sizing:border-box;
+  }
+  input.field-input:focus{
+    outline:none;
+    border-color:var(--orange);
+  }
+  input.field-input::placeholder{ color:var(--muted); }
+  textarea.field-input{
+    background:var(--surface);
+    border:2px solid var(--line);
+    border-radius:14px;
+    padding:13px 15px;
+    font-size:13px;
+    font-family:'Inter',sans-serif;
+    color:var(--ink);
+    width:100%;
+    box-sizing:border-box;
+    resize:vertical;
+    min-height:70px;
+  }
+  textarea.field-input:focus{ outline:none; border-color:var(--orange); }
+  .section-label{font-size:11px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin:20px 0 10px;}
+  .btn-primary{
+    min-width:230px;
+    background:var(--orange);
+    color:#FFFFFF;
+    border:none;
+    text-align:center;
+    padding:14px 40px;
+    border-radius:16px;
+    font-family:'Inter',sans-serif;
+    font-weight:800;
+    font-size:14.5px;
+    cursor:pointer;
+  }
+
+  /* === NDOKET : plein Ã©cran (hors maquette) === */
+  html,body{height:100%;}
+  body{padding:0 !important;display:block !important;justify-content:flex-start !important;}
+  .phone{width:100% !important;height:100% !important;max-width:none !important;
+    border-radius:0 !important;border:none !important;box-shadow:none !important;}
+  .notch{display:none !important;}
+  .screen{height:100% !important;min-height:100dvh !important;}
+  .content{overflow-y:auto !important;}
+</style>
+</head>
+<body>
+
+  <div class="phone">
+    <div class="notch"></div>
+    <div class="screen">
+
+      <div class="topbar">
+        <div class="back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px"><polyline points="15 18 9 12 15 6"/></svg></div>
+        <div class="topbar-title">Mes informations</div>
+      </div>
+
+      <div class="content">
+
+        <div class="avatar-picker" id="avatarPicker">
+          <div class="avatar-circle" id="avatarCircle"><div class="avatar-edit"></div></div>
+          <div class="avatar-label" id="avatarLabel">Changer la photo</div>
+        </div>
+        <input type="file" id="avatarInput" accept="image/*" style="display:none" />
+
+        <div class="field">
+          <div class="field-label">Prénom</div>
+          <input type="text" class="field-input" id="prenom" placeholder="Votre prénom" />
+        </div>
+
+        <div class="field">
+          <div class="field-label">Nom</div>
+          <input type="text" class="field-input" id="nom" placeholder="Votre nom" />
+        </div>
+
+        <div class="field">
+          <div class="field-label">Numéro de téléphone</div>
+          <input type="tel" class="field-input" id="telephone" placeholder="Ex : +221 77 123 45 67" />
+        </div>
+
+        <div class="field">
+          <div class="field-label">Adresse</div>
+          <input type="text" class="field-input" id="adresse" placeholder="Ex : Rue 12, Mermoz, Dakar" />
+        </div>
+
+        <!-- Champs supplémentaires réservés aux prestataires -->
+        <div id="proFields" style="display:none">
+          <div class="section-label">Informations prestataire</div>
+
+          <div class="field">
+            <div class="field-label">Nom du salon / activité</div>
+            <input type="text" class="field-input" id="proNom" placeholder="Ex : Salon Fatou Beauty" />
+          </div>
+
+          <div class="field">
+            <div class="field-label">Présentation (bio)</div>
+            <textarea class="field-input" id="proBio" placeholder="Décrivez votre activité, votre expérience…" maxlength="300"></textarea>
+          </div>
+
+          <div class="field">
+            <div class="field-label">Description / spécialités</div>
+            <textarea class="field-input" id="proDesc" placeholder="Ex : Tresses, nattes, maquillage…" maxlength="200"></textarea>
+          </div>
+        </div>
+
+        <div class="field">
+          <div class="field-label">Ma position GPS</div>
+          <button type="button" class="field-input" id="geoBtn" style="display:flex;align-items:center;justify-content:center;gap:8px;background:var(--blue-light);border:2px dashed var(--blue);color:var(--blue-dark);font-weight:700;font-size:12.5px;font-family:inherit;cursor:pointer;padding:13px;">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            <span id="geoLabel">Mettre à jour ma position</span>
+          </button>
+          <div style="font-size:10.5px;color:var(--muted);margin-top:6px;">Sert au tri par proximité (prestataires / clientes les plus proches).</div>
+        </div>
+
+      </div>
+
+      <div class="footer">
+        <button type="button" class="btn-primary" id="saveBtn">Enregistrer</button>
+      </div>
+
+    </div>
+  </div>
+
+<script src="supabase.js"></script>
+<script src="icons.js"></script>
+  <script src="nav.js"></script>
+<script>
+(function(){
+  var me = sessionUser();
+  if(!me){ location.href = 'login.html'; return; }
+
+  var isPro = false;
+  var proPid = null;
+
+  supabase.select('profils', { id: 'eq.' + me.id }).then(function(rows){
+    if(rows && rows[0]){
+      var p = rows[0];
+      isPro = p.role === 'prestataire' || !!p.prestataire_id;
+      document.body.setAttribute('data-role', isPro ? 'prestataire' : 'client');
+      document.getElementById('prenom').value = p.prenom || '';
+      document.getElementById('nom').value = p.nom || '';
+      document.getElementById('telephone').value = p.telephone || '';
+      document.getElementById('adresse').value = p.adresse || '';
+      if(p.avatar_url){
+        document.getElementById('avatarCircle').classList.add('has-img');
+        document.getElementById('avatarCircle').innerHTML = '<img src="' + escUrl(p.avatar_url) + '" alt="" />';
+        document.getElementById('avatarLabel').textContent = 'Photo de profil';
+      }
+      // Pour un prestataire : charger aussi les champs business
+      if(isPro && p.prestataire_id){
+        proPid = p.prestataire_id;
+        document.getElementById('proFields').style.display = 'block';
+        supabase.select('prestataires', { id: 'eq.' + p.prestataire_id }).then(function(pr){
+          if(pr && pr[0]){
+            document.getElementById('proNom').value = pr[0].nom || '';
+            document.getElementById('proBio').value = pr[0].bio || '';
+            document.getElementById('proDesc').value = pr[0].description || '';
+          }
+        }).catch(function(){});
+      }
+    }
+  }).catch(function(){});
+
+  // Photo de profil
+  document.getElementById('avatarPicker').addEventListener('click', function(){
+    document.getElementById('avatarInput').click();
+  });
+  document.getElementById('avatarInput').addEventListener('change', function(){
+    var f = this.files && this.files[0];
+    if(!f) return;
+    var r = new FileReader();
+    r.onload = function(e){
+      var circle = document.getElementById('avatarCircle');
+      circle.classList.add('has-img');
+      circle.innerHTML = '<img src="' + e.target.result + '" alt="" />';
+      document.getElementById('avatarLabel').textContent = 'Photo ajoutée';
+    };
+    r.readAsDataURL(f);
+    var ext = (f.type || 'image/jpeg').split('/')[1] || 'jpeg';
+    var path = 'avatars/' + me.id + '_' + Date.now() + '.' + ext;
+    supabase.uploadPhoto(f, path).then(function(url){
+      return supabase.update('profils', { avatar_url: url }, 'id', me.id).then(function(){
+        // Sync aussi côté prestataires pour que le profil affiche la bonne photo
+        if(isPro){
+          var t = proPid ? { col: 'id', val: proPid } : { col: 'user_id', val: me.id };
+          return supabase.update('prestataires', { photo_url: url }, t.col, t.val).catch(function(){});
+        }
+      });
+    }).then(function(){
+      showToast('Photo de profil mise à jour !');
+    }).catch(function(e){
+      showToast('Erreur photo : ' + e.message);
+    });
+  });
+
+  // Ma position GPS
+  function savePosition(pos){
+    return supabase.update('profils', { latitude: pos.latitude, longitude: pos.longitude }, 'id', me.id).then(function(){
+      if(isPro){
+        var t = proPid ? { col: 'id', val: proPid } : { col: 'user_id', val: me.id };
+        return supabase.update('prestataires', { latitude: pos.latitude, longitude: pos.longitude }, t.col, t.val).catch(function(){});
+      }
+    });
+  }
+  document.getElementById('geoBtn').addEventListener('click', function(){
+    var lbl = document.getElementById('geoLabel');
+    lbl.textContent = 'Localisation en cours…';
+    getMyPosition().then(function(pos){
+      return savePosition(pos).then(function(){
+        lbl.textContent = 'Position mise à jour ✓';
+        showToast('Position enregistrée ✓');
+        geoReverse(pos.latitude, pos.longitude).then(function(a){
+          var inp = document.getElementById('adresse');
+          if(inp){
+            inp.value = a; // toujours remplacer par l'adresse détectée
+            showToast('Adresse détectée : ' + a, 4000);
+          }
+        }).catch(function(){
+          showToast('Adresse non détectée : écrivez-la manuellement.', 4000);
+        });
+      });
+    }).catch(function(){
+      lbl.textContent = 'Position indisponible — réessayer';
+      showToast('Impossible de vous localiser. Vérifiez le GPS et l\'autorisation.');
+    });
+  });
+  attachAddressAutocomplete(document.getElementById('adresse'), function(pos){
+    savePosition(pos).then(function(){
+      document.getElementById('geoLabel').textContent = 'Position mise à jour ✓';
+      showToast('Position enregistrée ✓');
+    }).catch(function(){});
+  });
+
+  document.getElementById('saveBtn').addEventListener('click', function(){
+    var patch = {
+      prenom: document.getElementById('prenom').value.trim(),
+      nom: document.getElementById('nom').value.trim(),
+      telephone: document.getElementById('telephone').value.trim(),
+      adresse: document.getElementById('adresse').value.trim()
+    };
+    if(!patch.prenom || !patch.nom){ alert('Prénom et nom sont requis.'); return; }
+    var btn = this;
+    btn.disabled = true;
+    btn.textContent = 'Enregistrement…';
+    supabase.update('profils', patch, 'id', me.id).then(function(){
+      if(!isPro){ location.href = 'profil_client.html'; return; }
+      // Prestataire : sauver aussi les champs business + téléphone côté prestataires
+      var proPatch = { telephone: patch.telephone };
+      var proNom = document.getElementById('proNom').value.trim();
+      var proBio = document.getElementById('proBio').value.trim();
+      var proDesc = document.getElementById('proDesc').value.trim();
+      if(proNom) proPatch.nom = proNom;
+      if(proBio || proBio === '') proPatch.bio = proBio;
+      if(proDesc || proDesc === '') proPatch.description = proDesc;
+      var target = proPid ? { col: 'id', val: proPid } : { col: 'user_id', val: me.id };
+      supabase.update('prestataires', proPatch, target.col, target.val).then(function(){
+        showToast('Profil mis à jour ✓');
+        setTimeout(function(){ location.href = 'profil_prestataire.html'; }, 600);
+      }).catch(function(e){
+        btn.disabled = false;
+        btn.textContent = 'Enregistrer';
+        showToast('Erreur profil pro : ' + e.message, 4000);
+      });
+    }).catch(function(err){
+      btn.disabled = false;
+      btn.textContent = 'Enregistrer';
+      alert('Erreur : ' + err.message);
+    });
+  });
+})();
+</script>
+</body>
+</html>

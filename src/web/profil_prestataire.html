@@ -1,0 +1,857 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Ndoket — Profil prestataire</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="animations.css">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --bg:#F5FAFC;
+    --surface:#FFFFFF;
+    --ink:#1F2A33;
+    --ink-soft:#54646F;
+    --muted:#8B98A1;
+    --orange:#F2871E;
+    --orange-dark:#D66A0C;
+    --orange-light:#FDE3C5;
+    --blue:#3FC2E8;
+    --blue-dark:#1E9BC2;
+    --blue-light:#D6F3FB;
+    --red:#E14848;
+    --red-light:#FBE3E3;
+    --line:#E5EEF1;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:#EDEFF0;
+    font-family:'Inter',sans-serif;
+    padding:48px 16px;
+    display:flex;
+    justify-content:center;
+  }
+
+  .phone{
+    width:375px;
+    height:812px;
+    background:var(--surface);
+    border-radius:44px;
+    border:12px solid var(--ink);
+    overflow:hidden;
+    position:relative;
+    box-shadow: 0 30px 60px -25px rgba(31,42,51,0.4);
+  }
+  .notch{
+    position:absolute;
+    top:0; left:50%;
+    transform:translateX(-50%);
+    width:150px; height:26px;
+    background:var(--ink);
+    border-radius:0 0 16px 16px;
+    z-index:8;
+  }
+  .screen{
+    width:100%;
+    height:100%;
+    display:flex;
+    flex-direction:column;
+    overflow:hidden;
+  }
+
+  .content{
+    flex:1;
+    overflow-y:auto;
+  }
+
+  /* Header profil */
+  .profile-header{
+    background:var(--blue-dark);
+    padding:56px 20px 28px;
+    display:flex;
+    align-items:center;
+    gap:14px;
+    position:relative;
+    overflow:hidden;
+  }
+  .profile-header::after{
+    content:"";;
+    position:absolute;
+    right:-40px; top:-40px;
+    width:140px;height:140px;
+    border-radius:50%;
+    background:rgba(255,255,255,0.12);
+  }
+  .avatar-big{
+    width:64px;height:64px;
+    border-radius:16px;
+    background:linear-gradient(135deg, var(--blue-light), var(--orange-light) 140%);
+    border:3px solid rgba(255,255,255,0.4);
+    position:relative;
+    z-index:1;
+    flex-shrink:0;
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  }
+  .avatar-big img{width:100%;height:100%;object-fit:cover;border-radius:14px;display:none;}
+  .avatar-big.has-img img{display:block;}
+  .avatar-big.has-img .av-icon{display:none;}
+  .avatar-big .av-icon{font-size:22px;opacity:0.5;}
+  .avatar-big .av-cam{position:absolute;bottom:-4px;right:-4px;width:22px;height:22px;border-radius:50%;background:var(--orange);color:#fff;font-size:11px;display:flex;align-items:center;justify-content:center;z-index:2;border:2px solid var(--blue-dark);}
+  .profile-name-block{
+    position:relative;
+    z-index:1;
+  }
+  .profile-name-row{
+    display:flex;
+    align-items:center;
+    gap:6px;
+  }
+  .profile-name{
+    font-family:'Baloo 2',sans-serif;
+    font-size:18px;
+    font-weight:700;
+    color:#fff;
+  }
+  .verified-badge{
+    width:15px;height:15px;
+    border-radius:50%;
+    background:var(--orange);
+    position:relative;
+    flex-shrink:0;
+  }
+  .verified-badge::after{
+    content:"";;
+    position:absolute;
+    top:48%; left:50%;
+    width:6px;height:3.5px;
+    border-left:2px solid #fff;
+    border-bottom:2px solid #fff;
+    transform:translate(-50%,-60%) rotate(-45deg);
+  }
+  .profile-type{
+    font-size:11px;
+    color:#E4F7FD;
+    margin-top:3px;
+    font-weight:600;
+  }
+  .edit-btn{
+    margin-left:auto;
+    width:34px;height:34px;
+    border-radius:11px;
+    background:rgba(255,255,255,0.2);
+    position:relative;
+    z-index:1;
+    flex-shrink:0;
+  }
+
+  /* Stats rapides */
+  .stat-row{
+    display:flex;
+    margin:-18px 20px 20px;
+    background:var(--surface);
+    border-radius:16px;
+    border:2px solid var(--line);
+    position:relative;
+    z-index:2;
+    box-shadow:0 10px 20px -14px rgba(31,42,51,0.25);
+  }
+  .stat-item{
+    flex:1;
+    text-align:center;
+    padding:14px 8px;
+  }
+  .stat-item + .stat-item{
+    border-left:2px solid var(--line);
+  }
+  .stat-num{
+    font-family:'Baloo 2',sans-serif;
+    font-size:16px;
+    font-weight:800;
+    color:var(--blue-dark);
+  }
+  .stat-label{
+    font-size:9.5px;
+    color:var(--muted);
+    margin-top:2px;
+    font-weight:600;
+  }
+
+  /* Visibilité */
+  .visibility-card{
+    margin:0 20px 20px;
+    background:var(--orange-light);
+    border-radius:16px;
+    padding:14px 16px;
+    display:flex;
+    align-items:center;
+    gap:12px;
+  }
+  .visibility-card .icon{
+    width:36px;height:36px;
+    border-radius:10px;
+    background:var(--orange);
+    flex-shrink:0;
+  }
+  .visibility-card .txt h4{
+    font-family:'Baloo 2',sans-serif;
+    font-size:13px;
+    font-weight:700;
+    color:var(--orange-dark);
+    margin:0 0 2px;
+  }
+  .visibility-card .txt p{
+    font-size:10.5px;
+    color:var(--orange-dark);
+    margin:0;
+    opacity:0.85;
+  }
+  .visibility-card .switch{
+    margin-left:auto;
+    width:38px;height:22px;
+    border-radius:20px;
+    background:#3AA65A;
+    position:relative;
+    flex-shrink:0;
+  }
+  .visibility-card .switch::after{
+    content:"";;
+    position:absolute;
+    top:3px; right:3px;
+    width:16px;height:16px;
+    border-radius:50%;
+    background:#fff;
+  }
+
+  /* Menu */
+  .menu-group{
+    margin:0 20px 18px;
+  }
+  .menu-label{
+    font-size:11px;
+    font-weight:800;
+    color:var(--muted);
+    text-transform:uppercase;
+    letter-spacing:0.05em;
+    margin-bottom:8px;
+    padding-left:2px;
+  }
+  .menu-list{
+    background:var(--surface);
+    border:2px solid var(--line);
+    border-radius:16px;
+    overflow:hidden;
+  }
+  .menu-row{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    padding:13px 16px;
+    border-bottom:2px solid var(--line);
+  }
+  .menu-row:last-child{
+    border-bottom:none;
+  }
+  .menu-icon{
+    width:32px;height:32px;
+    border-radius:10px;
+    background:var(--bg);
+    flex-shrink:0;
+  }
+  .menu-text{
+    flex:1;
+    font-size:12.5px;
+    font-weight:600;
+    color:var(--ink);
+  }
+  .menu-badge{
+    font-size:9.5px;
+    font-weight:800;
+    color:var(--orange-dark);
+    background:var(--orange-light);
+    padding:2px 8px;
+    border-radius:8px;
+    margin-right:4px;
+  }
+  .menu-chevron{
+    width:16px;height:16px;
+    position:relative;
+    flex-shrink:0;
+  }
+  .menu-chevron::after{
+    content:"";;
+    position:absolute;
+    top:50%; left:40%;
+    width:6px;height:6px;
+    border-top:2px solid var(--muted);
+    border-right:2px solid var(--muted);
+    transform:translate(-50%,-50%) rotate(45deg);
+  }
+
+  .menu-row.danger .menu-text{
+    color:var(--red);
+  }
+  .menu-row.danger .menu-icon{
+    background:var(--red-light);
+  }
+
+  .app-version{
+    text-align:center;
+    font-size:10.5px;
+    color:var(--muted);
+    padding:6px 0 26px;
+  }
+
+  /* Bio */
+  .bio-card{
+    margin:0 20px 20px;
+    background:var(--surface);
+    border:2px solid var(--line);
+    border-radius:16px;
+    padding:14px 16px;
+  }
+  .bio-label{font-size:11px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:8px;}
+  .bio-text{font-size:12.5px;color:var(--ink-soft);line-height:1.5;white-space:pre-wrap;}
+  .bio-text.placeholder{color:var(--muted);font-style:italic;}
+  .bio-edit{display:none;}
+  .bio-edit textarea{
+    width:100%;min-height:70px;border:2px solid var(--line);border-radius:12px;padding:10px 12px;
+    font-size:13px;font-family:'Inter',sans-serif;color:var(--ink);resize:vertical;outline:none;background:var(--bg);
+  }
+  .bio-edit textarea:focus{border-color:var(--orange);background:#fff;}
+  .bio-actions{display:flex;gap:8px;margin-top:8px;}
+  .bio-btn{flex:1;padding:9px;border-radius:10px;font-size:12px;font-weight:700;font-family:'Inter',sans-serif;cursor:pointer;border:none;}
+  .bio-btn.save{background:var(--orange);color:#fff;}
+  .bio-btn.cancel{background:var(--bg);border:2px solid var(--line);color:var(--ink-soft);}
+
+  /* Réseaux sociaux */
+  .social-card{
+    margin:0 20px 20px;
+    background:var(--surface);
+    border:2px solid var(--line);
+    border-radius:16px;
+    padding:14px 16px;
+  }
+  .social-label{font-size:11px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:10px;}
+  .social-row{
+    display:flex;align-items:center;gap:10px;background:var(--bg);
+    border:2px solid var(--line);border-radius:12px;padding:9px 12px;margin-bottom:8px;
+  }
+  .social-row .social-ico{width:20px;height:20px;flex:none;opacity:.75;}
+  .social-row input{flex:1;min-width:0;border:0;background:transparent;outline:none;font-size:13px;font-family:'Inter',sans-serif;color:var(--ink);}
+  .social-row input::placeholder{color:var(--muted);}
+  .social-save{width:100%;padding:11px;border-radius:12px;background:var(--orange);color:#fff;border:none;font-size:13px;font-weight:700;font-family:'Inter',sans-serif;cursor:pointer;margin-top:2px;}
+
+  /* Galerie */
+  .gallery-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:8px;
+  }
+  .gallery-item{
+    aspect-ratio:1;
+    border-radius:12px;
+    overflow:hidden;
+    background:var(--bg);
+    position:relative;
+  }
+  .gallery-item img{width:100%;height:100%;object-fit:cover;}
+  .gallery-del{
+    position:absolute;top:4px;right:4px;width:22px;height:22px;border-radius:50%;
+    background:rgba(193,57,43,0.85);color:#fff;border:none;font-size:13px;cursor:pointer;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .gallery-add{
+    aspect-ratio:1;
+    border-radius:12px;
+    border:2px dashed var(--blue);
+    background:var(--blue-light);
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    gap:4px;
+    cursor:pointer;
+    color:var(--blue-dark);
+    font-size:11px;
+    font-weight:700;
+  }
+  .gallery-add .plus{font-size:24px;line-height:1;}
+
+
+  .topbar{
+    padding:52px 20px 8px;
+    display:flex;
+    align-items:center;
+    gap:12px;
+  }
+  .back{
+    width:34px;height:34px;
+    border-radius:11px;
+    background:var(--bg);
+    border:2px solid var(--line);
+    position:relative;
+    flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;}
+  
+  .topbar-title{
+    font-family:'Baloo 2',sans-serif;
+    font-size:16px;
+    font-weight:700;
+    color:var(--ink);
+  }
+  /* === NDOKET : plein Ã©cran (hors maquette) === */
+  html,body{height:100%;}
+  body{padding:0 !important;display:block !important;justify-content:flex-start !important;}
+  .phone{width:100% !important;height:100% !important;max-width:none !important;
+    border-radius:0 !important;border:none !important;box-shadow:none !important;}
+  .notch{display:none !important;}
+  .screen{height:100% !important;min-height:100dvh !important;}
+  .content{overflow-y:auto !important;}
+</style>
+</head>
+<body data-role="prestataire">
+
+  <div class="phone">
+    <div class="notch"></div>
+    <div class="screen">
+      <div class="topbar">
+          <div class="back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px"><polyline points="15 18 9 12 15 6"/></svg></div>
+          <div class="topbar-title">Mon profil</div>
+        </div>
+        <div class="content">
+
+        <div class="profile-header">
+          <div class="avatar-big" id="avatarBox">
+            <span class="av-icon">👤</span>
+            <img id="avatarImg" alt="" />
+            <span class="av-cam">📷</span>
+          </div>
+          <div class="profile-name-block">
+            <div class="profile-name-row">
+              <div class="profile-name" id="proName">—</div>
+              <div class="verified-badge"></div>
+            </div>
+            <div class="profile-type" id="proType">—</div>
+          </div>
+          <div class="edit-btn" id="editProfileBtn">✏️</div>
+        </div>
+        <input type="file" id="avatarInput" accept="image/*" style="display:none" />
+
+        <div class="stat-row">
+          <div class="stat-item">
+            <div class="stat-num" id="statRdv">0</div>
+            <div class="stat-label">RDV à venir</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-num" id="statNote">★ 5.0</div>
+            <div class="stat-label">Note moyenne</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-num" id="statGain">0 F</div>
+            <div class="stat-label">FCFA à venir</div>
+          </div>
+        </div>
+
+        <div class="visibility-card">
+          <div class="icon"></div>
+          <div class="txt">
+            <h4>Profil visible</h4>
+            <p>Vous apparaissez dans les recherches des clientes</p>
+          </div>
+          <div class="switch"></div>
+        </div>
+
+        <!-- Bio -->
+        <div class="bio-card">
+          <div class="bio-label">Ma présentation</div>
+          <div class="bio-text placeholder" id="bioText">Ajoutez une brève description de vous et de votre activité…</div>
+          <div class="bio-edit" id="bioEdit">
+            <textarea id="bioInput" placeholder="Ex : Spécialiste en pose d'ongles et de cils depuis 5 ans à Dakar…"></textarea>
+            <div class="bio-actions">
+              <button class="bio-btn cancel" id="bioCancel">Annuler</button>
+              <button class="bio-btn save" id="bioSave">Enregistrer</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Réseaux sociaux -->
+        <div class="social-card">
+          <div class="social-label">Mes réseaux sociaux</div>
+          <div class="social-row"><span class="social-ico" id="icoIg"></span>
+            <input type="text" id="socInstagram" placeholder="Instagram (ex : @monprofil)" /></div>
+          <div class="social-row"><span class="social-ico" id="icoTt"></span>
+            <input type="text" id="socTiktok" placeholder="TikTok (ex : @monprofil)" /></div>
+          <div class="social-row"><span class="social-ico" id="icoFb"></span>
+            <input type="text" id="socFacebook" placeholder="Facebook (ex : monpage)" /></div>
+          <button class="social-save" id="socSave">Enregistrer mes réseaux</button>
+        </div>
+
+        <!-- Galerie photos -->
+        <div class="menu-group">
+          <div class="menu-label">Ma galerie photo</div>
+          <div class="gallery-grid" id="galleryGrid"></div>
+        </div>
+        <input type="file" id="galleryInput" accept="image/*" style="display:none" />
+
+        <div class="menu-group">
+          <div class="menu-label">Mon activité</div>
+          <div class="menu-list">
+            <div class="menu-row" data-nav="fixer_prix">
+              <div class="menu-icon"></div>
+              <div class="menu-text">Mes services & prix</div>
+              <div class="menu-chevron"></div>
+            </div>
+            <div class="menu-row" data-nav="disponibilites">
+              <div class="menu-icon"></div>
+              <div class="menu-text">Mes disponibilités</div>
+              <div class="menu-chevron"></div>
+            </div>
+            <div class="menu-row" data-nav="fiche_avis"><div class="menu-icon"></div><div class="menu-text">Mes avis clients</div>
+              <div class="menu-chevron"></div>
+            </div>
+            <div class="menu-row" data-nav="frais_deplacement">
+              <div class="menu-icon"></div>
+              <div class="menu-text">Frais de déplacement</div>
+              <div class="menu-chevron"></div>
+            </div>
+            <div class="menu-row" id="shareProfileRow">
+              <div class="menu-icon"></div>
+              <div class="menu-text">Partager mon profil</div>
+              <div class="menu-chevron"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="menu-group">
+          <div class="menu-label">Paiements</div>
+          <div class="menu-list">
+            <div class="menu-row" data-nav="moyens_paiement">
+              <div class="menu-icon"></div>
+              <div class="menu-text">Compte de réception</div>
+              <div class="menu-chevron"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="menu-group">
+          <div class="menu-label">Compte</div>
+          <div class="menu-list">
+            <div class="menu-row" data-nav="mes_informations"><div class="menu-icon"></div><div class="menu-text">Informations de l'établissement</div>
+              <div class="menu-chevron"></div>
+            </div>
+            <div class="menu-row" data-nav="aide">
+              <div class="menu-icon"></div>
+              <div class="menu-text">Centre d'aide</div>
+              <div class="menu-chevron"></div>
+            </div>
+            <div class="menu-row danger" id="logoutRow">
+              <div class="menu-icon"></div>
+              <div class="menu-text">Se déconnecter</div>
+              <div class="menu-chevron"></div>
+            </div>
+            <div class="menu-row danger" id="deleteAccountRow">
+              <div class="menu-icon"></div>
+              <div class="menu-text">Supprimer mon compte</div>
+              <div class="menu-chevron"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="app-version">Ndoket · Version 1.0.0</div>
+
+      </div>
+    </div>
+  </div>
+
+<script src="supabase.js"></script>
+<script src="icons.js"></script>
+  <script src="nav.js"></script>
+<script>
+(function(){
+  var me = sessionUser();
+  if(!me){ location.href = 'login.html'; return; }
+  var fmt = function(n){ return (n || 0).toLocaleString('fr-FR'); };
+
+  var pid = ndoket.prestataireId() || null;
+  var myPhotos = [];
+
+  // ---- AVATAR UPLOAD ----
+  var avatarBox = document.getElementById('avatarBox');
+  var avatarInput = document.getElementById('avatarInput');
+  var avatarImg = document.getElementById('avatarImg');
+
+  // Crayon d'édition du profil → page Mes informations
+  document.getElementById('editProfileBtn').addEventListener('click', function(){
+    location.href = 'mes_informations.html';
+  });
+
+  avatarBox.addEventListener('click', function(){ avatarInput.click(); });
+  avatarInput.addEventListener('change', function(){
+    var f = this.files && this.files[0];
+    if(!f || !pid) return;
+    var r = new FileReader();
+    r.onload = function(e){
+      avatarImg.src = e.target.result;
+      avatarBox.classList.add('has-img');
+    };
+    r.readAsDataURL(f);
+    var ext = (f.type||'image/jpeg').split('/')[1] || 'jpeg';
+    supabase.uploadPhoto(f, 'avatars/' + pid + '_' + Date.now() + '.' + ext).then(function(url){
+      return supabase.update('prestataires', {photo_url: url}, 'id', pid).then(function(){
+        // Sync aussi profils.avatar_url pour la cohérence
+        var me = sessionUser();
+        if(me){ return supabase.update('profils', { avatar_url: url }, 'id', me.id).catch(function(){}); }
+      });
+    }).then(function(){
+      showToast('Photo de profil mise à jour !');
+    }).catch(function(e){
+      showToast('Erreur photo : ' + e.message);
+    });
+  });
+
+  // ---- BIO ----
+  var bioText = document.getElementById('bioText');
+  var bioEdit = document.getElementById('bioEdit');
+  var bioInput = document.getElementById('bioInput');
+  var currentBio = '';
+
+  function renderBio(bio){
+    currentBio = bio || '';
+    if(bio && bio.trim()){
+      bioText.textContent = bio;
+      bioText.classList.remove('placeholder');
+    } else {
+      bioText.textContent = 'Ajoutez une brève description de vous et de votre activité…';
+      bioText.classList.add('placeholder');
+    }
+  }
+  bioText.addEventListener('click', function(){
+    bioText.style.display = 'none';
+    bioEdit.style.display = 'block';
+    bioInput.value = currentBio;
+    bioInput.focus();
+  });
+  document.getElementById('bioCancel').addEventListener('click', function(){
+    bioEdit.style.display = 'none';
+    bioText.style.display = 'block';
+  });
+  document.getElementById('bioSave').addEventListener('click', function(){
+    var v = bioInput.value.trim();
+    if(!pid){ showToast('Profil introuvable'); return; }
+    supabase.update('prestataires', {bio: v}, 'id', pid).then(function(){
+      renderBio(v);
+      bioEdit.style.display = 'none';
+      bioText.style.display = 'block';
+      showToast('Présentation enregistrée !');
+    }).catch(function(e){
+      showToast('Erreur : ' + e.message);
+    });
+  });
+
+  // ---- GALERIE ----
+  var galleryGrid = document.getElementById('galleryGrid');
+  var galleryInput = document.getElementById('galleryInput');
+
+  function renderGallery(){
+    var html = '';
+    myPhotos.forEach(function(p, i){
+      html += '<div class="gallery-item"><img src="' + escUrl(p.url) + '" alt="" />' +
+        '<button class="gallery-del" data-i="' + i + '">&times;</button></div>';
+    });
+    html += '<div class="gallery-add" id="galleryAddBtn"><span class="plus">+</span>Ajouter</div>';
+    galleryGrid.innerHTML = html;
+
+    document.getElementById('galleryAddBtn').onclick = function(){ galleryInput.click(); };
+    galleryGrid.querySelectorAll('.gallery-del').forEach(function(b){
+      b.onclick = function(){
+        var i = parseInt(this.dataset.i, 10);
+        if(!confirm('Supprimer cette photo ?')) return;
+        supabase.delete('photos', 'id', myPhotos[i].id).then(function(){
+          myPhotos.splice(i, 1);
+          renderGallery();
+        }).catch(function(e){ showToast('Erreur : ' + e.message); });
+      };
+    });
+  }
+
+  galleryInput.addEventListener('change', function(){
+    var f = this.files && this.files[0];
+    if(!f || !pid) return;
+    var path = 'galerie/' + pid + '/' + Date.now() + '.' + ((f.type||'image/jpeg').split('/')[1] || 'jpeg');
+    supabase.uploadPhoto(f, path).then(function(url){
+      return supabase.insert('photos', { prestataire_id: pid, url: url });
+    }).then(function(row){
+      var r = Array.isArray(row) ? row[0] : row;
+      if(r) myPhotos.push(r);
+      renderGallery();
+      showToast('Photo ajoutée à la galerie !');
+    }).catch(function(e){
+      showToast('Erreur : ' + e.message);
+    });
+  });
+
+  // ---- RÉSEAUX SOCIAUX ----
+  document.getElementById('socSave').addEventListener('click', function(){
+    if(!pid){ showToast('Profil introuvable'); return; }
+    var patch = {
+      instagram: document.getElementById('socInstagram').value.trim(),
+      tiktok: document.getElementById('socTiktok').value.trim(),
+      facebook: document.getElementById('socFacebook').value.trim()
+    };
+    supabase.update('prestataires', patch, 'id', pid).then(function(){
+      showToast('Réseaux sociaux enregistrés !');
+    }).catch(function(e){
+      showToast('Erreur : ' + e.message);
+    });
+  });
+
+  function fillSocials(p){
+    document.getElementById('socInstagram').value = p.instagram || '';
+    document.getElementById('socTiktok').value = p.tiktok || '';
+    document.getElementById('socFacebook').value = p.facebook || '';
+  }
+
+  // ---- PARTAGE PROFIL ----
+  // LIEN PARTAGÉ : hébergez p.html (avec privacy.html) sur votre domaine,
+  // puis mettez le domaine ici. Ex : 'https://mon-domaine.com/p.html'
+  var SHARE_BASE = 'https://lefurtif221.github.io/ndoket-site/p.html';
+  function resolveShareId(){
+    var id = pid || ndoket.prestataireId();
+    if(id) return Promise.resolve(id);
+    // Dernier recours : retrouver l'identifiant via le profil connecté
+    return supabase.select('profils', { id: 'eq.' + me.id }).then(function(rows){
+      var found = rows && rows[0] && rows[0].prestataire_id;
+      if(found){ pid = found; return found; }
+      throw new Error('noid');
+    });
+  }
+  function copyLink(link){
+    var done = function(){ showToast('Lien copié ! Partage-le où tu veux.'); };
+    var legacy = function(){
+      var ta = document.createElement('textarea');
+      ta.value = link;
+      ta.style.position = 'fixed';
+      ta.style.opacity = '0';
+      document.body.appendChild(ta);
+      ta.select();
+      try{ document.execCommand('copy'); }catch(e){}
+      document.body.removeChild(ta);
+      done();
+    };
+    if(navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(link).then(done).catch(legacy);
+    } else {
+      legacy();
+    }
+  }
+  function doShare(id){
+    var link = SHARE_BASE + '?id=' + id;
+    var nom = (document.getElementById('proName') && document.getElementById('proName').textContent) || 'ce prestataire';
+    var text = 'Découvre ' + nom + ' sur Ndoket : ' + link;
+    var Share = null;
+    try{
+      if(window.Capacitor){
+        if(window.Capacitor.Plugins && window.Capacitor.Plugins.Share){
+          Share = window.Capacitor.Plugins.Share;
+        } else if(typeof window.Capacitor.registerPlugin === 'function'){
+          Share = window.Capacitor.registerPlugin('Share');
+        }
+      }
+    }catch(e){ Share = null; }
+    if(Share && Share.share){
+      Share.share({
+        title: 'Ndoket · ' + nom,
+        text: text,
+        url: link,
+        dialogTitle: 'Partager mon profil'
+      }).then(function(){
+        showToast('Profil partagé !');
+      }).catch(function(){
+        copyLink(link);
+      });
+      return;
+    }
+    copyLink(link);
+  }
+  document.getElementById('shareProfileRow').addEventListener('click', function(){
+    resolveShareId().then(doShare).catch(function(){
+      showToast('Profil introuvable');
+    });
+  });
+
+  // ---- CHARGEMENT ----
+  function fill(pidx){
+    supabase.select('prestataires', { id: 'eq.' + pidx }).then(function(rows){
+      if(rows && rows[0]){
+        var p = rows[0];
+        document.getElementById('proName').textContent = p.nom;
+        document.getElementById('proType').textContent = p.categorie + ' · ' + p.adresse;
+        document.getElementById('statNote').textContent = '★ ' + Number(p.note_globale).toFixed(1);
+        if(p.photo_url){
+          avatarImg.src = p.photo_url;
+          avatarBox.classList.add('has-img');
+        }
+        renderBio(p.bio);
+        fillSocials(p);
+      }
+    }).catch(function(){});
+    supabase.select('reservations', { prestataire_id: 'eq.' + pidx }).then(function(rows){
+      var list = rows || [];
+      var today = new Date();
+      var tk = today.getFullYear() + '-' + ('0' + (today.getMonth() + 1)).slice(-2) + '-' + ('0' + today.getDate()).slice(-2);
+      var future = list.filter(function(r){ return r.statut !== 'annule' && r.date_rdv >= tk; });
+      document.getElementById('statRdv').textContent = future.length;
+      var sum = future.reduce(function(a, r){ return a + (r.montant_total || 0); }, 0);
+      document.getElementById('statGain').textContent = fmt(sum);
+    }).catch(function(){});
+    // Charger galerie
+    supabase.select('photos', { prestataire_id: 'eq.' + pidx }).then(function(rows){
+      myPhotos = rows || [];
+      renderGallery();
+    }).catch(function(){ renderGallery(); });
+  }
+
+  supabase.select('profils', { id: 'eq.' + me.id }).then(function(rows){
+    if(rows && rows[0] && rows[0].prestataire_id){
+      pid = rows[0].prestataire_id;
+      ndoket.setPrestataire(pid);
+      fill(pid);
+    } else if(pid){
+      fill(pid);
+    } else {
+      document.getElementById('proName').textContent = 'Profil en cours de validation';
+      renderBio('');
+      renderGallery();
+    }
+  }).catch(function(){});
+
+  document.getElementById('logoutRow').addEventListener('click', function(){
+    supabase.signOut().then(function(){
+      ndoket.clearBooking();
+      location.href = 'index.html';
+    });
+  });
+
+  document.getElementById('deleteAccountRow').addEventListener('click', function(){
+    if(!confirm('Supprimer définitivement votre compte ? Votre profil, services et galerie seront supprimés.')) return;
+    var row = this;
+    row.style.opacity = '0.5';
+    supabase.rpc('delete_my_account').then(function(){
+      clearSession();
+      ndoket.clearBooking();
+      location.href = 'index.html';
+    }).catch(function(e){
+      row.style.opacity = '1';
+      alert('Erreur : ' + e.message);
+    });
+  });
+})();
+</script>
+</body>
+</html>

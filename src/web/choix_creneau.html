@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Ndoket — Choix du créneau</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="animations.css">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --bg:#F5FAFC;
+    --surface:#FFFFFF;
+    --ink:#1F2A33;
+    --ink-soft:#54646F;
+    --muted:#8B98A1;
+    --orange:#F2871E;
+    --orange-dark:#D66A0C;
+    --orange-light:#FDE3C5;
+    --blue:#3FC2E8;
+    --blue-dark:#1E9BC2;
+    --blue-light:#D6F3FB;
+    --line:#E5EEF1;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:#EDEFF0;
+    font-family:'Inter',sans-serif;
+    padding:48px 16px;
+    display:flex;
+    justify-content:center;
+  }
+
+  .phone{
+    width:375px;
+    height:812px;
+    background:var(--surface);
+    border-radius:44px;
+    border:12px solid var(--ink);
+    overflow:hidden;
+    position:relative;
+    box-shadow: 0 30px 60px -25px rgba(31,42,51,0.4);
+  }
+  .notch{
+    position:absolute;
+    top:0; left:50%;
+    transform:translateX(-50%);
+    width:150px; height:26px;
+    background:var(--ink);
+    border-radius:0 0 16px 16px;
+    z-index:8;
+  }
+  .screen{
+    width:100%;
+    height:100%;
+    display:flex;
+    flex-direction:column;
+    overflow:hidden;
+  }
+
+  .topbar{
+    padding:52px 20px 8px;
+    display:flex;
+    align-items:center;
+    gap:12px;
+  }
+  .back{
+    width:34px;height:34px;
+    border-radius:11px;
+    background:var(--bg);
+    border:2px solid var(--line);
+    position:relative;
+    flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;}
+  
+  .steps{
+    display:flex;
+    gap:6px;
+    flex:1;
+  }
+  .step-bar{
+    height:4px;
+    flex:1;
+    border-radius:4px;
+    background:var(--line);
+  }
+  .step-bar.done{
+    background:var(--orange);
+  }
+
+  .body{
+    flex:1;
+    overflow-y:auto;
+    padding:22px 24px 24px;
+  }
+
+  .eyebrow{
+    font-size:11.5px;
+    font-weight:800;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    color:var(--orange-dark);
+    margin-bottom:8px;
+  }
+  h1{
+    font-family:'Baloo 2',sans-serif;
+    font-size:22px;
+    font-weight:700;
+    color:var(--ink);
+    margin:0 0 20px;
+  }
+
+  .summary-chip{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    background:var(--bg);
+    border-radius:14px;
+    padding:10px 14px;
+    margin-bottom:24px;
+  }
+  .summary-chip .avatar{
+    width:34px;height:34px;
+    border-radius:10px;
+    background:linear-gradient(135deg, var(--blue-light), var(--orange-light) 140%);
+    flex-shrink:0;
+  }
+  .summary-chip .txt .name{
+    font-size:12.5px;
+    font-weight:700;
+    color:var(--ink);
+  }
+  .summary-chip .txt .service{
+    font-size:11px;
+    color:var(--muted);
+  }
+  .summary-chip .mode-tag{
+    margin-left:auto;
+    font-size:9.5px;
+    font-weight:800;
+    color:var(--orange-dark);
+    background:var(--orange-light);
+    padding:4px 9px;
+    border-radius:8px;
+    white-space:nowrap;
+  }
+
+  .section-label{
+    font-size:12px;
+    font-weight:800;
+    color:var(--ink-soft);
+    text-transform:uppercase;
+    letter-spacing:0.04em;
+    margin-bottom:12px;
+  }
+
+  /* Sélecteur de date */
+  .date-row{
+    display:flex;
+    gap:8px;
+    overflow-x:auto;
+    padding-bottom:4px;
+    margin-bottom:26px;
+  }
+  .date-item{
+    flex-shrink:0;
+    width:52px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:4px;
+    border:2px solid var(--line);
+    border-radius:14px;
+    padding:10px 0;
+  }
+  .date-item.selected{
+    border-color:var(--orange);
+    background:var(--orange);
+  }
+  .date-item .dow{
+    font-size:10px;
+    font-weight:700;
+    color:var(--muted);
+  }
+  .date-item.selected .dow{
+    color:#FFEFDB;
+  }
+  .date-item .dom{
+    font-family:'Baloo 2',sans-serif;
+    font-size:15px;
+    font-weight:700;
+    color:var(--ink);
+  }
+  .date-item.selected .dom{
+    color:#fff;
+  }
+  .date-item.disabled{
+    opacity:0.35;
+  }
+
+  /* Grille de créneaux */
+  .slot-period{
+    margin-bottom:18px;
+  }
+  .slot-period-label{
+    font-size:11.5px;
+    font-weight:700;
+    color:var(--ink-soft);
+    margin-bottom:10px;
+  }
+  .slot-grid{
+    display:grid;
+    grid-template-columns:repeat(3, 1fr);
+    gap:8px;
+  }
+  .slot{
+    text-align:center;
+    padding:11px 0;
+    border-radius:12px;
+    border:2px solid var(--line);
+    font-size:12.5px;
+    font-weight:700;
+    color:var(--ink-soft);
+  }
+  .slot.selected{
+    border-color:var(--orange);
+    background:var(--orange);
+    color:#fff;
+  }
+  .slot.unavailable{
+    color:var(--muted);
+    background:var(--bg);
+    text-decoration:line-through;
+    border-color:var(--line);
+    opacity:0.55;
+  }
+
+  .footer{
+    padding:16px 24px 26px;
+    border-top:2px solid var(--line);
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:14px;
+  }
+  .footer-info .label{
+    font-size:10px;
+    color:var(--muted);
+    font-weight:600;
+  }
+  .footer-info .val{
+    font-family:'Baloo 2',sans-serif;
+    font-size:14px;
+    font-weight:700;
+    color:var(--ink);
+  }
+  .btn-primary{
+    min-width:170px;
+    background:var(--orange);
+    color:#fff;
+    text-align:center;
+    padding:14px 32px;
+    border-radius:16px;
+    font-weight:800;
+    font-size:14.5px;
+    border:none;
+    font-family:'Inter',sans-serif;
+    cursor:pointer;
+  }
+
+  .list-empty{
+    text-align:center;
+    font-size:13px;
+    color:var(--muted);
+    padding:30px 16px;
+  }
+
+  /* === NDOKET : plein ecran (phone only) === */
+  html,body{height:100%;}
+  body{padding:0 !important;display:block !important;justify-content:flex-start !important;}
+  .phone{width:100% !important;height:100% !important;max-width:none !important;
+    border-radius:0 !important;border:none !important;box-shadow:none !important;}
+  .notch{display:none !important;}
+  .screen{height:100% !important;min-height:100dvh !important;}
+  .content{overflow-y:auto !important;}
+</style>
+</head>
+<body>
+
+  <div class="phone">
+    <div class="notch"></div>
+    <div class="screen">
+
+      <div class="topbar">
+        <div class="back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px"><polyline points="15 18 9 12 15 6"/></svg></div>
+        <div class="steps">
+          <div class="step-bar done"></div>
+          <div class="step-bar done"></div>
+          <div class="step-bar"></div>
+          <div class="step-bar"></div>
+        </div>
+      </div>
+
+      <div class="body">
+        <div class="eyebrow">Étape 3 sur 4</div>
+        <h1>Choisissez un créneau</h1>
+
+        <div class="summary-chip">
+          <div class="avatar"></div>
+          <div class="txt">
+            <div class="name" id="proName">—</div>
+            <div class="service" id="serviceName">—</div>
+          </div>
+          <div class="mode-tag" id="modeTag">—</div>
+        </div>
+
+        <div class="section-label">Date</div>
+        <div class="date-row" id="dateRow"></div>
+
+        <div class="section-label" id="slotLabel">Créneaux disponibles</div>
+        <div id="slotPeriods"></div>
+        <div class="list-empty" id="listEmpty" style="display:none">Aucun créneau ce jour-là.</div>
+      </div>
+
+      <div class="footer">
+        <div class="footer-info">
+          <div class="label">Créneau choisi</div>
+          <div class="val" id="chosenVal">—</div>
+        </div>
+        <button type="button" class="btn-primary" id="continueBtn">Continuer</button>
+      </div>
+
+    </div>
+  </div>
+
+
+<script src="supabase.js"></script>
+<script src="icons.js"></script>
+  <script src="nav.js"></script>
+<script>
+(function(){
+  var booking = ndoket.getBooking();
+  if(!booking.service_id){ location.href = 'fiche_services.html'; return; }
+
+  var DOW = ['Dim','Lun','Mar','Mer','Jeu','Ven','Sam'];
+  var MONTHS = ['janv','févr','mars','avr','mai','juin','juil','août','sept','oct','nov','déc'];
+
+  var days = [];
+  var today = new Date();
+  for(var i = 1; i <= 7; i++){
+    var d = new Date(today);
+    d.setDate(today.getDate() + i);
+    if(d.getDay() === 0) continue;
+    days.push(d);
+  }
+  if(days.length < 4){ days = [new Date(today.getTime() + 86400000)]; }
+
+  var selDay = days[0];
+  var selSlot = null;
+  var disponibilites = [];
+  var takenSlots = [];
+  var prestataireId = booking.prestataire_id || ndoket.prestataireId();
+  var fraisDomicile = parseInt(ndoket.get('frais', 0), 10) || 0;
+
+  document.getElementById('serviceName').textContent = booking.service_nom;
+  document.getElementById('modeTag').textContent = booking.mode === 'a_domicile' ? 'À domicile' : 'Sur place';
+
+  if(prestataireId){
+    // Charger les disponibilités
+    supabase.select('disponibilites', { prestataire_id: 'eq.' + prestataireId }).then(function(rows){
+      disponibilites = rows || [];
+      renderSlots();
+    }).catch(function(){ renderSlots(); });
+
+    supabase.select('prestataires', { id: 'eq.' + prestataireId }).then(function(rows){
+      if(rows && rows[0]){
+        document.getElementById('proName').textContent = rows[0].nom;
+        fraisDomicile = parseInt(rows[0].frais_deplacement, 10) || 0;
+        ndoket.set('frais', fraisDomicile);
+      }
+    }).catch(function(){});
+  }
+
+  function dayLabel(d){
+    return DOW[d.getDay()] + '. ' + d.getDate() + ' ' + MONTHS[d.getMonth()];
+  }
+  function dayKey(d){
+    return d.getFullYear() + '-' + ('0' + (d.getMonth() + 1)).slice(-2) + '-' + ('0' + d.getDate()).slice(-2);
+  }
+
+  // Normalise "09:00:00" (Postgres) → "09:00" et convertit en minutes
+  function hhmm(t){ return String(t || '').slice(0, 5); }
+  function toMin(t){
+    var p = hhmm(t).split(':');
+    return parseInt(p[0], 10) * 60 + parseInt(p[1], 10);
+  }
+  var serviceDuree = parseInt(booking.duree_min, 10) || 60;
+
+  // Générer les créneaux basés sur les disponibilités réelles
+  function getSlotsForDay(d){
+    var jour = d.getDay(); // 0=dim, 1=lun...
+    var slots = [];
+    disponibilites.forEach(function(dispo){
+      if(dispo.jour_semaine !== jour) return;
+      var debut = toMin(dispo.heure_debut);
+      var fin = toMin(dispo.heure_fin);
+      // Un créneau n'est proposé que s'il entièrement tient dans la plage
+      while(debut + serviceDuree <= fin){
+        var hh = ('0' + Math.floor(debut / 60)).slice(-2);
+        var mm = ('0' + (debut % 60)).slice(-2);
+        slots.push(hh + ':' + mm);
+        debut += 60; // créneaux d'1h
+      }
+    });
+    return slots;
+  }
+
+  // Créneaux occupés du jour sélectionné (RPC : la RLS empêche de lire les
+  // réservations des autres clientes)
+  function loadTaken(d){
+    if(!prestataireId){ takenSlots = []; return Promise.resolve(); }
+    return supabase.rpc('get_creneaux_pris', { p_pid: prestataireId, p_date: dayKey(d) })
+      .then(function(rows){ takenSlots = rows || []; })
+      .catch(function(){ takenSlots = []; });
+  }
+
+  function isSlotTaken(d, slot){
+    var s = toMin(slot);
+    var e = s + serviceDuree;
+    return takenSlots.some(function(r){
+      var rs = toMin(r.heure_debut);
+      var re = r.heure_fin ? toMin(r.heure_fin) : (rs + serviceDuree);
+      return s < re && e > rs; // chevauchement
+    });
+  }
+
+  var dateRow = document.getElementById('dateRow');
+  days.forEach(function(d, idx){
+    var item = document.createElement('div');
+    item.className = 'date-item' + (idx === 0 ? ' selected' : '');
+    item.innerHTML = '<span class="dow">' + DOW[d.getDay()] + '</span><span class="dom">' + d.getDate() + '</span>';
+    item.addEventListener('click', function(){
+      document.querySelectorAll('.date-item').forEach(function(el){ el.classList.remove('selected'); });
+      item.classList.add('selected');
+      selDay = d;
+      selSlot = null;
+      renderSlots();
+    });
+    dateRow.appendChild(item);
+  });
+
+  function renderSlots(){
+    document.getElementById('slotLabel').textContent = 'Créneaux disponibles — ' + dayLabel(selDay);
+    var wrap = document.getElementById('slotPeriods');
+    wrap.innerHTML = '';
+    loadTaken(selDay).then(function(){
+      var SLOTS = getSlotsForDay(selDay);
+      if(!SLOTS.length){
+        document.getElementById('listEmpty').textContent = 'Aucun créneau disponible ce jour-là.';
+        document.getElementById('listEmpty').style.display = 'block';
+        return;
+      }
+      var periods = [
+        { label: 'Matin', from: 0, to: Math.ceil(SLOTS.length / 3) },
+        { label: 'Après-midi', from: Math.ceil(SLOTS.length / 3), to: Math.ceil(SLOTS.length * 2 / 3) },
+        { label: 'Soir', from: Math.ceil(SLOTS.length * 2 / 3), to: SLOTS.length }
+      ];
+      periods.forEach(function(per){
+        if(per.from >= per.to) return;
+        var sec = document.createElement('div');
+        sec.className = 'slot-period';
+        sec.innerHTML = '<div class="slot-period-label">' + per.label + '</div><div class="slot-grid"></div>';
+        var grid = sec.querySelector('.slot-grid');
+        SLOTS.slice(per.from, per.to).forEach(function(slot){
+          var el = document.createElement('div');
+          if(isSlotTaken(selDay, slot)){
+            el.className = 'slot unavailable';
+            el.textContent = slot;
+          } else {
+            el.className = 'slot' + (slot === selSlot ? ' selected' : '');
+            el.textContent = slot;
+            el.addEventListener('click', function(){
+              selSlot = slot;
+              document.querySelectorAll('.slot').forEach(function(s){ s.classList.remove('selected'); });
+              el.classList.add('selected');
+              document.getElementById('chosenVal').textContent = dayLabel(selDay) + ', ' + slot;
+            });
+          }
+          grid.appendChild(el);
+        });
+        wrap.appendChild(sec);
+      });
+      document.getElementById('listEmpty').style.display = 'none';
+    });
+  }
+
+  document.getElementById('continueBtn').addEventListener('click', function(){
+    if(!selSlot){
+      document.getElementById('chosenVal').textContent = 'Choisissez un créneau !';
+      return;
+    }
+    var fee = booking.mode === 'a_domicile' ? fraisDomicile : 0;
+    // Base = prix sans frais (montant_ht = montant hors frais, défini par personnalisation)
+    var baseMontant = parseInt(booking.montant_ht, 10);
+    if(isNaN(baseMontant)){
+      baseMontant = parseInt(booking.montant, 10) || parseInt(booking.prix, 10) || 0;
+      // Retirer le frais déjà inclus s'il y en a un
+      var oldFee = parseInt(booking.frais, 10) || 0;
+      if(oldFee > 0 && baseMontant >= oldFee){ baseMontant -= oldFee; }
+    }
+    ndoket.setBooking({
+      date: dayKey(selDay),
+      heure: selSlot,
+      montant_ht: baseMontant,
+      montant: baseMontant + fee,
+      frais: fee
+    });
+    location.href = 'paiement.html';
+  });
+
+  renderSlots();
+})();
+</script>
+</body>
+</html>

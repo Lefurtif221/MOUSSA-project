@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Ndoket — Accueil prestataire</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="animations.css">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#F5FAFC;--surface:#FFFFFF;--ink:#1F2A33;--ink-soft:#54646F;--muted:#8B98A1;
+    --orange:#F2871E;--orange-dark:#D66A0C;--orange-light:#FDE3C5;
+    --blue:#3FC2E8;--blue-dark:#1E9BC2;--blue-light:#D6F3FB;
+    --green:#3AA65A;--green-light:#DCF3E2;--line:#E5EEF1;
+  }
+  *{box-sizing:border-box;}
+  html,body{height:100%;}
+  body{margin:0;background:var(--surface);font-family:'Inter',sans-serif;}
+  .screen{width:100%;height:100dvh;display:flex;flex-direction:column;overflow:hidden;}
+
+  /* Header dark */
+  .header{background:var(--ink);padding:50px 20px 20px;position:relative;overflow:hidden;}
+  .header::after{content:"";position:absolute;right:-30px;top:-30px;width:120px;height:120px;border-radius:50%;background:rgba(63,194,232,0.12);}
+  .header-row{display:flex;justify-content:space-between;align-items:flex-start;position:relative;}
+  .greeting-sm{font-size:10.5px;font-weight:700;color:#9AAAB4;letter-spacing:0.04em;}
+  .greeting{font-family:'Baloo 2',sans-serif;font-size:19px;font-weight:700;color:#fff;margin-top:2px;}
+  .avatar{width:42px;height:42px;border-radius:14px;background:var(--orange);display:flex;align-items:center;justify-content:center;color:#fff;font-family:'Baloo 2';font-size:16px;font-weight:800;border:2px solid rgba(255,255,255,0.2);}
+  .online-row{display:flex;align-items:center;gap:8px;margin-top:14px;position:relative;}
+  .dot{width:8px;height:8px;border-radius:50%;background:var(--green);}
+  .online-text{font-size:11.5px;font-weight:700;color:#DCF3E2;}
+
+  /* Bande colorée */
+  .strip{height:5px;background:repeating-linear-gradient(90deg,var(--orange) 0 12px,#fff 12px 17px,var(--blue) 17px 22px,#fff 22px 27px);}
+
+  /* Content scrollable */
+  .content{flex:1;overflow-y:auto;}
+
+  /* Stats */
+  .stats{display:flex;gap:10px;padding:16px 20px 0;}
+  .stat{flex:1;background:var(--bg);border:2px solid var(--line);border-radius:14px;padding:12px;}
+  .stat-val{font-family:'Baloo 2',sans-serif;font-size:17px;font-weight:800;color:var(--orange-dark);}
+  .stat-lbl{font-size:9.5px;color:var(--muted);font-weight:600;margin-top:2px;}
+
+  /* Actions rapides */
+  .actions{display:flex;gap:10px;padding:14px 20px 0;}
+  .act{flex:1;background:var(--bg);border-radius:14px;padding:14px 8px;display:flex;flex-direction:column;align-items:center;gap:8px;cursor:pointer;transition:transform 0.15s;}
+  .act:active{transform:scale(0.95);}
+  .act-icon{width:36px;height:36px;border-radius:10px;background:var(--surface);border:2px solid var(--line);display:flex;align-items:center;justify-content:center;}
+  .act-icon svg{width:18px;height:18px;stroke:var(--orange-dark);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+  .act-label{font-size:10px;font-weight:700;color:var(--ink-soft);text-align:center;line-height:1.3;}
+
+  /* Section */
+  .sec-head{display:flex;justify-content:space-between;align-items:baseline;padding:18px 20px 10px;}
+  .sec-head h4{font-family:'Baloo 2',sans-serif;font-size:15px;font-weight:700;color:var(--ink);margin:0;}
+  .sec-head a{font-size:11.5px;color:var(--orange-dark);font-weight:700;cursor:pointer;text-decoration:none;}
+
+  /* RDV cards */
+  .rdv-list{padding:0 20px 20px;display:flex;flex-direction:column;gap:10px;}
+  .rdv-row{display:flex;align-items:center;gap:12px;background:var(--surface);border:2px solid var(--line);border-radius:14px;padding:12px 14px;cursor:pointer;transition:transform 0.15s;}
+  .rdv-row:active{transform:scale(0.98);}
+  .rdv-time{display:flex;flex-direction:column;align-items:center;width:42px;flex-shrink:0;}
+  .rdv-time .t{font-family:'Baloo 2',sans-serif;font-weight:800;font-size:13px;color:var(--blue-dark);}
+  .rdv-time .d{width:4px;height:4px;border-radius:50%;background:var(--line);margin-top:4px;}
+  .rdv-info{flex:1;}
+  .rdv-info .name{font-size:12.5px;font-weight:700;color:var(--ink);}
+  .rdv-info .meta{font-size:11px;color:var(--muted);margin-top:1px;}
+  .tag{font-size:9px;font-weight:800;padding:3px 8px;border-radius:8px;white-space:nowrap;}
+  .tag.home{background:var(--orange-light);color:var(--orange-dark);}
+  .tag.place{background:var(--blue-light);color:var(--blue-dark);}
+  .empty{text-align:center;padding:30px 20px;font-size:13px;color:var(--muted);}
+
+  /* Tabbar */
+  .tabbar{display:flex;justify-content:space-around;padding:12px 0 10px;background:var(--surface);border-top:2px solid var(--line);}
+  .tab{display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;-webkit-tap-highlight-color:transparent;}
+  .tab-icon{width:22px;height:22px;display:flex;align-items:center;justify-content:center;}
+  .tab-icon svg{width:20px;height:20px;}
+  .tab-text{font-size:9px;font-weight:700;color:var(--muted);}
+  .tab.active .tab-text{color:var(--orange-dark);}
+</style>
+</head>
+<body data-role="prestataire">
+  <div class="screen">
+    <div class="header">
+      <div class="header-row">
+        <div>
+          <div class="greeting-sm">Bonjour</div>
+          <div class="greeting" id="greeting">—</div>
+        </div>
+        <div class="avatar" id="avatarLetter">N</div>
+      </div>
+      <div class="online-row">
+        <span class="dot"></span>
+        <span class="online-text">Vous êtes visible par les clientes</span>
+      </div>
+    </div>
+    <div class="strip"></div>
+
+    <div class="content">
+      <div class="stats">
+        <div class="stat"><div class="stat-val" id="statToday">0</div><div class="stat-lbl">RDV aujourd'hui</div></div>
+        <div class="stat"><div class="stat-val" id="statWeek">0 F</div><div class="stat-lbl">Cette semaine</div></div>
+        <div class="stat"><div class="stat-val" id="statNote">★ 5.0</div><div class="stat-lbl">Note moyenne</div></div>
+      </div>
+
+      <div class="actions">
+        <div class="act" data-nav="fixer_prix">
+          <div class="act-icon"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div>
+          <div class="act-label">Ajouter<br>un service</div>
+        </div>
+        <div class="act" data-nav="disponibilites">
+          <div class="act-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+          <div class="act-label">Mes<br>dispos</div>
+        </div>
+        <div class="act" data-nav="mes_rdv_prestataire">
+          <div class="act-icon"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div>
+          <div class="act-label">Voir mon<br>agenda</div>
+        </div>
+        <div class="act" data-nav="profil_prestataire">
+          <div class="act-icon"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
+          <div class="act-label">Mon<br>profil</div>
+        </div>
+      </div>
+
+      <div class="sec-head">
+        <h4>Prochaines réservations</h4>
+        <a data-nav="mes_rdv_prestataire">Voir tout</a>
+      </div>
+
+      <div id="bookingList" class="rdv-list"></div>
+      <div class="empty" id="listEmpty" style="display:none">Aucune réservation à venir.</div>
+    </div>
+
+    <div class="tabbar">
+      <div class="tab active" data-nav="accueil_prestataire">
+        <span class="tab-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></span>
+        <div class="tab-text">Accueil</div>
+      </div>
+      <div class="tab" data-nav="fixer_prix">
+        <span class="tab-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg></span>
+        <div class="tab-text">Services</div>
+      </div>
+      <div class="tab" data-nav="mes_rdv_prestataire">
+        <span class="tab-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></span>
+        <div class="tab-text">RDV</div>
+      </div>
+      <div class="tab" data-nav="profil_prestataire">
+        <span class="tab-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span>
+        <div class="tab-text">Profil</div>
+      </div>
+    </div>
+  </div>
+
+<script src="supabase.js"></script>
+<script src="icons.js"></script>
+<script src="nav.js"></script>
+<script>
+(function(){
+  var me = sessionUser();
+  if(!me){ location.href='login.html'; return; }
+  localStorage.setItem('ndoket_space', 'pro');
+  // Sonderie des nouveaux RDV (notification simplifiée)
+  startRdvPolling();
+
+  var DOW=['Dim','Lun','Mar','Mer','Jeu','Ven','Sam'];
+  var MONTHS=['janv','févr','mars','avr','mai','juin','juil','août','sept','oct','nov','déc'];
+  var fmt=function(n){ return (n||0).toLocaleString('fr-FR'); };
+  function dayKey(d){ return d.getFullYear()+'-'+('0'+(d.getMonth()+1)).slice(-2)+'-'+('0'+d.getDate()).slice(-2); }
+
+  var pid = null;
+
+  supabase.select('profils',{id:'eq.'+me.id}).then(function(rows){
+    var p = rows && rows[0];
+    if(p){
+      pid = p.prestataire_id || null;
+      document.getElementById('greeting').textContent = p.prenom || '—';
+      document.getElementById('avatarLetter').textContent = (p.prenom||'N')[0].toUpperCase();
+      if(p.avatar_url){
+        document.getElementById('avatarLetter').innerHTML = '<img src="' + escUrl(p.avatar_url) + '" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:inherit" />';
+      }
+      if(pid){
+        ndoket.setPrestataire(pid);
+        loadPrestataire();
+        loadReservations();
+      }
+    }
+  }).catch(function(){});
+
+  function loadPrestataire(){
+    supabase.select('prestataires',{id:'eq.'+pid}).then(function(rows){
+      if(rows && rows[0]){
+        var p = rows[0];
+        document.getElementById('greeting').textContent = p.nom || '—';
+        document.getElementById('avatarLetter').textContent = (p.nom||'N')[0].toUpperCase();
+        if(p.photo_url){
+          document.getElementById('avatarLetter').innerHTML = '<img src="' + escUrl(p.photo_url) + '" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:inherit" />';
+        }
+        document.getElementById('statNote').textContent = '★ ' + Number(p.note_globale||5).toFixed(1);
+      }
+    }).catch(function(){});
+  }
+
+  function loadReservations(){
+    if(!pid){ document.getElementById('listEmpty').style.display='block'; return; }
+    supabase.select('reservations',{prestataire_id:'eq.'+pid}).then(function(rows){
+      var all = rows || [];
+      var today = dayKey(new Date());
+      var weekStart = new Date(); weekStart.setDate(weekStart.getDate()-weekStart.getDay()+1);
+      var weekEnd = new Date(weekStart); weekEnd.setDate(weekEnd.getDate()+6);
+      var weekKey = dayKey(weekStart);
+      var weekEndKey = dayKey(weekEnd);
+
+      var todayCount=0, weekSum=0;
+      all.forEach(function(r){
+        if(r.statut==='annule') return;
+        if(r.date_rdv===today) todayCount++;
+        if(r.date_rdv>=weekKey && r.date_rdv<=weekEndKey) weekSum+=(r.montant_total||0);
+      });
+      document.getElementById('statToday').textContent = todayCount;
+      document.getElementById('statWeek').textContent = fmt(weekSum)+' F';
+
+      var future = all.filter(function(r){ return r.statut!=='annule' && r.date_rdv>=today; })
+        .sort(function(a,b){ return (a.date_rdv+' '+(a.heure_debut||'')).localeCompare(b.date_rdv+' '+(b.heure_debut||'')); });
+
+      var list = document.getElementById('bookingList');
+      list.innerHTML = '';
+      var shown=0;
+      future.forEach(function(r){
+        if(shown>=5) return;
+        shown++;
+        var d=new Date(r.date_rdv+'T00:00:00');
+        var h=(r.heure_debut||'').substring(0,5);
+        var row=document.createElement('div');
+        row.className='rdv-row';
+        row.innerHTML=
+          '<div class="rdv-time"><span class="t">'+h+'</span><span class="d"></span></div>'+
+          '<div class="rdv-info"><div class="name">Client #'+(r.code||r.id.slice(0,6))+'</div>'+
+          '<div class="meta">'+DOW[d.getDay()]+' '+d.getDate()+' '+MONTHS[d.getMonth()]+' · '+fmt(r.montant_total)+' F</div></div>'+
+          '<span class="tag '+(r.mode==='a_domicile'?'home':'place')+'">'+(r.mode==='a_domicile'?'Domicile':'Sur place')+'</span>';
+        row.onclick=function(){
+          ndoket.setBooking({_reservation_id:r.id});
+          location.href='fiche_client.html';
+        };
+        list.appendChild(row);
+      });
+      document.getElementById('listEmpty').style.display=shown?'none':'block';
+    }).catch(function(e){
+      document.getElementById('listEmpty').style.display='block';
+      document.getElementById('listEmpty').textContent='Erreur : '+e.message;
+    });
+  }
+})();
+</script>
+</body>
+</html>

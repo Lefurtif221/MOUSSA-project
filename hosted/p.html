@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ndoket · Voir le profil</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box;}
+  body{
+    margin:0;min-height:100dvh;
+    background:#F5FAFC;
+    font-family:'Inter',sans-serif;
+    display:flex;align-items:center;justify-content:center;
+    padding:24px;
+  }
+  .card{
+    background:#fff;
+    border-radius:24px;
+    padding:36px 28px;
+    max-width:380px;width:100%;
+    text-align:center;
+    box-shadow:0 20px 50px -20px rgba(31,42,51,.25);
+  }
+  .logo{
+    width:64px;height:64px;border-radius:20px;
+    background:#1F2A33;color:#fff;
+    display:flex;align-items:center;justify-content:center;
+    font-family:'Baloo 2',sans-serif;font-size:28px;font-weight:800;
+    margin:0 auto 16px;
+  }
+  h1{font-family:'Baloo 2',sans-serif;font-size:20px;color:#1F2A33;margin:0 0 8px;}
+  p{font-size:13.5px;line-height:1.6;color:#54646F;margin:0 0 24px;}
+  .btn{
+    display:block;width:100%;
+    padding:15px;border-radius:16px;
+    background:#1E9BC2;color:#fff;
+    font-family:inherit;font-size:15px;font-weight:800;
+    text-decoration:none;margin-bottom:12px;
+  }
+  .btn.store{background:#F2871E;}
+  .tiny{font-size:11px;color:#8B98A1;margin-top:16px;line-height:1.6;}
+</style>
+</head>
+<body>
+  <div class="card">
+    <div class="logo">N</div>
+    <h1>Voir ce profil sur Ndoket</h1>
+    <p>La beauté à Dakar : coiffure, ongles, cils.<br>Ouvrez ce lien dans l'application Ndoket.</p>
+    <a class="btn" id="openBtn" href="#">Ouvrir dans Ndoket</a>
+    <a class="btn store" id="storeBtn" href="https://play.google.com/store" target="_blank" rel="noopener">Installer Ndoket</a>
+    <div class="tiny">Si l'application ne s'ouvre pas, installez-la puis rouvrez ce lien.</div>
+  </div>
+<script>
+(function(){
+  var m = /[?&]id=([A-Za-z0-9-]+)/.exec(location.search);
+  var id = m ? m[1] : '';
+  var deep = id ? 'ndoket://prestataire/' + id : 'ndoket://';
+  document.getElementById('openBtn').href = deep;
+  // Tentative d'ouverture automatique si l'app est installée
+  if(id){
+    setTimeout(function(){ location.href = deep; }, 600);
+  }
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Ndoket — Moyens de paiement</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="animations.css">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --bg:#F5FAFC;
+    --surface:#FFFFFF;
+    --ink:#1F2A33;
+    --ink-soft:#54646F;
+    --muted:#8B98A1;
+    --orange:#F2871E;
+    --orange-dark:#D66A0C;
+    --orange-light:#FDE3C5;
+    --blue:#3FC2E8;
+    --blue-dark:#1E9BC2;
+    --blue-light:#D6F3FB;
+    --red:#E14848;
+    --line:#E5EEF1;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:#EDEFF0;
+    font-family:'Inter',sans-serif;
+    padding:48px 16px;
+    display:flex;
+    justify-content:center;
+  }
+
+  .phone{
+    width:375px;
+    height:812px;
+    background:var(--surface);
+    border-radius:44px;
+    border:12px solid var(--ink);
+    overflow:hidden;
+    position:relative;
+    box-shadow: 0 30px 60px -25px rgba(31,42,51,0.4);
+  }
+  .notch{
+    position:absolute;
+    top:0; left:50%;
+    transform:translateX(-50%);
+    width:150px; height:26px;
+    background:var(--ink);
+    border-radius:0 0 16px 16px;
+    z-index:8;
+  }
+  .screen{
+    width:100%;
+    height:100%;
+    display:flex;
+    flex-direction:column;
+    overflow:hidden;
+  }
+
+  .topbar{
+    padding:52px 20px 8px;
+    display:flex;
+    align-items:center;
+    gap:12px;
+  }
+  .back{
+    width:34px;height:34px;
+    border-radius:11px;
+    background:var(--bg);
+    border:2px solid var(--line);
+    position:relative;
+    flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;}
+  
+  .topbar-title{
+    font-family:'Baloo 2',sans-serif;
+    font-size:16px;
+    font-weight:700;
+    color:var(--ink);
+  }
+
+  .content{
+    flex:1;
+    overflow-y:auto;
+    padding:18px 20px 24px;
+  }
+
+  .section-label{
+    font-size:11px;
+    font-weight:800;
+    color:var(--ink-soft);
+    text-transform:uppercase;
+    letter-spacing:0.05em;
+    margin-bottom:10px;
+  }
+
+  .pay-card{
+    display:flex;
+    align-items:center;
+    gap:14px;
+    border:2px solid var(--line);
+    border-radius:16px;
+    padding:14px;
+    margin-bottom:10px;
+  }
+  .pay-card.default{
+    border-color:var(--orange);
+    background:var(--orange-light);
+  }
+  .pay-logo{
+    width:44px;height:44px;
+    border-radius:12px;
+    flex-shrink:0;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-family:'Baloo 2',sans-serif;
+    font-weight:800;
+    font-size:11px;
+    color:#fff;
+  }
+    .pay-logo .wordmark{font-family:'Inter',sans-serif;font-weight:800;text-transform:lowercase;color:#fff;letter-spacing:-0.3px;line-height:1;}
+.pay-logo.wave{ background:#4FD8F1; }
+  .pay-logo.om{ background:#FF7900; }
+  .pay-logo.free{ background:#2A2A72; }
+
+  .pay-text{
+    flex:1;
+  }
+  .pay-text .t1{
+    font-size:13px;
+    font-weight:700;
+    color:var(--ink);
+  }
+  .pay-text .t2{
+    font-size:10.5px;
+    color:var(--muted);
+    margin-top:1px;
+  }
+  .default-badge{
+    font-size:9px;
+    font-weight:800;
+    text-transform:uppercase;
+    letter-spacing:0.03em;
+    color:var(--orange-dark);
+    background:#fff;
+    padding:3px 8px;
+    border-radius:8px;
+    margin-top:4px;
+    display:inline-block;
+  }
+
+  .pay-menu{
+    width:28px;height:28px;
+    border-radius:50%;
+    background:var(--surface);
+    border:2px solid var(--line);
+    position:relative;
+    flex-shrink:0;
+  }
+  .pay-menu::before, .pay-menu::after, .pay-menu .dot{
+    content:"";
+    position:absolute;
+    width:3px;height:3px;
+    border-radius:50%;
+    background:var(--muted);
+    top:50%;
+    left:50%;
+  }
+  .pay-menu::before{ transform:translate(-7px,-50%); }
+  .pay-menu .dot{ transform:translate(-50%,-50%); }
+  .pay-menu::after{ transform:translate(4px,-50%); }
+
+  .add-method-btn{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+    padding:14px;
+    border:2px dashed var(--blue);
+    background:var(--blue-light);
+    border-radius:16px;
+    margin-top:6px;
+    margin-bottom:24px;
+  }
+  .add-method-btn .plus{
+    width:20px;height:20px;
+    border-radius:50%;
+    background:var(--blue-dark);
+    position:relative;
+    flex-shrink:0;
+  }
+  .add-method-btn .plus::before, .add-method-btn .plus::after{
+    content:"";
+    position:absolute;
+    background:#fff;
+  }
+  .add-method-btn .plus::before{ width:10px;height:2px; top:50%; left:50%; transform:translate(-50%,-50%); }
+  .add-method-btn .plus::after{ width:2px;height:10px; top:50%; left:50%; transform:translate(-50%,-50%); }
+  .add-method-btn span{
+    font-size:13px;
+    font-weight:700;
+    color:var(--blue-dark);
+  }
+
+  .cash-note{
+    display:flex;
+    align-items:flex-start;
+    gap:10px;
+    background:var(--bg);
+    border-radius:14px;
+    padding:14px;
+  }
+  .cash-note .dot{
+    width:8px;height:8px;
+    border-radius:50%;
+    background:var(--ink-soft);
+    margin-top:5px;
+    flex-shrink:0;
+  }
+  .cash-note p{
+    margin:0;
+    font-size:11.5px;
+    color:var(--ink-soft);
+    line-height:1.5;
+  }
+
+  .info-box{background:var(--blue-light,#D6F3FB);border-radius:14px;padding:14px;font-size:12px;line-height:1.55;color:var(--ink-soft);margin-bottom:18px;}
+  .field{margin-bottom:14px;}
+  .field-label{font-size:12px;font-weight:700;color:var(--ink-soft);margin-bottom:6px;}
+  .field-input{border:2px solid var(--line,#E5EEF1);border-radius:14px;padding:13px 15px;background:var(--bg,#F5FAFC);font-size:13px;font-family:'Inter',sans-serif;color:var(--ink);width:100%;outline:none;}
+  .field-input:focus{border-color:var(--orange,#F2871E);background:#fff;}
+  .saved-row{display:flex;justify-content:space-between;align-items:center;background:var(--surface,#fff);border:2px solid var(--line,#E5EEF1);border-radius:14px;padding:12px 14px;margin-bottom:10px;font-size:12.5px;}
+  .saved-row .k{font-weight:700;color:var(--ink);}
+  .saved-row .v{color:var(--muted,#8B98A1);}
+  .btn-primary{width:100%;background:var(--orange,#F2871E);color:#fff;border:none;padding:15px;border-radius:14px;font-weight:700;font-size:14px;font-family:'Inter',sans-serif;cursor:pointer;margin-top:8px;}
+  .btn-primary:disabled{opacity:.5;}
+
+  /* === NDOKET : plein Ã©cran (hors maquette) === */
+  html,body{height:100%;}
+  body{padding:0 !important;display:block !important;justify-content:flex-start !important;}
+  .phone{width:100% !important;height:100% !important;max-width:none !important;
+    border-radius:0 !important;border:none !important;box-shadow:none !important;}
+  .notch{display:none !important;}
+  .screen{height:100% !important;min-height:100dvh !important;}
+  .content{overflow-y:auto !important;}
+</style>
+</head>
+<body data-role="prestataire">
+
+  <div class="phone">
+    <div class="notch"></div>
+    <div class="screen">
+
+      <div class="topbar">
+        <div class="back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px"><polyline points="15 18 9 12 15 6"/></svg></div>
+        <div class="topbar-title">Compte de réception</div>
+      </div>
+
+      <div class="content">
+
+        <div class="info-box">
+          Les clientes paient en ligne sur le compte sécurisé Ndoket. Ndoket vous verse ensuite vos gains sur le numéro ci-dessous, sous 24 à 48 h après chaque rendez-vous. Renseignez au moins un numéro.
+        </div>
+
+        <div class="section-label">Enregistré</div>
+        <div id="savedList"></div>
+
+        <div class="section-label">Modifier vos numéros</div>
+
+        <div class="field">
+          <div class="field-label">Nom du titulaire des comptes</div>
+          <input type="text" class="field-input" id="titulaire" placeholder="Ex : Fatou Ndiaye" />
+        </div>
+        <div class="field">
+          <div class="field-label">Numéro Wave</div>
+          <input type="tel" class="field-input" id="waveNum" placeholder="Ex : 77 123 45 67" />
+        </div>
+        <div class="field">
+          <div class="field-label">Numéro Orange Money</div>
+          <input type="tel" class="field-input" id="omNum" placeholder="Ex : 78 123 45 67" />
+        </div>
+
+        <div class="form-error" id="formError" style="display:none;background:#FBE3E3;color:#C0392B;font-size:12px;font-weight:600;border-radius:12px;padding:10px 12px;margin-bottom:12px;"></div>
+
+        <button class="btn-primary" id="saveBtn">Enregistrer</button>
+
+      </div>
+
+    </div>
+  </div>
+
+<script src="icons.js"></script>
+<script src="supabase.js"></script>
+<script>
+(function(){
+  var me = sessionUser();
+  if(!me){ location.href = 'login.html'; return; }
+  var pid = ndoket.prestataireId();
+  var error = document.getElementById('formError');
+  var btn = document.getElementById('saveBtn');
+
+  function renderSaved(p){
+    var list = document.getElementById('savedList');
+    var rows = '';
+    if(p.wave_numero){ rows += '<div class="saved-row"><span class="k">Wave</span><span class="v">' + esc(p.wave_numero) + '</span></div>'; }
+    if(p.om_numero){ rows += '<div class="saved-row"><span class="k">Orange Money</span><span class="v">' + esc(p.om_numero) + '</span></div>'; }
+    if(!rows){ rows = '<div class="saved-row"><span class="v">Aucun numéro enregistré pour le moment.</span></div>'; }
+    list.innerHTML = rows;
+  }
+
+  function load(){
+    if(!pid){ document.getElementById('savedList').innerHTML = '<div class="saved-row"><span class="v">Profil prestataire introuvable.</span></div>'; return; }
+    supabase.select('prestataires', { id: 'eq.' + pid }).then(function(rows){
+      var p = rows && rows[0];
+      if(!p) return;
+      renderSaved(p);
+      document.getElementById('titulaire').value = p.paiement_titulaire || '';
+      document.getElementById('waveNum').value = p.wave_numero || '';
+      document.getElementById('omNum').value = p.om_numero || '';
+    }).catch(function(){});
+  }
+
+  btn.addEventListener('click', function(){
+    error.style.display = 'none';
+    var titulaire = document.getElementById('titulaire').value.trim();
+    var wave = document.getElementById('waveNum').value.trim();
+    var om = document.getElementById('omNum').value.trim();
+    if(!wave && !om){
+      error.textContent = 'Renseignez au moins un numéro (Wave ou Orange Money).';
+      error.style.display = 'block';
+      return;
+    }
+    if(!titulaire){
+      error.textContent = 'Indiquez le nom du titulaire des comptes.';
+      error.style.display = 'block';
+      return;
+    }
+    btn.disabled = true;
+    supabase.update('prestataires', {
+      paiement_titulaire: titulaire,
+      wave_numero: wave || null,
+      om_numero: om || null
+    }, 'id', pid).then(function(rows){
+      btn.disabled = false;
+      if(!rows || !rows.length){
+        error.textContent = 'Erreur : mise à jour refusée. Reconnectez-vous et réessayez.';
+        error.style.display = 'block';
+        return;
+      }
+      showToast('Compte de réception enregistré ✓');
+      load();
+    }).catch(function(e){
+      btn.disabled = false;
+      error.textContent = 'Erreur : ' + e.message;
+      error.style.display = 'block';
+    });
+  });
+
+  load();
+})();
+</script>
+  <script src="nav.js"></script>
+</body>
+</html>

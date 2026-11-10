@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Ndoket — Fiche client</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="animations.css">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --bg:#F5FAFC;
+    --surface:#FFFFFF;
+    --ink:#1F2A33;
+    --ink-soft:#54646F;
+    --muted:#8B98A1;
+    --orange:#F2871E;
+    --orange-dark:#D66A0C;
+    --orange-light:#FDE3C5;
+    --blue:#3FC2E8;
+    --blue-dark:#1E9BC2;
+    --blue-light:#D6F3FB;
+    --green:#3AA65A;
+    --green-light:#DCF3E2;
+    --line:#E5EEF1;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:#EDEFF0;
+    font-family:'Inter',sans-serif;
+    padding:48px 16px;
+    display:flex;
+    justify-content:center;
+  }
+
+  .phone{
+    width:375px;
+    height:812px;
+    background:var(--surface);
+    border-radius:44px;
+    border:12px solid var(--ink);
+    overflow:hidden;
+    position:relative;
+    box-shadow: 0 30px 60px -25px rgba(31,42,51,0.4);
+  }
+  .notch{
+    position:absolute;
+    top:0; left:50%;
+    transform:translateX(-50%);
+    width:150px; height:26px;
+    background:var(--ink);
+    border-radius:0 0 16px 16px;
+    z-index:8;
+  }
+  .screen{
+    width:100%;
+    height:100%;
+    display:flex;
+    flex-direction:column;
+    overflow:hidden;
+  }
+
+  .topbar{
+    padding:52px 20px 8px;
+    display:flex;
+    align-items:center;
+    gap:12px;
+  }
+  .back{
+    width:34px;height:34px;
+    border-radius:11px;
+    background:var(--bg);
+    border:2px solid var(--line);
+    position:relative;
+    flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;}
+  
+  .topbar-title{
+    font-family:'Baloo 2',sans-serif;
+    font-size:16px;
+    font-weight:700;
+    color:var(--ink);
+  }
+
+  .content{
+    flex:1;
+    overflow-y:auto;
+    padding:16px 20px 20px;
+  }
+
+  /* Bandeau client */
+  .client-header{
+    display:flex;
+    align-items:center;
+    gap:14px;
+    background:var(--bg);
+    border-radius:18px;
+    padding:16px;
+    margin-bottom:20px;
+  }
+  .client-avatar{
+    width:56px;height:56px;
+    border-radius:50%;
+    background:linear-gradient(135deg, var(--blue-light), var(--orange-light) 140%);
+    flex-shrink:0;
+    border:3px solid var(--surface);
+  }
+  .client-name{
+    font-family:'Baloo 2',sans-serif;
+    font-size:16px;
+    font-weight:700;
+    color:var(--ink);
+  }
+  .client-meta{
+    font-size:11.5px;
+    color:var(--muted);
+    margin-top:2px;
+  }
+  .client-badge{
+    display:inline-block;
+    margin-top:6px;
+    font-size:9.5px;
+    font-weight:800;
+    color:var(--blue-dark);
+    background:var(--blue-light);
+    padding:3px 9px;
+    border-radius:8px;
+  }
+
+  .status-pill{
+    display:inline-block;
+    font-size:10px;
+    font-weight:800;
+    text-transform:uppercase;
+    letter-spacing:0.03em;
+    padding:5px 11px;
+    border-radius:20px;
+    background:var(--green-light);
+    color:var(--green);
+    margin-bottom:16px;
+  }
+
+  .section-title{
+    font-size:11px;
+    font-weight:800;
+    color:var(--ink-soft);
+    text-transform:uppercase;
+    letter-spacing:0.05em;
+    margin-bottom:10px;
+  }
+  .section-block{
+    margin-bottom:20px;
+  }
+
+  /* Détail réservation */
+  .detail-row{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:10px 0;
+    border-bottom:1px solid var(--line);
+  }
+  .detail-row:last-child{
+    border-bottom:none;
+  }
+  .detail-row .lbl{
+    font-size:12px;
+    color:var(--ink-soft);
+    font-weight:600;
+  }
+  .detail-row .val{
+    font-size:12.5px;
+    color:var(--ink);
+    font-weight:700;
+    text-align:right;
+  }
+  .detail-row .val.price{
+    color:var(--orange-dark);
+  }
+
+  .mode-tag{
+    font-size:9.5px;
+    font-weight:800;
+    padding:3px 9px;
+    border-radius:8px;
+    white-space:nowrap;
+  }
+  .mode-tag.home{ background:var(--orange-light); color:var(--orange-dark); }
+  .mode-tag.place{ background:var(--blue-light); color:var(--blue-dark); }
+
+  /* Adresse (si à domicile) */
+  .address-card{
+    background:var(--orange-light);
+    border-radius:14px;
+    padding:12px 14px;
+    display:flex;
+    align-items:flex-start;
+    gap:10px;
+  }
+  .address-card .dot{
+    width:8px;height:8px;
+    border-radius:50%;
+    background:var(--orange-dark);
+    margin-top:5px;
+    flex-shrink:0;
+  }
+  .address-card p{
+    margin:0;
+    font-size:12px;
+    color:var(--orange-dark);
+    font-weight:600;
+    line-height:1.5;
+  }
+
+  /* Photo modèle + note */
+  .model-photo{
+    width:100%;
+    aspect-ratio:16/9;
+    border-radius:14px;
+    background:linear-gradient(135deg, #FDE3C5, #F2871E 140%);
+    margin-bottom:10px;
+  }
+  .note-box{
+    background:var(--bg);
+    border-radius:14px;
+    padding:12px 14px;
+    font-size:12px;
+    color:var(--ink-soft);
+    line-height:1.55;
+  }
+
+  /* Actions */
+  .actions-row{
+    display:flex;
+    gap:10px;
+    margin-top:4px;
+  }
+  .action-btn{
+    flex:1;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:6px;
+    padding:12px;
+    border:2px solid var(--line);
+    border-radius:14px;
+  }
+  .action-btn .ic{
+    width:22px;height:22px;
+    border-radius:50%;
+    background:var(--blue-light);
+  }
+  .action-btn span{
+    font-size:10.5px;
+    font-weight:700;
+    color:var(--ink-soft);
+  }
+
+  /* Localisation partagée */
+  .loc-list{display:flex;flex-direction:column;gap:8px;margin-bottom:10px;}
+  .loc-empty{font-size:11.5px;color:var(--muted);padding:6px 2px;}
+  .loc-row{
+    display:flex;align-items:center;gap:10px;
+    padding:12px 14px;
+    border:2px solid var(--line);
+    border-radius:14px;
+    background:var(--surface);
+    text-decoration:none;
+  }
+  .loc-row .pin{
+    width:34px;height:34px;flex-shrink:0;
+    border-radius:10px;
+    background:var(--blue-light);
+    display:flex;align-items:center;justify-content:center;
+    color:var(--blue-dark);
+  }
+  .loc-row .pin svg{width:17px;height:17px;}
+  .loc-row .txt{flex:1;min-width:0;}
+  .loc-row .who{display:block;font-size:11px;font-weight:700;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .loc-row .sub{display:block;font-size:10.5px;color:var(--blue-dark);font-weight:700;}
+  .loc-row .ext{width:16px;height:16px;color:var(--muted);flex-shrink:0;}
+  .loc-send{
+    display:flex;align-items:center;justify-content:center;gap:8px;
+    width:100%;padding:13px;
+    border:2px dashed var(--blue);
+    border-radius:14px;
+    background:var(--blue-light);
+    color:var(--blue-dark);
+    font-family:inherit;
+    font-weight:800;font-size:12.5px;
+    cursor:pointer;
+  }
+  .loc-send svg{width:17px;height:17px;}
+
+  .toast{
+    position:fixed;left:50%;bottom:90px;transform:translateX(-50%) translateY(10px);
+    background:var(--ink);color:#fff;
+    padding:11px 18px;border-radius:999px;
+    font-size:12.5px;font-weight:700;
+    opacity:0;pointer-events:none;
+    transition:opacity .25s, transform .25s;
+    z-index:50;max-width:85%;text-align:center;
+  }
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+  .footer{
+    padding:14px 20px 24px;
+    border-top:2px solid var(--line);
+    display:flex;
+    gap:10px;
+  }
+  .btn-decline{
+    flex:1;
+    background:var(--surface);
+    color:var(--ink-soft);
+    border:2px solid var(--line);
+    text-align:center;
+    padding:14px;
+    border-radius:16px;
+    font-weight:700;
+    font-size:13px;
+    border:none;
+    font-family:'Inter',sans-serif;
+    cursor:pointer;
+  }
+  .btn-confirm{
+    flex:1.4;
+    background:var(--green);
+    color:#fff;
+    text-align:center;
+    padding:14px;
+    border-radius:16px;
+    font-weight:700;
+    font-size:13px;
+    border:none;
+    font-family:'Inter',sans-serif;
+    cursor:pointer;
+  }
+
+  /* === NDOKET : plein Ã©cran (hors maquette) === */
+  html,body{height:100%;}
+  body{padding:0 !important;display:block !important;justify-content:flex-start !important;}
+  .phone{width:100% !important;height:100% !important;max-width:none !important;
+    border-radius:0 !important;border:none !important;box-shadow:none !important;}
+  .notch{display:none !important;}
+  .screen{height:100% !important;min-height:100dvh !important;}
+  .content{overflow-y:auto !important;}
+</style>
+</head>
+<body data-role="prestataire">
+
+  <div class="phone">
+    <div class="notch"></div>
+    <div class="screen">
+
+      <div class="topbar">
+        <div class="back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px"><polyline points="15 18 9 12 15 6"/></svg></div>
+        <div class="topbar-title">Détail du rendez-vous</div>
+      </div>
+
+      <div class="content">
+
+        <div class="status-pill" id="statusPill">—</div>
+
+        <div class="client-header">
+          <div class="client-avatar"></div>
+          <div>
+            <div class="client-name" id="clientName">—</div>
+            <div class="client-meta" id="clientTel">—</div>
+            <div class="client-badge" id="clientBadge">—</div>
+          </div>
+        </div>
+
+        <div class="section-block">
+          <div class="section-title">Détails de la réservation</div>
+          <div class="detail-row">
+            <span class="lbl">Service</span>
+            <span class="val" id="dService">—</span>
+          </div>
+          <div class="detail-row" id="dOptionRow" style="display:none">
+            <span class="lbl">Option</span>
+            <span class="val" id="dOption">—</span>
+          </div>
+          <div class="detail-row">
+            <span class="lbl">Date & heure</span>
+            <span class="val" id="dDate">—</span>
+          </div>
+          <div class="detail-row">
+            <span class="lbl">Mode</span>
+            <span class="mode-tag" id="dMode">—</span>
+          </div>
+          <div class="detail-row">
+            <span class="lbl">Montant total</span>
+            <span class="val price" id="dMontant">—</span>
+          </div>
+          <div class="detail-row">
+            <span class="lbl">Paiement</span>
+            <span class="val" id="dPay">—</span>
+          </div>
+          <div class="detail-row">
+            <span class="lbl">Code</span>
+            <span class="val price" id="dCode">—</span>
+          </div>
+        </div>
+
+        <div class="section-block" id="addrBlock" style="display:none">
+          <div class="section-title">Adresse de la cliente</div>
+          <div class="address-card">
+            <div class="dot"></div>
+            <p id="dAddr">—</p>
+          </div>
+        </div>
+
+        <div class="section-block" id="noteBlock" style="display:none">
+          <div class="section-title">Remarques de la cliente</div>
+          <div class="note-box" id="dNote">—</div>
+        </div>
+
+        <div class="section-block" id="photoBlock" style="display:none">
+          <div class="section-title">Photo du modèle souhaité</div>
+          <img id="dPhoto" src="" alt="" style="width:100%;border-radius:14px;display:block" />
+        </div>
+
+        <div class="section-block" id="locBlock" style="display:none">
+          <div class="section-title">Localisation</div>
+          <div class="loc-list" id="locList"></div>
+          <button type="button" class="loc-send" id="sendLocBtn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="3 11 22 2 13 21 11 13 3 11"/></svg>
+            <span>Envoyer ma position</span>
+          </button>
+        </div>
+
+        <div class="actions-row">
+          <div class="action-btn" id="callBtn">
+            <div class="ic"></div>
+            <span>Appeler</span>
+          </div>
+          <div class="action-btn" id="itinBtn">
+            <div class="ic"></div>
+            <span>Itinéraire</span>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="footer">
+        <button type="button" class="btn-decline" id="declineBtn">Annuler</button>
+        <button type="button" class="btn-confirm" id="confirmBtn">Confirmer</button>
+      </div>
+
+    </div>
+  </div>
+
+<script src="supabase.js"></script>
+<script src="icons.js"></script>
+<script src="nav.js"></script>
+<script>
+(function(){
+  var booking = ndoket.getBooking();
+  var rid = booking && booking._reservation_id;
+  if(!rid){ location.href = 'accueil_prestataire.html'; return; }
+
+  var DOW = ['Dim','Lun','Mar','Mer','Jeu','Ven','Sam'];
+  var MONTHS = ['janv','févr','mars','avr','mai','juin','juil','août','sept','oct','nov','déc'];
+  var PAY = { wave: 'Wave', orange: 'Orange Money', free: 'Free Money', especes: 'Espèces' };
+  var STATUS = { confirme: 'Confirmé', paye: 'Payé', termine: 'Terminé', annule: 'Annulé' };
+  var fmt = function(n){ return (n || 0).toLocaleString('fr-FR') + ' FCFA'; };
+
+  var R = null;
+  var itinAddr = '';
+
+  function mapsUrl(q){ return 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(q); }
+
+  function renderLocs(){
+    var list = document.getElementById('locList');
+    list.innerHTML = '';
+    var items = [];
+    if(R && R.localisation_client){ items.push({ who: 'Position de la cliente', val: R.localisation_client }); }
+    if(R && R.localisation_presta){ items.push({ who: 'Position de la prestataire', val: R.localisation_presta }); }
+    if(!items.length){
+      list.innerHTML = '<div class="loc-empty">Aucune position partagée pour le moment.</div>';
+      return;
+    }
+    items.forEach(function(it){
+      var a = document.createElement('a');
+      a.className = 'loc-row';
+      a.href = '#';
+      a.innerHTML = '<span class="pin"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></span>' +
+        '<span class="txt"><span class="who">' + it.who + '</span><span class="sub">Ouvrir dans Google Maps</span></span>' +
+        '<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>';
+      a.addEventListener('click', function(e){
+        e.preventDefault();
+        window.openExternal(mapsUrl(it.val));
+      });
+      list.appendChild(a);
+    });
+  }
+
+  function sendLoc(){
+    if(!navigator.geolocation){ showToast('GPS non disponible sur cet appareil'); return; }
+    showToast('Recherche de votre position…');
+    navigator.geolocation.getCurrentPosition(function(pos){
+      var val = pos.coords.latitude.toFixed(6) + ',' + pos.coords.longitude.toFixed(6);
+      supabase.update('reservations', { localisation_presta: val }, 'id', rid).then(function(){
+        if(R){ R.localisation_presta = val; }
+    renderLocs();
+    // Position déjà donnée (ou RDV terminé/annulé) : plus de bouton d'envoi
+    if(R.localisation_presta || R.statut === 'termine' || R.statut === 'annule'){
+      document.getElementById('sendLocBtn').style.display = 'none';
+    }
+        showToast('Position envoyée à la cliente ✓');
+      }).catch(function(err){
+        showToast('Erreur : ' + err.message);
+      });
+    }, function(err){
+      var msg = 'Impossible de vous localiser. Réessayez.';
+      if(err && err.code === 1){
+        msg = 'Accès à la position refusé. Allez dans Réglages → Applications → Ndoket → Autorisations → Position, puis autorisez.';
+      } else if(err && err.code === 2){
+        msg = 'Position indisponible. Vérifiez que le GPS est bien activé.';
+      } else if(err && err.code === 3){
+        msg = 'Délai dépassé. Réessayez.';
+      }
+      showToast(msg, 5000);
+    }, { enableHighAccuracy: true, timeout: 15000, maximumAge: 30000 });
+  }
+
+  supabase.select('reservations', { id: 'eq.' + rid }).then(function(rows){
+    var r = rows && rows[0];
+    if(!r){ location.href = 'accueil_prestataire.html'; return; }
+    R = r;
+
+    document.getElementById('statusPill').textContent = STATUS[r.statut] || r.statut;
+    document.getElementById('dMontant').textContent = fmt(r.montant_total);
+    document.getElementById('dPay').textContent = PAY[r.paiement_method] || '—';
+    document.getElementById('dCode').textContent = '#' + r.code;
+    document.getElementById('dMode').textContent = r.mode === 'a_domicile' ? 'À domicile' : 'Sur place';
+    document.getElementById('dMode').className = 'mode-tag ' + (r.mode === 'a_domicile' ? 'home' : 'place');
+
+    // Après annulation ou fin : masquer appel + localisation
+    var rdvDone = (r.statut === 'annule' || r.statut === 'termine');
+    if(rdvDone){
+      var callB = document.getElementById('callBtn');
+      if(callB) callB.style.display = 'none';
+      var locB = document.getElementById('locBlock');
+      if(locB) locB.style.display = 'none';
+      var sendLocB = document.getElementById('sendLocBtn');
+      if(sendLocB) sendLocB.style.display = 'none';
+      var itinB = document.getElementById('itinBtn');
+      if(itinB) itinB.style.display = 'none';
+    }
+
+    if(r.date_rdv){
+      var d = new Date(r.date_rdv + 'T00:00:00');
+      var h = (r.heure_debut || '').substring(0,5);
+      document.getElementById('dDate').textContent = DOW[d.getDay()] + '. ' + d.getDate() + ' ' + MONTHS[d.getMonth()] + ', ' + h;
+    }
+    if(r.mode === 'a_domicile'){
+      document.getElementById('locBlock').style.display = 'block';
+      if(r.adresse_domicile){
+        document.getElementById('addrBlock').style.display = 'block';
+        document.getElementById('dAddr').textContent = r.adresse_domicile;
+        itinAddr = r.adresse_domicile;
+      }
+    }
+    renderLocs();
+    if(r.nombre_coupes > 1 || r.perles){
+      document.getElementById('dOptionRow').style.display = 'flex';
+      var opts = [];
+      if(r.nombre_coupes > 1){ opts.push(r.nombre_coupes + ' coupes'); }
+      if(r.perles){ opts.push('perles'); }
+      document.getElementById('dOption').textContent = opts.join(' + ');
+    }
+    if(r.notes){
+      document.getElementById('noteBlock').style.display = 'block';
+      document.getElementById('dNote').textContent = '« ' + r.notes + ' »';
+    }
+    if(r.photo_reference){
+      document.getElementById('photoBlock').style.display = 'block';
+      document.getElementById('dPhoto').src = r.photo_reference;
+    }
+
+    var isDone = r.statut === 'termine' || r.statut === 'annule';
+    document.getElementById('declineBtn').style.display = isDone ? 'none' : 'block';
+    document.getElementById('confirmBtn').style.display = isDone ? 'none' : 'block';
+    // Parcours de statut : confirme → (paye si payé sur place) → termine
+    var confirmBtn = document.getElementById('confirmBtn');
+    if(r.statut === 'confirme'){
+      confirmBtn.textContent = r.paiement_statut === 'paye_online' ? 'Marquer terminé' : 'Marquer comme payé';
+      confirmBtn.style.background = 'var(--orange)';
+    } else if(r.statut === 'paye'){
+      confirmBtn.textContent = 'Marquer terminé';
+      confirmBtn.style.background = 'var(--green)';
+    }
+
+    // Load client profile (via RPC : RLS interdit de lire les profils des autres)
+    if(r.client_id){
+      supabase.rpc('get_profils_brief', { p_ids: [r.client_id] }).then(function(cRows){
+        if(cRows && cRows[0]){
+          var c = cRows[0];
+          document.getElementById('clientName').textContent = (c.prenom || '') + ' ' + (c.nom || '');
+          document.getElementById('clientTel').textContent = c.telephone || '—';
+          document.getElementById('clientBadge').textContent = 'Cliente Ndoket';
+          if(!itinAddr && c.adresse){ itinAddr = c.adresse; }
+          document.getElementById('callBtn').addEventListener('click', function(){
+            if(c.telephone){ location.href = 'tel:' + c.telephone; }
+            else { showToast('Aucun numéro de téléphone disponible'); }
+          });
+        }
+      }).catch(function(){});
+    }
+
+    // Load service name
+    if(r.service_id){
+      supabase.select('services', { id: 'eq.' + r.service_id }).then(function(sRows){
+        if(sRows && sRows[0]){ document.getElementById('dService').textContent = sRows[0].nom; }
+      }).catch(function(){});
+    }
+
+    // Store r for confirm/decline buttons
+    window._res = r;
+
+  }).catch(function(err){
+    alert('Erreur : ' + err.message);
+  });
+
+  document.getElementById('declineBtn').addEventListener('click', function(){
+    if(!confirm('Annuler ce rendez-vous ?')) return;
+    supabase.update('reservations', { statut: 'annule' }, 'id', rid).then(function(){
+      location.href = 'accueil_prestataire.html';
+    }).catch(function(err){ alert('Erreur : ' + err.message); });
+  });
+
+  // Itinéraire → Google Maps
+  document.getElementById('itinBtn').addEventListener('click', function(){
+    if(!itinAddr){ showToast('Adresse non disponible'); return; }
+    window.openExternal(mapsUrl(itinAddr));
+  });
+  document.getElementById('sendLocBtn').addEventListener('click', sendLoc);
+
+  // Icônes des boutons d'action
+  try{
+    document.querySelector('#callBtn .ic').innerHTML = icon('phone', 16, '#1E9BC2');
+    document.querySelector('#itinBtn .ic').innerHTML = icon('mapPin', 16, '#1E9BC2');
+  }catch(e){}
+
+  document.getElementById('confirmBtn').addEventListener('click', function(){
+    var r = window._res;
+    if(!r) return;
+    var next = r.statut === 'confirme' ? 'paye' : 'termine';
+    supabase.update('reservations', { statut: next }, 'id', rid).then(function(){
+      // Notifier la cliente du changement de statut
+      if(r.client_id){
+        var msgs = {
+          paye: { t: '💳 Paiement confirmé', b: 'Votre prestataire a confirmé le paiement.' },
+          termine: { t: '✅ Prestation terminée', b: 'Votre rendez-vous est terminé. Vous pouvez laisser un avis !' }
+        };
+        var m = msgs[next];
+        if(m){ sendPush('user', null, r.client_id, m.t, m.b, { page: 'mes_reservations.html' }); }
+      }
+      location.href = 'accueil_prestataire.html';
+    }).catch(function(err){ alert('Erreur : ' + err.message); });
+  });
+})();
+</script>
+</body>
+</html>

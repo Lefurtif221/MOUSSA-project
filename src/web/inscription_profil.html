@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Ndoket — Inscription client</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="animations.css">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --bg:#F5FAFC;
+    --surface:#FFFFFF;
+    --ink:#1F2A33;
+    --ink-soft:#54646F;
+    --muted:#8B98A1;
+    --orange:#F2871E;
+    --orange-dark:#D66A0C;
+    --orange-light:#FDE3C5;
+    --blue:#3FC2E8;
+    --blue-dark:#1E9BC2;
+    --blue-light:#D6F3FB;
+    --line:#E5EEF1;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:#EDEFF0;
+    font-family:'Inter',sans-serif;
+    padding:48px 16px;
+    display:flex;
+    justify-content:center;
+  }
+
+  .phone{
+    width:375px;
+    height:812px;
+    background:var(--surface);
+    border-radius:44px;
+    border:12px solid var(--ink);
+    overflow:hidden;
+    position:relative;
+    box-shadow: 0 30px 60px -25px rgba(31,42,51,0.4);
+  }
+  .notch{
+    position:absolute;
+    top:0; left:50%;
+    transform:translateX(-50%);
+    width:150px; height:26px;
+    background:var(--ink);
+    border-radius:0 0 16px 16px;
+    z-index:5;
+  }
+  .screen{
+    width:100%;
+    height:100%;
+    display:flex;
+    flex-direction:column;
+    overflow:hidden;
+  }
+
+  .topbar{
+    padding:52px 20px 8px;
+    display:flex;
+    align-items:center;
+    gap:12px;
+  }
+  .back{
+    width:34px;height:34px;
+    border-radius:11px;
+    background:var(--bg);
+    border:2px solid var(--line);
+    position:relative;
+    flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;}
+  
+  .steps{
+    display:flex;
+    gap:6px;
+    flex:1;
+  }
+  .step-bar{
+    height:4px;
+    flex:1;
+    border-radius:4px;
+    background:var(--line);
+  }
+  .step-bar.done{
+    background:var(--orange);
+  }
+
+  .body{
+    flex:1;
+    overflow-y:auto;
+    padding:20px 24px 24px;
+  }
+
+  .eyebrow{
+    font-size:11.5px;
+    font-weight:800;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    color:var(--orange-dark);
+    margin-bottom:8px;
+  }
+  h1{
+    font-family:'Baloo 2',sans-serif;
+    font-size:24px;
+    font-weight:700;
+    color:var(--ink);
+    margin:0 0 8px;
+  }
+  .subtitle{
+    font-size:13px;
+    color:var(--ink-soft);
+    line-height:1.55;
+    margin:0 0 28px;
+  }
+
+  .avatar-picker{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    margin-bottom:28px;
+  }
+  .avatar-circle{
+    width:84px;height:84px;
+    border-radius:50%;
+    background:var(--bg);
+    border:2px dashed var(--muted);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    margin-bottom:10px;
+    overflow:hidden;
+  }
+  .avatar-circle.has-img{border-style:solid;border-color:var(--blue-light);}
+  .avatar-circle img{width:100%;height:100%;object-fit:cover;border-radius:50%;}
+  .avatar-plus{
+    width:22px;height:22px;
+    position:relative;
+  }
+  .avatar-plus::before, .avatar-plus::after{
+    content:"";
+    position:absolute;
+    background:var(--muted);
+  }
+  .avatar-plus::before{
+    width:100%; height:3px; top:50%; left:0; transform:translateY(-50%);
+    border-radius:2px;
+  }
+  .avatar-plus::after{
+    height:100%; width:3px; left:50%; top:0; transform:translateX(-50%);
+    border-radius:2px;
+  }
+  .avatar-label{
+    font-size:11.5px;
+    font-weight:700;
+    color:var(--blue-dark);
+  }
+
+  .field{
+    margin-bottom:18px;
+  }
+  .field-label{
+    font-size:12px;
+    font-weight:700;
+    color:var(--ink-soft);
+    margin-bottom:7px;
+  }
+  .field-input{
+    border:2px solid var(--line);
+    border-radius:14px;
+    padding:14px 16px;
+    background:var(--bg);
+    font-size:13.5px;
+  }
+  input.field-input{
+    width:100%;
+    outline:none;
+    font-family:'Inter',sans-serif;
+    color:var(--ink);
+  }
+  input.field-input:focus{
+    border-color:var(--blue);
+    background:#fff;
+  }
+  input.field-input::placeholder{ color:var(--muted); }
+  .form-error{
+    display:none;
+    background:#FBE3E3;
+    color:#C0392B;
+    font-size:12px;
+    font-weight:600;
+    border-radius:12px;
+    padding:10px 12px;
+    margin-top:10px;
+  }
+  .field-input.filled{
+    color:var(--ink);
+    font-weight:600;
+  }
+  .field-input.placeholder{
+    color:var(--muted);
+  }
+  .field-input.locked{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    background:var(--blue-light);
+    border-color:var(--blue-light);
+  }
+  .field-input.locked span:first-child{
+    color:var(--blue-dark);
+    font-weight:700;
+  }
+  .field-input.locked .verified{
+    font-size:10px;
+    font-weight:800;
+    color:var(--blue-dark);
+    background:#FFFFFF;
+    padding:3px 8px;
+    border-radius:8px;
+  }
+
+  .role-hint{
+    display:flex;
+    gap:10px;
+    align-items:flex-start;
+    background:var(--orange-light);
+    border-radius:14px;
+    padding:14px;
+    margin-bottom:24px;
+  }
+  .role-hint .dot{
+    width:8px;height:8px;
+    border-radius:50%;
+    background:var(--orange-dark);
+    margin-top:5px;
+    flex-shrink:0;
+  }
+  .role-hint p{
+    margin:0;
+    font-size:11.5px;
+    color:var(--orange-dark);
+    line-height:1.5;
+    font-weight:600;
+  }
+
+  .terms{
+    display:flex;
+    align-items:flex-start;
+    gap:10px;
+    margin-bottom:8px;
+  }
+  .checkbox{
+    width:18px;height:18px;
+    border-radius:6px;
+    background:var(--orange);
+    flex-shrink:0;
+    margin-top:1px;
+    position:relative;
+  }
+  .checkbox::after{
+    content:"";
+    position:absolute;
+    top:45%; left:50%;
+    width:8px;height:4px;
+    border-left:2px solid #fff;
+    border-bottom:2px solid #fff;
+    transform:translate(-50%,-60%) rotate(-45deg);
+  }
+  .terms p{
+    margin:0;
+    font-size:11.5px;
+    color:var(--ink-soft);
+    line-height:1.5;
+  }
+  .terms a{
+    color:var(--blue-dark);
+    font-weight:700;
+  }
+
+  .footer{display:flex;justify-content:center;align-items:center;
+    padding:16px 20px 28px;
+    border-top:2px solid var(--line);
+  }
+  .btn-primary{
+    min-width:230px;
+    background:var(--orange);
+    color:#FFFFFF;
+    border:none;
+    text-align:center;
+    padding:14px 40px;
+    border-radius:16px;
+    font-family:'Inter',sans-serif;
+    font-weight:800;
+    font-size:14.5px;
+    cursor:pointer;
+  }
+
+  /* === NDOKET : plein ecran (phone only) === */
+  html,body{height:100%;}
+  body{padding:0 !important;display:block !important;justify-content:flex-start !important;}
+  .phone{width:100% !important;height:100% !important;max-width:none !important;
+    border-radius:0 !important;border:none !important;box-shadow:none !important;}
+  .notch{display:none !important;}
+  .screen{height:100% !important;min-height:100dvh !important;}
+  .content{overflow-y:auto !important;}
+</style>
+</head>
+<body>
+
+  <div class="phone">
+    <div class="notch"></div>
+    <div class="screen">
+
+      <div class="topbar">
+        <div class="back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px"><polyline points="15 18 9 12 15 6"/></svg></div>
+        <div class="steps">
+          <div class="step-bar done"></div>
+          <div class="step-bar done"></div>
+        </div>
+      </div>
+
+      <div class="body">
+        <div class="eyebrow">Étape 2 sur 2</div>
+        <h1>Créez votre profil</h1>
+        <p class="subtitle">Quelques informations pour personnaliser vos réservations sur Ndoket.</p>
+
+        <div class="avatar-picker" id="avatarPicker">
+          <div class="avatar-circle" id="avatarCircle"><div class="avatar-plus"></div></div>
+          <div class="avatar-label" id="avatarLabel">Ajouter une photo</div>
+        </div>
+        <input type="file" id="avatarInput" accept="image/*" style="display:none" />
+
+        <div class="field">
+          <div class="field-label">Prénom</div>
+          <input type="text" class="field-input" id="prenom" placeholder="Ex : Aïcha" autocomplete="given-name" />
+        </div>
+
+        <div class="field">
+          <div class="field-label">Nom</div>
+          <input type="text" class="field-input" id="nom" placeholder="Ex : Diop" autocomplete="family-name" />
+        </div>
+
+        <div class="field">
+          <div class="field-label">Numéro de téléphone</div>
+          <input type="tel" class="field-input" id="telephone" placeholder="Ex : +221 77 123 45 67" autocomplete="tel" />
+        </div>
+
+        <div class="field">
+          <div class="field-label">Adresse</div>
+          <input type="text" class="field-input" id="adresse" placeholder="Ex : Rue 12, Mermoz, Dakar" autocomplete="street-address" />
+        </div>
+
+        <div class="field">
+          <div class="field-label">Position <span style="color:#C0392B">(requis)</span></div>
+          <button type="button" class="field-input" id="geoBtn" style="display:flex;align-items:center;justify-content:center;gap:8px;background:var(--blue-light);border:2px dashed var(--blue);color:var(--blue-dark);font-weight:700;font-size:12.5px;font-family:inherit;cursor:pointer;padding:13px;">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            <span id="geoLabel">Utiliser ma position GPS</span>
+          </button>
+          <div style="font-size:10.5px;color:var(--muted);margin-top:6px;">Permet d'afficher en premier les prestataires les plus proches de vous.</div>
+        </div>
+
+        <div class="role-hint">
+          <div class="dot"></div>
+          <p>Vous vous inscrivez en tant que cliente. Vous pourrez aussi proposer vos services plus tard depuis votre profil.</p>
+        </div>
+
+        <div class="form-error" id="formError"></div>
+      </div>
+
+      <div class="footer">
+        <button type="button" class="btn-primary" id="createBtn">Créer mon compte</button>
+      </div>
+
+    </div>
+  </div>
+
+
+<script src="supabase.js"></script>
+<script src="icons.js"></script>
+  <script src="nav.js"></script>
+<script>
+(function(){
+  var prenom = document.getElementById('prenom');
+  var nom = document.getElementById('nom');
+  var tel = document.getElementById('telephone');
+  var adresse = document.getElementById('adresse');
+  var error = document.getElementById('formError');
+  var btn = document.getElementById('createBtn');
+
+  // Retour = annuler l'inscription : déconnexion + retour à l'accueil
+  // (sinon login.html renvoie en avant via autoRouteHome → boucle infinie)
+  document.querySelector('.back').addEventListener('click', function(e){
+    e.stopPropagation();
+    e.preventDefault();
+    clearSession();
+    supabase.signOut().catch(function(){});
+    location.href = 'index.html';
+  });
+
+  function setError(msg){
+    error.textContent = msg || '';
+    error.style.display = msg ? 'block' : 'none';
+  }
+
+  // Photo de profil
+  var avatarFile = null;
+  document.getElementById('avatarPicker').addEventListener('click', function(){
+    document.getElementById('avatarInput').click();
+  });
+  document.getElementById('avatarInput').addEventListener('change', function(){
+    var f = this.files && this.files[0];
+    if(!f) return;
+    avatarFile = f;
+    var r = new FileReader();
+    r.onload = function(e){
+      var circle = document.getElementById('avatarCircle');
+      circle.classList.add('has-img');
+      circle.innerHTML = '<img src="' + e.target.result + '" alt="" />';
+      document.getElementById('avatarLabel').textContent = 'Photo ajoutée';
+    };
+    r.readAsDataURL(f);
+  });
+
+  // Position GPS (obligatoire : bouton GPS ou adresse suggérée)
+  var geoPos = null;
+  document.getElementById('geoBtn').addEventListener('click', function(){
+    var lbl = document.getElementById('geoLabel');
+    lbl.textContent = 'Localisation en cours…';
+    getMyPosition().then(function(pos){
+      geoPos = pos;
+      lbl.textContent = 'Position capturée ✓';
+      geoReverse(pos.latitude, pos.longitude).then(function(a){
+        if(!adresse.value.trim()){ adresse.value = a; }
+      }).catch(function(){});
+    }).catch(function(){
+      lbl.textContent = 'Position indisponible — réessayer';
+    });
+  });
+  attachAddressAutocomplete(adresse, function(pos){
+    geoPos = pos;
+    document.getElementById('geoLabel').textContent = 'Position capturée ✓';
+  });
+
+  btn.addEventListener('click', function(){
+    var s = loadSession();
+    if(!s || !s.user){
+      setError('Session expirée. Veuillez recommencer l\'inscription.');
+      return;
+    }
+    var pn = prenom.value.trim();
+    var nm = nom.value.trim();
+    var tl = tel.value.trim();
+
+    if(!pn || !nm){ setError('Prénom et nom sont obligatoires.'); return; }
+    if(!/^\+?[0-9 ]{9,}$/.test(tl)){ setError('Numéro de téléphone invalide.'); return; }
+    if(!geoPos){
+      setError('Position requise : touchez « Utiliser ma position GPS » ou choisissez une adresse suggérée dans la liste.');
+      var gb = document.getElementById('geoBtn');
+      if(gb && gb.scrollIntoView){ gb.scrollIntoView({ behavior: 'smooth', block: 'center' }); }
+      if(gb){ gb.style.borderColor = '#C0392B'; setTimeout(function(){ gb.style.borderColor = ''; }, 2500); }
+      return;
+    }
+
+    btn.disabled = true;
+    btn.textContent = 'Création du compte…';
+
+    function finish(avatarUrl){
+      supabase.insert('profils', {
+        id: s.user.id,
+        role: 'client',
+        prenom: pn,
+        nom: nm,
+        telephone: tl,
+        adresse: adresse.value.trim(),
+        latitude: geoPos ? geoPos.latitude : null,
+        longitude: geoPos ? geoPos.longitude : null,
+        avatar_url: avatarUrl || null
+      }).then(function(){
+        location.href = 'accueil_client.html';
+      }).catch(function(err){
+        btn.disabled = false;
+        btn.textContent = 'Créer mon compte';
+        setError(err.message);
+      });
+    }
+
+    if(avatarFile){
+      var ext = (avatarFile.type || 'image/jpeg').split('/')[1] || 'jpeg';
+      supabase.uploadPhoto(avatarFile, 'avatars/' + s.user.id + '.' + ext).then(function(url){
+        finish(url);
+      }).catch(function(){
+        finish(null);
+      });
+    } else {
+      finish(null);
+    }
+  });
+})();
+</script>
+</body>
+</html>

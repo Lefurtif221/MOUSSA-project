@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Ndoket · Paiement</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="animations.css">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --bg:#F5FAFC;
+    --surface:#FFFFFF;
+    --ink:#1F2A33;
+    --ink-soft:#54646F;
+    --muted:#8B98A1;
+    --orange:#F2871E;
+    --blue:#3FC2E8;
+    --blue-dark:#1E9BC2;
+    --blue-light:#D6F3FB;
+    --line:#E5EEF1;
+    --green:#2FB574;
+    --green-light:#E1F7EC;
+    --red:#E14848;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:#EDEFF0;
+    font-family:'Inter',sans-serif;
+    padding:48px 16px;
+    display:flex;
+    justify-content:center;
+  }
+  .phone{
+    width:375px;
+    height:812px;
+    background:var(--surface);
+    border-radius:44px;
+    border:12px solid var(--ink);
+    overflow:hidden;
+    position:relative;
+    box-shadow: 0 30px 60px -25px rgba(31,42,51,0.4);
+  }
+  .notch{
+    position:absolute;
+    top:0; left:50%;
+    transform:translateX(-50%);
+    width:150px; height:26px;
+    background:var(--ink);
+    border-radius:0 0 16px 16px;
+    z-index:8;
+  }
+  .screen{
+    width:100%;
+    height:100%;
+    display:flex;
+    flex-direction:column;
+    overflow:hidden;
+  }
+  .topbar{
+    padding:52px 20px 8px;
+    display:flex;
+    align-items:center;
+    gap:12px;
+  }
+  .back{
+    width:34px;height:34px;
+    border-radius:11px;
+    background:var(--bg);
+    border:2px solid var(--line);
+    flex-shrink:0;
+    display:flex;align-items:center;justify-content:center;
+    color:var(--ink);
+    cursor:pointer;
+  }
+  .back svg{width:18px;height:18px;}
+  .topbar-title{
+    font-family:'Baloo 2',sans-serif;
+    font-size:16px;
+    font-weight:700;
+    color:var(--ink);
+  }
+  .content{
+    flex:1;
+    overflow-y:auto;
+    padding:40px 28px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    text-align:center;
+  }
+  .spinner{
+    width:64px;height:64px;
+    border-radius:50%;
+    border:6px solid var(--blue-light);
+    border-top-color:var(--blue-dark);
+    animation:spin 0.9s linear infinite;
+    margin-bottom:22px;
+  }
+  .spinner.done{ animation:none; border-color:var(--green-light); border-top-color:var(--green); }
+  .spinner.fail{ animation:none; border-color:#FBE3E3; border-top-color:var(--red); }
+  @keyframes spin{ to{ transform:rotate(360deg); } }
+  .st-title{
+    font-family:'Baloo 2',sans-serif;
+    font-size:18px;
+    font-weight:700;
+    color:var(--ink);
+    margin-bottom:8px;
+  }
+  .st-sub{
+    font-size:12.5px;
+    line-height:1.6;
+    color:var(--ink-soft);
+    margin-bottom:26px;
+  }
+  .btn-ghost{
+    padding:13px 30px;
+    border-radius:14px;
+    border:2px solid var(--line);
+    background:var(--surface);
+    font-family:inherit;
+    font-size:13px;
+    font-weight:700;
+    color:var(--ink-soft);
+    cursor:pointer;
+  }
+  .toast{
+    position:fixed;left:50%;bottom:90px;transform:translateX(-50%) translateY(10px);
+    background:var(--ink);color:#fff;
+    padding:11px 18px;border-radius:999px;
+    font-size:12.5px;font-weight:700;
+    opacity:0;pointer-events:none;
+    transition:opacity .25s, transform .25s;
+    z-index:50;max-width:85%;text-align:center;
+  }
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+  /* NDOKET : plein ecran (phone only) */
+  html,body{height:100%;}
+  body{padding:0 !important;display:block !important;}
+  .phone{width:100% !important;height:100% !important;max-width:none !important;
+    border-radius:0 !important;border:none !important;box-shadow:none !important;}
+  .notch{display:none !important;}
+  .screen{height:100% !important;min-height:100dvh !important;}
+  .content{overflow-y:auto !important;}
+</style>
+</head>
+<body>
+
+  <div class="phone">
+    <div class="notch"></div>
+    <div class="screen">
+
+      <div class="topbar">
+        <div class="back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg></div>
+        <div class="topbar-title">Paiement</div>
+      </div>
+
+      <div class="content">
+        <div class="spinner" id="spinner"></div>
+        <div class="st-title" id="stTitle">Vérification du paiement…</div>
+        <div class="st-sub" id="stSub">Ne fermez pas cette page.<br>Confirmation automatique dès réception du paiement.</div>
+        <button type="button" class="btn-ghost" id="laterBtn" style="display:none">Voir mes rendez-vous</button>
+      </div>
+
+    </div>
+  </div>
+
+<script src="supabase.js"></script>
+<script src="icons.js"></script>
+<script src="nav.js"></script>
+<script>
+(function(){
+  var ref = ndoket.get('pending_ref');
+  if(!ref){ location.href = 'mes_reservations.html'; return; }
+
+  var tries = 0;
+  var maxTries = 30;
+  var done = false;
+
+  function finish(){
+    done = true;
+    try{ localStorage.removeItem('ndoket_pending_ref'); }catch(e){}
+  }
+
+  function poll(){
+    if(done) return;
+    tries++;
+    supabase.select('paiements', { ref_command: 'eq.' + ref }).then(function(rows){
+      var p = rows && rows[0];
+      if(p && p.statut === 'paye'){
+        finish();
+        document.getElementById('spinner').className = 'spinner done';
+        document.getElementById('stTitle').textContent = 'Paiement confirmé !';
+        document.getElementById('stSub').textContent = 'Votre rendez-vous est réservé.';
+        ndoket.clearBooking();
+        showToast('Paiement confirmé !');
+        // Notifier la prestataire du nouveau RDV
+        if(p.prestataire_id){
+          sendPush('prestataire', p.prestataire_id, null,
+            '📋 Nouveau rendez-vous',
+            'Une cliente vient de réserver ' + (p.service_nom || 'un service') + ' le ' + (p.date_rdv || '') + ' à ' + (p.heure_debut || ''),
+            { page: 'fiche_client.html' }
+          );
+        }
+        setTimeout(function(){ location.href = 'mes_reservations.html'; }, 1200);
+        return;
+      }
+      if(p && p.statut === 'annule'){
+        finish();
+        document.getElementById('spinner').className = 'spinner fail';
+        document.getElementById('stTitle').textContent = 'Paiement annulé';
+        document.getElementById('stSub').textContent = 'Aucun montant n\'a été débité. Vous pouvez réessayer.';
+        showToast('Paiement annulé');
+        setTimeout(function(){ location.href = 'paiement.html'; }, 1500);
+        return;
+      }
+      if(tries >= maxTries){
+        done = true;
+        // On GARDE pending_ref : l'utilisateur peut revérifier plus tard
+        document.getElementById('spinner').className = 'spinner fail';
+        document.getElementById('stTitle').textContent = 'Confirmation en attente';
+        document.getElementById('stSub').textContent = 'Le paiement n\'est pas encore confirmé. Si vous avez payé, votre rendez-vous apparaîtra dans « Mes rendez-vous » dès réception de la confirmation. Vous pouvez revérifier.';
+        var retryBtn = document.getElementById('laterBtn');
+        retryBtn.style.display = 'block';
+        retryBtn.textContent = 'Vérifier à nouveau';
+        retryBtn.onclick = function(){
+          done = false;
+          tries = 0;
+          document.getElementById('spinner').className = 'spinner';
+          document.getElementById('stTitle').textContent = 'Vérification du paiement…';
+          document.getElementById('stSub').textContent = 'Ne fermez pas cette page.';
+          retryBtn.style.display = 'none';
+          poll();
+        };
+        var rdvBtn = document.createElement('button');
+        rdvBtn.className = 'btn-ghost';
+        rdvBtn.style.marginTop = '10px';
+        rdvBtn.textContent = 'Voir mes rendez-vous';
+        rdvBtn.addEventListener('click', function(){ location.href = 'mes_reservations.html'; });
+        if(retryBtn && retryBtn.parentNode){ retryBtn.parentNode.insertBefore(rdvBtn, retryBtn.nextSibling); }
+        return;
+      }
+      setTimeout(poll, 3000);
+    }).catch(function(){
+      if(tries >= maxTries){ location.href = 'mes_reservations.html'; return; }
+      setTimeout(poll, 3000);
+    });
+  }
+  poll();
+})();
+</script>
+</body>
+</html>
